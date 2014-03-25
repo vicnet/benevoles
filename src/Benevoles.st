@@ -1,9 +1,27 @@
 Smalltalk createPackage: 'Benevoles'!
-Object subclass: #Application
+Announcer subclass: #FdJAnnonceur
+	instanceVariableNames: ''
+	package: 'Benevoles'!
+
+FdJAnnonceur class instanceVariableNames: 'current'!
+
+!FdJAnnonceur class methodsFor: 'accessing'!
+
+current
+	^ current ifNil: [ current := super new ]
+! !
+
+!FdJAnnonceur class methodsFor: 'instance creation'!
+
+new
+	self shouldNotImplement
+! !
+
+Object subclass: #FdJApplication
 	instanceVariableNames: 'w'
 	package: 'Benevoles'!
 
-!Application methodsFor: 'initialization'!
+!FdJApplication methodsFor: 'initialization'!
 
 clear
 	w remove
@@ -12,48 +30,57 @@ clear
 initialize
 	super initialize.
 
-	w := WidgetBenevole new.
+	w := FdJWidgetBenevole new.
 	w appendToJQuery: 'body' asJQuery
 ! !
 
-Object subclass: #Benevole
-	instanceVariableNames: 'nom prenom assoc tshirt'
+Object subclass: #FdJBenevole
+	instanceVariableNames: 'nom prenom assoc tshirt etat'
 	package: 'Benevoles'!
-!Benevole commentStamp!
-tshirt: un TShirt!
+!FdJBenevole commentStamp!
+tshirt: un TShirt
+etat: pas encore venu, en cours de traitement, terminé!
 
-Object subclass: #Benevoles
+!FdJBenevole methodsFor: 'accessing'!
+
+announcer
+	^ FdJAnnounceur current
+! !
+
+Object subclass: #FdJBenevoles
 	instanceVariableNames: 'liste'
 	package: 'Benevoles'!
 
-Object subclass: #Stock
+Object subclass: #FdJStock
 	instanceVariableNames: 'tshirts'
 	package: 'Benevoles'!
 
-Object subclass: #TShirt
+Object subclass: #FdJTShirt
 	instanceVariableNames: 'type taille spec'
 	package: 'Benevoles'!
-!TShirt commentStamp!
+!FdJTShirt commentStamp!
 type: H(omme) ou F(emme)
 taille: XS, S, M...
 spec: vide, lsf, dv...!
 
-Widget subclass: #WidgetBenevole
+Widget subclass: #FdJWidgetBenevole
 	instanceVariableNames: 'div'
 	package: 'Benevoles'!
 
-!WidgetBenevole methodsFor: 'rendering'!
+!FdJWidgetBenevole methodsFor: 'rendering'!
 
 remove
 	div asJQuery remove
 !
 
+renderIdentiteOn: html
+	^ html div class: 'identite';
+		with: [ html div class: 'prenom'.
+				html div class: 'nom' ]
+!
+
 renderOn: html
-	div := html div class: 'benevole';
-		with: [
-			html div class: 'identite';
-				with: [ html div class: 'prenom'.
-						html div class: 'nom' ]
-					]
+	div := html div class: 'benevole'.
+	div with: (self renderIdentiteOn: html)
 ! !
 

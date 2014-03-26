@@ -34,6 +34,10 @@ initialize
 	w appendToJQuery: 'body' asJQuery
 ! !
 
+Object subclass: #FdJAssociation
+	instanceVariableNames: 'nom logo'
+	package: 'Benevoles'!
+
 Object subclass: #FdJBenevole
 	instanceVariableNames: 'nom prenom assoc tshirt etat'
 	package: 'Benevoles'!
@@ -74,13 +78,13 @@ remove
 !
 
 renderIdentiteOn: html
-	^ html div class: 'identite';
+	html div class: 'identite';
 		with: [ html div class: 'prenom'.
 				html div class: 'nom' ]
 !
 
 renderOn: html
 	div := html div class: 'benevole'.
-	div with: (self renderIdentiteOn: html)
+	div with: [ self renderIdentiteOn: html ]
 ! !
 

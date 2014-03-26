@@ -1,4 +1,4 @@
-define("benevoles/Benevoles", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Web", "amber_core/Kernel-Announcements"], function(smalltalk,nil,_st, globals){
+define("benevoles/Benevoles", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Announcements", "amber_core/Kernel-Objects", "amber_core/Web"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Benevoles');
 smalltalk.packages["Benevoles"].transport = {"type":"amd","amdNamespace":"benevoles"};
 
@@ -84,6 +84,9 @@ globals.FdJApplication);
 
 
 
+smalltalk.addClass('FdJAssociation', globals.Object, ['nom', 'logo'], 'Benevoles');
+
+
 smalltalk.addClass('FdJBenevole', globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'etat'], 'Benevoles');
 globals.FdJBenevole.comment="tshirt: un TShirt\x0aetat: pas encore venu, en cours de traitement, terminé";
 smalltalk.addMethod(
@@ -141,24 +144,22 @@ protocol: 'rendering',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$4,$3,$1;
-$2=_st(html)._div();
+var $1,$3,$2;
+$1=_st(html)._div();
 $ctx1.sendIdx["div"]=1;
-_st($2)._class_("identite");
+_st($1)._class_("identite");
 $ctx1.sendIdx["class:"]=1;
-$3=_st($2)._with_((function(){
+$2=_st($1)._with_((function(){
 return smalltalk.withContext(function($ctx2) {
-$4=_st(html)._div();
+$3=_st(html)._div();
 $ctx2.sendIdx["div"]=2;
-_st($4)._class_("prenom");
+_st($3)._class_("prenom");
 $ctx2.sendIdx["class:"]=2;
 return _st(_st(html)._div())._class_("nom");
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$1=$3;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"renderIdentiteOn:",{html:html},globals.FdJWidgetBenevole)})},
+return self}, function($ctx1) {$ctx1.fill(self,"renderIdentiteOn:",{html:html},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderIdentiteOn: html\x0a\x09^ html div class: 'identite';\x0a\x09\x09with: [ html div class: 'prenom'.\x0a\x09\x09\x09\x09html div class: 'nom' ]",
+source: "renderIdentiteOn: html\x0a\x09html div class: 'identite';\x0a\x09\x09with: [ html div class: 'prenom'.\x0a\x09\x09\x09\x09html div class: 'nom' ]",
 messageSends: ["class:", "div", "with:"],
 referencedClasses: []
 }),
@@ -172,10 +173,13 @@ fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self["@div"]=_st(_st(html)._div())._class_("benevole");
-_st(self["@div"])._with_(self._renderIdentiteOn_(html));
+_st(self["@div"])._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._renderIdentiteOn_(html);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09div := html div class: 'benevole'.\x0a\x09div with: (self renderIdentiteOn: html)",
+source: "renderOn: html\x0a\x09div := html div class: 'benevole'.\x0a\x09div with: [ self renderIdentiteOn: html ]",
 messageSends: ["class:", "div", "with:", "renderIdentiteOn:"],
 referencedClasses: []
 }),

@@ -1,0 +1,25 @@
+body {
+    font-family: Lucida Grande, Tahoma, sans-serif;
+}
+.benevole {
+    width: 30%;
+    padding: 5px;
+    border: solid;
+    border-radius: 10px;
+    font-size: 200%;
+}
+.prenom {
+    display:inline;
+    margin: 5px;
+}
+.nom {
+    display:inline;
+    margin: 5px;
+    font-size: 80%;
+}
+.association {
+    display:inline;
+    margin: 5px;
+    font-size: 80%;
+    font-style:italic;
+}

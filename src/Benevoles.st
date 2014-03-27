@@ -106,8 +106,19 @@ prenom: chaine
 exemple
 	^ self new nom: 'OSELE';
 			 prenom: 'Vincent';
-			 association: (FdJAssociation test);
+			 association: (FdJAssociation exemple);
 			 yourself
+!
+
+exemples
+	| benevoles association |
+	benevoles := Array new.
+	association := FdJAssociation exemple
+	benevoles add: self exemple.
+	benevoles add: self new nom: 'DUPOND';
+			 prenom: 'Gérard';
+			 association: association.
+	^ benevoles
 ! !
 
 Object subclass: #FdJBenevoles
@@ -202,14 +213,33 @@ renderAssociationOn: html
 !
 
 renderIdentiteOn: html
-	html div class: 'identite';
-		with: [ html div class: 'prenom'; with: benevole prenom.
+	div := html div class: 'identite'.
+	div with: [ html div class: 'prenom'; with: benevole prenom.
 				html div class: 'nom'; with: benevole nom]
 !
 
 renderOn: html
-	div := html div class: 'benevole'.
-	div with: [ self renderIdentiteOn: html.
+	html div class: 'benevole';
+		with: [ self renderIdentiteOn: html.
 				self renderAssociationOn: html]
+! !
+
+Widget subclass: #FdJWidgetBenevoles
+	instanceVariableNames: 'benevoles'
+	package: 'Benevoles'!
+
+!FdJWidgetBenevoles methodsFor: 'as yet unclassified'!
+
+associe: desBenevoles
+	benevoles := desBenevoles
+!
+
+renderBenevolesOn: html
+	benevoles do: [ :b | b renderOn: html ]
+!
+
+renderOn: html
+	html div class: 'benevoles';
+		with: [ self renderBenevolesOn: html]
 ! !
 

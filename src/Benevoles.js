@@ -154,8 +154,8 @@ globals.FdJAssociation);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "test",
-protocol: 'as yet unclassified',
+selector: "exemple",
+protocol: 'exemples',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
@@ -165,9 +165,9 @@ _st($2)._nom_("Joc-ere");
 $3=_st($2)._yourself();
 $1=$3;
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"test",{},globals.FdJAssociation.klass)})},
+}, function($ctx1) {$ctx1.fill(self,"exemple",{},globals.FdJAssociation.klass)})},
 args: [],
-source: "test\x0a\x09\x22Genère un échantillon\x22\x0a\x0a\x09^ self new nom: 'Joc-ere'; yourself",
+source: "exemple\x0a\x09\x22Genère un échantillon\x22\x0a\x09^ self new nom: 'Joc-ere'; yourself",
 messageSends: ["nom:", "new", "yourself"],
 referencedClasses: []
 }),
@@ -294,8 +294,8 @@ globals.FdJBenevole);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "test",
-protocol: 'as yet unclassified',
+selector: "exemple",
+protocol: 'exemples',
 fn: function (){
 var self=this;
 function $FdJAssociation(){return globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
@@ -308,9 +308,9 @@ _st($2)._association_(_st($FdJAssociation())._test());
 $3=_st($2)._yourself();
 $1=$3;
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"test",{},globals.FdJBenevole.klass)})},
+}, function($ctx1) {$ctx1.fill(self,"exemple",{},globals.FdJBenevole.klass)})},
 args: [],
-source: "test\x0a\x09^ self new nom: 'OSELE';\x0a\x09\x09\x09 prenom: 'Vincent';\x0a\x09\x09\x09 association: (FdJAssociation test);\x0a\x09\x09\x09 yourself",
+source: "exemple\x0a\x09^ self new nom: 'OSELE';\x0a\x09\x09\x09 prenom: 'Vincent';\x0a\x09\x09\x09 association: (FdJAssociation test);\x0a\x09\x09\x09 yourself",
 messageSends: ["nom:", "new", "prenom:", "association:", "test", "yourself"],
 referencedClasses: ["FdJAssociation"]
 }),
@@ -325,6 +325,256 @@ smalltalk.addClass('FdJStock', globals.Object, ['tshirts'], 'Benevoles');
 
 smalltalk.addClass('FdJTShirt', globals.Object, ['type', 'taille', 'spec'], 'Benevoles');
 globals.FdJTShirt.comment="type: H(omme) ou F(emme)\x0ataille: XS, S, M...\x0aspec: vide, lsf, dv...";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "spec",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@spec"];
+return $1;
+},
+args: [],
+source: "spec\x0a\x09^ spec",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJTShirt);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "spec:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@spec"]=anObject;
+return self},
+args: ["anObject"],
+source: "spec: anObject\x0a\x09spec := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJTShirt);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "taille",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@taille"];
+return $1;
+},
+args: [],
+source: "taille\x0a\x09^ taille",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJTShirt);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "taille:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@taille"]=anObject;
+return self},
+args: ["anObject"],
+source: "taille: anObject\x0a\x09taille := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJTShirt);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "type",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@type"];
+return $1;
+},
+args: [],
+source: "type\x0a\x09^ type",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJTShirt);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "type:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@type"]=anObject;
+return self},
+args: ["anObject"],
+source: "type: anObject\x0a\x09type := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJTShirt);
+
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "h3xl",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$1;
+$2=self._new();
+_st($2)._type_("H");
+_st($2)._taille_("X3L");
+$3=_st($2)._yourself();
+$1=$3;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"h3xl",{},globals.FdJTShirt.klass)})},
+args: [],
+source: "h3xl\x0a\x09^ self new type: #H; taille: #X3L; yourself",
+messageSends: ["type:", "new", "taille:", "yourself"],
+referencedClasses: []
+}),
+globals.FdJTShirt.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hl",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$1;
+$2=self._new();
+_st($2)._type_("H");
+_st($2)._taille_("L");
+$3=_st($2)._yourself();
+$1=$3;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"hl",{},globals.FdJTShirt.klass)})},
+args: [],
+source: "hl\x0a\x09^ self new type: #H; taille: #L; yourself",
+messageSends: ["type:", "new", "taille:", "yourself"],
+referencedClasses: []
+}),
+globals.FdJTShirt.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hm",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$1;
+$2=self._new();
+_st($2)._type_("H");
+_st($2)._taille_("M");
+$3=_st($2)._yourself();
+$1=$3;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"hm",{},globals.FdJTShirt.klass)})},
+args: [],
+source: "hm\x0a\x09^ self new type: #H; taille: #M; yourself",
+messageSends: ["type:", "new", "taille:", "yourself"],
+referencedClasses: []
+}),
+globals.FdJTShirt.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hs",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$1;
+$2=self._new();
+_st($2)._type_("H");
+_st($2)._taille_("S");
+$3=_st($2)._yourself();
+$1=$3;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"hs",{},globals.FdJTShirt.klass)})},
+args: [],
+source: "hs\x0a\x09^ self new type: #H; taille: #S; yourself",
+messageSends: ["type:", "new", "taille:", "yourself"],
+referencedClasses: []
+}),
+globals.FdJTShirt.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hxl",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$1;
+$2=self._new();
+_st($2)._type_("H");
+_st($2)._taille_("XL");
+$3=_st($2)._yourself();
+$1=$3;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"hxl",{},globals.FdJTShirt.klass)})},
+args: [],
+source: "hxl\x0a\x09^ self new type: #H; taille: #XL; yourself",
+messageSends: ["type:", "new", "taille:", "yourself"],
+referencedClasses: []
+}),
+globals.FdJTShirt.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hxs",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$1;
+$2=self._new();
+_st($2)._type_("H");
+_st($2)._taille_("XS");
+$3=_st($2)._yourself();
+$1=$3;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"hxs",{},globals.FdJTShirt.klass)})},
+args: [],
+source: "hxs\x0a\x09^ self new type: #H; taille: #XS; yourself",
+messageSends: ["type:", "new", "taille:", "yourself"],
+referencedClasses: []
+}),
+globals.FdJTShirt.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "hxxl",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$3,$1;
+$2=self._new();
+_st($2)._type_("H");
+_st($2)._taille_("XXL");
+$3=_st($2)._yourself();
+$1=$3;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"hxxl",{},globals.FdJTShirt.klass)})},
+args: [],
+source: "hxxl\x0a\x09^ self new type: #H; taille: #XXL; yourself",
+messageSends: ["type:", "new", "taille:", "yourself"],
+referencedClasses: []
+}),
+globals.FdJTShirt.klass);
 
 
 smalltalk.addClass('FdJWidgetBenevole', globals.Widget, ['benevole', 'div'], 'Benevoles');

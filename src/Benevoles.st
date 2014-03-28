@@ -18,20 +18,21 @@ new
 ! !
 
 Object subclass: #FdJApplication
-	instanceVariableNames: 'w'
+	instanceVariableNames: 'benevoles w'
 	package: 'Benevoles'!
 
 !FdJApplication methodsFor: 'initialization'!
 
-clear
-	w remove
-!
-
 initialize
+	| liste |
 	super initialize.
+	
+	benevoles := FdJBenevole exemples.
+	
+	FdJSelectionneur new appendToJQuery: 'body' asJQuery.
 
-	w := FdJWidgetBenevole new.
-	w associe: FdJBenevole test.
+	"liste := benevoles collect: [ :b | FdJWidgetBenevole new associe: b. ]."
+	w := FdJWidgetBenevoles new.
 	w appendToJQuery: 'body' asJQuery
 ! !
 
@@ -113,11 +114,14 @@ exemple
 exemples
 	| benevoles association |
 	benevoles := Array new.
-	association := FdJAssociation exemple
+	association := FdJAssociation exemple.
 	benevoles add: self exemple.
-	benevoles add: self new nom: 'DUPOND';
+	benevoles add: (self new nom: 'DUPOND';
 			 prenom: 'Gérard';
-			 association: association.
+			 association: association).
+	benevoles add: (self new nom: 'MEILLEIS';
+			 prenom: 'George';
+			 association: association).
 	^ benevoles
 ! !
 
@@ -203,29 +207,29 @@ associe: unBenevole
 	benevole := unBenevole
 !
 
-remove
-	div asJQuery remove
-!
-
 renderAssociationOn: html
 	html div class: 'association';
 		with: benevole association nom
 !
 
 renderIdentiteOn: html
-	div := html div class: 'identite'.
-	div with: [ html div class: 'prenom'; with: benevole prenom.
+	html div class: 'identite';
+		with: [ html div class: 'prenom'; with: benevole prenom.
 				html div class: 'nom'; with: benevole nom]
 !
 
 renderOn: html
-	html div class: 'benevole';
-		with: [ self renderIdentiteOn: html.
+	div := html div class: 'benevole'.
+	div with: [ self renderIdentiteOn: html.
 				self renderAssociationOn: html]
+!
+
+supprime
+	div asJQuery remove
 ! !
 
 Widget subclass: #FdJWidgetBenevoles
-	instanceVariableNames: 'benevoles'
+	instanceVariableNames: 'benevoles div'
 	package: 'Benevoles'!
 
 !FdJWidgetBenevoles methodsFor: 'as yet unclassified'!
@@ -239,7 +243,37 @@ renderBenevolesOn: html
 !
 
 renderOn: html
-	html div class: 'benevoles';
-		with: [ self renderBenevolesOn: html]
+	div := html div class: 'benevoles'.
+	div with: [ self renderBenevolesOn: html]
+!
+
+supprime
+	"supprime le tag de base"
+	div asJQuery remove
+!
+
+vide
+	"supprime les widgets Benevole mais laisse la racine"
+	benevoles do: [ :b | b supprime ]
+! !
+
+!FdJWidgetBenevoles methodsFor: 'initialization'!
+
+initialize
+	super initialize.
+
+	benevoles := #()
+! !
+
+Widget subclass: #FdJWidgetSelectionneur
+	instanceVariableNames: 'div'
+	package: 'Benevoles'!
+
+!FdJWidgetSelectionneur methodsFor: 'as yet unclassified'!
+
+renderOn: html
+	| i |
+	i := html input class: 'selectionneur'.
+	i onKeyUp: [ Transcript show: i; cr ]
 ! !
 

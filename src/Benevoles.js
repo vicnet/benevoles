@@ -46,7 +46,7 @@ referencedClasses: []
 globals.FdJAnnonceur.klass);
 
 
-smalltalk.addClass('FdJApplication', globals.Object, ['benevoles', 'w'], 'Benevoles');
+smalltalk.addClass('FdJApplication', globals.Object, ['benevoles', 'selectionneur'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "filter:",
@@ -59,11 +59,11 @@ selectionnes=_st(self["@benevoles"])._select_((function(b){
 return smalltalk.withContext(function($ctx2) {
 return _st(_st(b)._nom())._includesSubString_(texte);
 }, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
-_st(self["@w"])._associe_(selectionnes);
+_st(self["@selectionneur"])._selectionne_(selectionnes);
 return self}, function($ctx1) {$ctx1.fill(self,"filter:",{texte:texte,selectionnes:selectionnes},globals.FdJApplication)})},
 args: ["texte"],
-source: "filter: texte\x0a\x09| selectionnes |\x0a\x09selectionnes := benevoles select: [ :b | b nom includesSubString: texte].\x0a\x09w associe: selectionnes",
-messageSends: ["select:", "includesSubString:", "nom", "associe:"],
+source: "filter: texte\x0a\x09| selectionnes |\x0a\x09selectionnes := benevoles select: [ :b | b nom includesSubString: texte].\x0a\x09selectionneur selectionne: selectionnes",
+messageSends: ["select:", "includesSubString:", "nom", "selectionne:"],
 referencedClasses: []
 }),
 globals.FdJApplication);
@@ -77,26 +77,35 @@ var self=this;
 var liste;
 function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
 function $FdJWidgetSelectionneur(){return globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
-function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4;
+var $1,$2;
 globals.FdJApplication.superclass.fn.prototype._initialize.apply(_st(self), []);
 self["@benevoles"]=_st($FdJBenevole())._exemples();
-$1=_st($FdJWidgetSelectionneur())._new();
-$ctx1.sendIdx["new"]=1;
-$2=$1;
-$3="body"._asJQuery();
-$ctx1.sendIdx["asJQuery"]=1;
-_st($2)._appendToJQuery_($3);
-$ctx1.sendIdx["appendToJQuery:"]=1;
-$4=_st($1)._presentateur_(self);
-self["@w"]=_st($FdJWidgetBenevoles())._new();
-_st(self["@w"])._appendToJQuery_("body"._asJQuery());
+self["@selectionneur"]=_st($FdJWidgetSelectionneur())._new();
+$1=self["@selectionneur"];
+_st($1)._appendToJQuery_("body"._asJQuery());
+$2=_st($1)._presentateur_(self);
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{liste:liste},globals.FdJApplication)})},
 args: [],
-source: "initialize\x0a\x09| liste |\x0a\x09super initialize.\x0a\x09\x0a\x09benevoles := FdJBenevole exemples.\x0a\x09\x0a\x09FdJWidgetSelectionneur new\x0a\x09\x09appendToJQuery: 'body' asJQuery;\x0a\x09\x09presentateur: self.\x0a\x0a\x09\x22liste := benevoles collect: [ :b | FdJWidgetBenevole new associe: b. ].\x22\x0a\x09w := FdJWidgetBenevoles new.\x0a\x09w appendToJQuery: 'body' asJQuery",
-messageSends: ["initialize", "exemples", "appendToJQuery:", "new", "asJQuery", "presentateur:"],
-referencedClasses: ["FdJBenevole", "FdJWidgetSelectionneur", "FdJWidgetBenevoles"]
+source: "initialize\x0a\x09| liste |\x0a\x09super initialize.\x0a\x09\x0a\x09benevoles := FdJBenevole exemples.\x0a\x09\x0a\x09selectionneur := FdJWidgetSelectionneur new.\x0a\x09selectionneur appendToJQuery: 'body' asJQuery;\x0a\x09\x09\x09\x09  presentateur: self",
+messageSends: ["initialize", "exemples", "new", "appendToJQuery:", "asJQuery", "presentateur:"],
+referencedClasses: ["FdJBenevole", "FdJWidgetSelectionneur"]
+}),
+globals.FdJApplication);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "termine",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self["@selectionneur"])._supprime();
+return self}, function($ctx1) {$ctx1.fill(self,"termine",{},globals.FdJApplication)})},
+args: [],
+source: "termine\x0a\x09selectionneur supprime",
+messageSends: ["supprime"],
+referencedClasses: []
 }),
 globals.FdJApplication);
 
@@ -879,7 +888,7 @@ globals.FdJWidgetBenevoles);
 
 
 
-smalltalk.addClass('FdJWidgetSelectionneur', globals.Widget, ['presentateur'], 'Benevoles');
+smalltalk.addClass('FdJWidgetSelectionneur', globals.Widget, ['presentateur', 'div', 'liste'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "presentateur:",
@@ -902,16 +911,63 @@ protocol: 'as yet unclassified',
 fn: function (html){
 var self=this;
 var input;
+function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 return smalltalk.withContext(function($ctx1) { 
-input=_st(_st(html)._input())._class_("selectionneur");
-_st(input)._onKeyUp_((function(){
+self["@div"]=_st(_st(html)._div())._class_("selectionneur");
+_st(self["@div"])._with_((function(){
 return smalltalk.withContext(function($ctx2) {
+input=_st(html)._input();
+input;
+_st(input)._onKeyUp_((function(){
+return smalltalk.withContext(function($ctx3) {
 return _st(self["@presentateur"])._filter_(_st(_st(input)._asJQuery())._val());
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+self["@liste"]=_st($FdJWidgetBenevoles())._new();
+self["@liste"];
+return _st(self["@liste"])._renderOn_(html);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html,input:input},globals.FdJWidgetSelectionneur)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09| input |\x0a\x09input := html input class: 'selectionneur'.\x0a\x09input onKeyUp: [ presentateur filter: (input asJQuery val) ]",
-messageSends: ["class:", "input", "onKeyUp:", "filter:", "val", "asJQuery"],
+source: "renderOn: html\x0a\x09| input |\x0a\x09div := html div class: 'selectionneur'.\x0a\x09div with: [\x0a\x09\x09input := html input.\x0a\x09\x09input onKeyUp: [ presentateur filter: (input asJQuery val) ].\x0a\x09\x09\x0a\x09\x09liste := FdJWidgetBenevoles new.\x0a\x09\x09liste renderOn: html ]",
+messageSends: ["class:", "div", "with:", "input", "onKeyUp:", "filter:", "val", "asJQuery", "new", "renderOn:"],
+referencedClasses: ["FdJWidgetBenevoles"]
+}),
+globals.FdJWidgetSelectionneur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "selectionne:",
+protocol: 'as yet unclassified',
+fn: function (benevoles){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self["@liste"])._associe_(benevoles);
+return self}, function($ctx1) {$ctx1.fill(self,"selectionne:",{benevoles:benevoles},globals.FdJWidgetSelectionneur)})},
+args: ["benevoles"],
+source: "selectionne: benevoles\x0a\x09liste associe: benevoles",
+messageSends: ["associe:"],
+referencedClasses: []
+}),
+globals.FdJWidgetSelectionneur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "supprime",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$receiver;
+$1=self["@div"];
+if(($receiver = $1) == nil || $receiver == null){
+$1;
+} else {
+_st(_st(self["@div"])._asJQuery())._remove();
+};
+return self}, function($ctx1) {$ctx1.fill(self,"supprime",{},globals.FdJWidgetSelectionneur)})},
+args: [],
+source: "supprime\x0a\x09div ifNotNil: [ div asJQuery remove ]",
+messageSends: ["ifNotNil:", "remove", "asJQuery"],
 referencedClasses: []
 }),
 globals.FdJWidgetSelectionneur);

@@ -23,3 +23,15 @@ body {
     font-size: 80%;
     font-style:italic;
 }
+.selectionneur input {
+    width: 30%;
+    padding: 5px;
+    font-size: 120%;
+}
+.selectionneur .benevole {
+    font-size: 120%;
+}
+/*
+.selectionneur .association {
+    display:block;
+}*/

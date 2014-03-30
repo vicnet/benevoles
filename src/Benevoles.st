@@ -23,13 +23,21 @@ Object subclass: #FdJApplication
 
 !FdJApplication methodsFor: 'initialization'!
 
+filter: texte
+	| selectionnes |
+	selectionnes := benevoles select: [ :b | b nom includesSubString: texte].
+	w associe: selectionnes
+!
+
 initialize
 	| liste |
 	super initialize.
 	
 	benevoles := FdJBenevole exemples.
 	
-	FdJSelectionneur new appendToJQuery: 'body' asJQuery.
+	FdJWidgetSelectionneur new
+		appendToJQuery: 'body' asJQuery;
+		presentateur: self.
 
 	"liste := benevoles collect: [ :b | FdJWidgetBenevole new associe: b. ]."
 	w := FdJWidgetBenevoles new.
@@ -225,7 +233,7 @@ renderOn: html
 !
 
 supprime
-	div asJQuery remove
+	div ifNotNil: [ div asJQuery remove ]
 ! !
 
 Widget subclass: #FdJWidgetBenevoles
@@ -235,7 +243,9 @@ Widget subclass: #FdJWidgetBenevoles
 !FdJWidgetBenevoles methodsFor: 'as yet unclassified'!
 
 associe: desBenevoles
-	benevoles := desBenevoles
+	self vide.
+	benevoles := desBenevoles collect: [ :b | FdJWidgetBenevole new associe: b; yourself ].
+	div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]
 !
 
 renderBenevolesOn: html
@@ -254,7 +264,8 @@ supprime
 
 vide
 	"supprime les widgets Benevole mais laisse la racine"
-	benevoles do: [ :b | b supprime ]
+	benevoles do: [ :b | b supprime ].
+	benevoles = #()
 ! !
 
 !FdJWidgetBenevoles methodsFor: 'initialization'!
@@ -266,14 +277,18 @@ initialize
 ! !
 
 Widget subclass: #FdJWidgetSelectionneur
-	instanceVariableNames: 'div'
+	instanceVariableNames: 'presentateur'
 	package: 'Benevoles'!
 
 !FdJWidgetSelectionneur methodsFor: 'as yet unclassified'!
 
+presentateur: unPresentateur
+	presentateur := unPresentateur
+!
+
 renderOn: html
-	| i |
-	i := html input class: 'selectionneur'.
-	i onKeyUp: [ Transcript show: i; cr ]
+	| input |
+	input := html input class: 'selectionneur'.
+	input onKeyUp: [ presentateur filter: (input asJQuery val) ]
 ! !
 

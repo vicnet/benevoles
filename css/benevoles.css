@@ -9,16 +9,15 @@ body {
     font-size: 200%;
 }
 .prenom {
-    display:inline;
     margin: 5px;
+    display: inline;
 }
 .nom {
-    display:inline;
+    display: inline;
     margin: 5px;
     font-size: 80%;
 }
 .association {
-    display:inline;
     margin: 5px;
     font-size: 80%;
     font-style:italic;
@@ -31,7 +30,9 @@ body {
 .selectionneur .benevole {
     font-size: 120%;
 }
-/*
+.selectionneur .identite {
+    display: inline;
+}
 .selectionneur .association {
-    display:block;
-}*/
+    display:inline;
+}

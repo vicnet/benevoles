@@ -18,12 +18,12 @@ new
 ! !
 
 Object subclass: #FdJApplication
-	instanceVariableNames: 'benevoles selectionneur'
+	instanceVariableNames: 'benevoles selectionneur distributeur'
 	package: 'Benevoles'!
 
 !FdJApplication methodsFor: 'initialization'!
 
-filter: texte
+filtre: texte
 	| selectionnes |
 	selectionnes := benevoles select: [ :b | b nom includesSubString: texte].
 	selectionneur selectionne: selectionnes
@@ -35,13 +35,24 @@ initialize
 	
 	benevoles := FdJBenevole exemples.
 	
-	selectionneur := FdJWidgetSelectionneur new.
-	selectionneur appendToJQuery: 'body' asJQuery;
-				  presentateur: self
+	selectionneur := FdJWidgetSelectionneur	new
+		presentateur: self;
+		appendToJQuery: 'body' asJQuery.
+	
+	distributeur := FdJWidgetBenevoles new
+		presentateur: self;
+		appendToJQuery: 'body' asJQuery.
+
+	self filtre: 'OS'
+!
+
+selectionne: benevole
+	distributeur associe: #(benevole)
 !
 
 termine
-	selectionneur supprime
+	selectionneur supprime.
+	distributeur termine
 ! !
 
 Object subclass: #FdJAssociation
@@ -206,13 +217,17 @@ hxxl
 ! !
 
 Widget subclass: #FdJWidgetBenevole
-	instanceVariableNames: 'benevole div'
+	instanceVariableNames: 'benevole div presentateur'
 	package: 'Benevoles'!
 
 !FdJWidgetBenevole methodsFor: 'rendering'!
 
 associe: unBenevole
 	benevole := unBenevole
+!
+
+presentateur: unPresentateur
+	presentateur := unPresentateur
 !
 
 renderAssociationOn: html
@@ -229,7 +244,8 @@ renderIdentiteOn: html
 renderOn: html
 	div := html div class: 'benevole'.
 	div with: [ self renderIdentiteOn: html.
-				self renderAssociationOn: html]
+				self renderAssociationOn: html].
+	div onClick: [ presentateur selectionne: benevole ]
 !
 
 supprime
@@ -237,15 +253,24 @@ supprime
 ! !
 
 Widget subclass: #FdJWidgetBenevoles
-	instanceVariableNames: 'benevoles div'
+	instanceVariableNames: 'benevoles div presentateur'
 	package: 'Benevoles'!
 
 !FdJWidgetBenevoles methodsFor: 'as yet unclassified'!
 
 associe: desBenevoles
+	"liste de modele Benevole"
 	self vide.
-	benevoles := desBenevoles collect: [ :b | FdJWidgetBenevole new associe: b; yourself ].
+	benevoles := desBenevoles collect: [ :b |
+		FdJWidgetBenevole new
+			presentateur: presentateur;
+			associe: b;
+			yourself ].
 	div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]
+!
+
+presentateur: unPresentateur
+	presentateur := unPresentateur
 !
 
 renderBenevolesOn: html
@@ -291,9 +316,10 @@ renderOn: html
 	div := html div class: 'selectionneur'.
 	div with: [
 		input := html input.
-		input onKeyUp: [ presentateur filter: (input asJQuery val) ].
+		input onKeyUp: [ presentateur filtre: (input asJQuery val) ].
 		
 		liste := FdJWidgetBenevoles new.
+		liste presentateur: presentateur.
 		liste renderOn: html ]
 !
 

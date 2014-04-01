@@ -25,7 +25,7 @@ Object subclass: #FdJApplication
 
 filtre: texte
 	| selectionnes |
-	selectionnes := benevoles select: [ :b | b nom includesSubString: texte].
+	selectionnes := benevoles select: [ :b | b estDisponible & (b nom includesSubString: texte)].
 	selectionneur selectionne: selectionnes
 !
 
@@ -47,12 +47,14 @@ initialize
 !
 
 selectionne: benevole
-	distributeur associe: #(benevole)
+	benevole encours.
+	self filtre: (selectionneur filtre).
+	distributeur ajoute: benevole
 !
 
 termine
 	selectionneur supprime.
-	distributeur termine
+	distributeur supprime
 ! !
 
 Object subclass: #FdJAssociation
@@ -88,12 +90,12 @@ Object subclass: #FdJBenevole
 	instanceVariableNames: 'nom prenom assoc tshirt etat'
 	package: 'Benevoles'!
 !FdJBenevole commentStamp!
-tshirt: un TShirt
-etat: pas encore venu, en cours de traitement, terminé!
+- tshirt: un TShirt
+- etat: pas encore venu, en cours de traitement, terminé!
 
 !FdJBenevole methodsFor: 'accessing'!
 
-announcer
+announceur
 	^ FdJAnnounceur current
 !
 
@@ -103,6 +105,26 @@ association
 
 association: uneAssoc
 	assoc := uneAssoc
+!
+
+distribue
+	etat := #distribue
+!
+
+encours
+	etat := #encours
+!
+
+estDisponible
+	^ etat==nil
+!
+
+estDistribue
+	^ etat==#distribue
+!
+
+estEncours
+	^ etat==#encours
 !
 
 nom
@@ -258,15 +280,23 @@ Widget subclass: #FdJWidgetBenevoles
 
 !FdJWidgetBenevoles methodsFor: 'as yet unclassified'!
 
+ajoute: unBenevole
+	benevoles add: (self creeWidget: unBenevole).
+	self update
+!
+
 associe: desBenevoles
 	"liste de modele Benevole"
 	self vide.
-	benevoles := desBenevoles collect: [ :b |
-		FdJWidgetBenevole new
+	benevoles := desBenevoles collect: [ :b | self creeWidget: b ].
+	self update
+!
+
+creeWidget: unBenevole
+	^ FdJWidgetBenevole new
 			presentateur: presentateur;
-			associe: b;
-			yourself ].
-	div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]
+			associe: unBenevole;
+			yourself
 !
 
 presentateur: unPresentateur
@@ -287,6 +317,10 @@ supprime
 	div asJQuery remove
 !
 
+update
+	div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]
+!
+
 vide
 	"supprime les widgets Benevole mais laisse la racine"
 	benevoles do: [ :b | b supprime ].
@@ -302,21 +336,24 @@ initialize
 ! !
 
 Widget subclass: #FdJWidgetSelectionneur
-	instanceVariableNames: 'presentateur div liste'
+	instanceVariableNames: 'presentateur div liste input'
 	package: 'Benevoles'!
 
 !FdJWidgetSelectionneur methodsFor: 'as yet unclassified'!
+
+filtre
+	^ input asJQuery val
+!
 
 presentateur: unPresentateur
 	presentateur := unPresentateur
 !
 
 renderOn: html
-	| input |
 	div := html div class: 'selectionneur'.
 	div with: [
 		input := html input.
-		input onKeyUp: [ presentateur filtre: (input asJQuery val) ].
+		input onKeyUp: [ presentateur filtre: (self filtre) ].
 		
 		liste := FdJWidgetBenevoles new.
 		liste presentateur: presentateur.

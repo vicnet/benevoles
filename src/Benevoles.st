@@ -47,9 +47,10 @@ initialize
 !
 
 selectionne: benevole
-	benevole encours.
-	self filtre: (selectionneur filtre).
-	distributeur ajoute: benevole
+	benevole estDisponible ifTrue: [
+		benevole encours.
+		self filtre: (selectionneur filtre).
+		distributeur ajoute: benevole ]
 !
 
 termine
@@ -238,18 +239,46 @@ hxxl
 	^ self new type: #H; taille: #XXL; yourself
 ! !
 
-Widget subclass: #FdJWidgetBenevole
-	instanceVariableNames: 'benevole div presentateur'
+Widget subclass: #FdJWidget
+	instanceVariableNames: 'presentateur widgets div'
+	package: 'Benevoles'!
+
+!FdJWidget methodsFor: 'as yet unclassified'!
+
+ajoute: unWidget
+	unWidget presentateur: presentateur.
+	widgets add: unWidget
+!
+
+initialize
+	super initialize.
+
+	widgets := #()
+!
+
+presentateur: unPresentateur
+	presentateur := unPresentateur
+!
+
+supprime
+	div ifNotNil: [ div asJQuery remove ].
+	div := nil
+!
+
+vide
+	"supprime les widgets mais laisse la racine"
+	widgets do: [ :w | w supprime ].
+	widgets := #()
+! !
+
+FdJWidget subclass: #FdJWidgetBenevole
+	instanceVariableNames: 'benevole'
 	package: 'Benevoles'!
 
 !FdJWidgetBenevole methodsFor: 'rendering'!
 
 associe: unBenevole
 	benevole := unBenevole
-!
-
-presentateur: unPresentateur
-	presentateur := unPresentateur
 !
 
 renderAssociationOn: html
@@ -268,43 +297,33 @@ renderOn: html
 	div with: [ self renderIdentiteOn: html.
 				self renderAssociationOn: html].
 	div onClick: [ presentateur selectionne: benevole ]
-!
-
-supprime
-	div ifNotNil: [ div asJQuery remove ]
 ! !
 
-Widget subclass: #FdJWidgetBenevoles
-	instanceVariableNames: 'benevoles div presentateur'
+FdJWidget subclass: #FdJWidgetBenevoles
+	instanceVariableNames: ''
 	package: 'Benevoles'!
 
 !FdJWidgetBenevoles methodsFor: 'as yet unclassified'!
 
 ajoute: unBenevole
-	benevoles add: (self creeWidget: unBenevole).
+	self creeWidget: unBenevole.
 	self update
 !
 
 associe: desBenevoles
 	"liste de modele Benevole"
 	self vide.
-	benevoles := desBenevoles collect: [ :b | self creeWidget: b ].
+	desBenevoles do: [ :b | self creeWidget: b ].
 	self update
 !
 
 creeWidget: unBenevole
-	^ FdJWidgetBenevole new
-			presentateur: presentateur;
-			associe: unBenevole;
-			yourself
-!
-
-presentateur: unPresentateur
-	presentateur := unPresentateur
+	super ajoute:
+		(FdJWidgetBenevole new associe: unBenevole)
 !
 
 renderBenevolesOn: html
-	benevoles do: [ :b | b renderOn: html ]
+	widgets do: [ :b | b renderOn: html ]
 !
 
 renderOn: html
@@ -312,41 +331,18 @@ renderOn: html
 	div with: [ self renderBenevolesOn: html]
 !
 
-supprime
-	"supprime le tag de base"
-	div asJQuery remove
-!
-
 update
 	div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]
-!
-
-vide
-	"supprime les widgets Benevole mais laisse la racine"
-	benevoles do: [ :b | b supprime ].
-	benevoles = #()
 ! !
 
-!FdJWidgetBenevoles methodsFor: 'initialization'!
-
-initialize
-	super initialize.
-
-	benevoles := #()
-! !
-
-Widget subclass: #FdJWidgetSelectionneur
-	instanceVariableNames: 'presentateur div liste input'
+FdJWidget subclass: #FdJWidgetSelectionneur
+	instanceVariableNames: 'liste input'
 	package: 'Benevoles'!
 
 !FdJWidgetSelectionneur methodsFor: 'as yet unclassified'!
 
 filtre
 	^ input asJQuery val
-!
-
-presentateur: unPresentateur
-	presentateur := unPresentateur
 !
 
 renderOn: html
@@ -362,9 +358,5 @@ renderOn: html
 
 selectionne: benevoles
 	liste associe: benevoles
-!
-
-supprime
-	div ifNotNil: [ div asJQuery remove ]
 ! !
 

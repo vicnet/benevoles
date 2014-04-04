@@ -112,13 +112,17 @@ protocol: 'initialization',
 fn: function (benevole){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(benevole)._estDisponible();
+if(smalltalk.assert($1)){
 _st(benevole)._encours();
 self._filtre_(_st(self["@selectionneur"])._filtre());
 _st(self["@distributeur"])._ajoute_(benevole);
+};
 return self}, function($ctx1) {$ctx1.fill(self,"selectionne:",{benevole:benevole},globals.FdJApplication)})},
 args: ["benevole"],
-source: "selectionne: benevole\x0a\x09benevole encours.\x0a\x09self filtre: (selectionneur filtre).\x0a\x09distributeur ajoute: benevole",
-messageSends: ["encours", "filtre:", "filtre", "ajoute:"],
+source: "selectionne: benevole\x0a\x09benevole estDisponible ifTrue: [\x0a\x09\x09benevole encours.\x0a\x09\x09self filtre: (selectionneur filtre).\x0a\x09\x09distributeur ajoute: benevole ]",
+messageSends: ["ifTrue:", "estDisponible", "encours", "filtre:", "filtre", "ajoute:"],
 referencedClasses: []
 }),
 globals.FdJApplication);
@@ -762,7 +766,103 @@ referencedClasses: []
 globals.FdJTShirt.klass);
 
 
-smalltalk.addClass('FdJWidgetBenevole', globals.Widget, ['benevole', 'div', 'presentateur'], 'Benevoles');
+smalltalk.addClass('FdJWidget', globals.Widget, ['presentateur', 'widgets', 'div'], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "ajoute:",
+protocol: 'as yet unclassified',
+fn: function (unWidget){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(unWidget)._presentateur_(self["@presentateur"]);
+_st(self["@widgets"])._add_(unWidget);
+return self}, function($ctx1) {$ctx1.fill(self,"ajoute:",{unWidget:unWidget},globals.FdJWidget)})},
+args: ["unWidget"],
+source: "ajoute: unWidget\x0a\x09unWidget presentateur: presentateur.\x0a\x09widgets add: unWidget",
+messageSends: ["presentateur:", "add:"],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initialize",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+($ctx1.supercall = true, globals.FdJWidget.superclass.fn.prototype._initialize.apply(_st(self), []));
+$ctx1.supercall = false;
+self["@widgets"]=[];
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.FdJWidget)})},
+args: [],
+source: "initialize\x0a\x09super initialize.\x0a\x0a\x09widgets := #()",
+messageSends: ["initialize"],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "presentateur:",
+protocol: 'as yet unclassified',
+fn: function (unPresentateur){
+var self=this;
+self["@presentateur"]=unPresentateur;
+return self},
+args: ["unPresentateur"],
+source: "presentateur: unPresentateur\x0a\x09presentateur := unPresentateur",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "supprime",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$receiver;
+$1=self["@div"];
+if(($receiver = $1) == null || $receiver.isNil){
+$1;
+} else {
+_st(_st(self["@div"])._asJQuery())._remove();
+};
+self["@div"]=nil;
+return self}, function($ctx1) {$ctx1.fill(self,"supprime",{},globals.FdJWidget)})},
+args: [],
+source: "supprime\x0a\x09div ifNotNil: [ div asJQuery remove ].\x0a\x09div := nil",
+messageSends: ["ifNotNil:", "remove", "asJQuery"],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "vide",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self["@widgets"])._do_((function(w){
+return smalltalk.withContext(function($ctx2) {
+return _st(w)._supprime();
+}, function($ctx2) {$ctx2.fillBlock({w:w},$ctx1,1)})}));
+self["@widgets"]=[];
+return self}, function($ctx1) {$ctx1.fill(self,"vide",{},globals.FdJWidget)})},
+args: [],
+source: "vide\x0a\x09\x22supprime les widgets mais laisse la racine\x22\x0a\x09widgets do: [ :w | w supprime ].\x0a\x09widgets := #()",
+messageSends: ["do:", "supprime"],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+
+
+smalltalk.addClass('FdJWidgetBenevole', globals.FdJWidget, ['benevole'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "associe:",
@@ -773,21 +873,6 @@ self["@benevole"]=unBenevole;
 return self},
 args: ["unBenevole"],
 source: "associe: unBenevole\x0a\x09benevole := unBenevole",
-messageSends: [],
-referencedClasses: []
-}),
-globals.FdJWidgetBenevole);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "presentateur:",
-protocol: 'rendering',
-fn: function (unPresentateur){
-var self=this;
-self["@presentateur"]=unPresentateur;
-return self},
-args: ["unPresentateur"],
-source: "presentateur: unPresentateur\x0a\x09presentateur := unPresentateur",
 messageSends: [],
 referencedClasses: []
 }),
@@ -872,31 +957,9 @@ referencedClasses: []
 }),
 globals.FdJWidgetBenevole);
 
-smalltalk.addMethod(
-smalltalk.method({
-selector: "supprime",
-protocol: 'rendering',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$receiver;
-$1=self["@div"];
-if(($receiver = $1) == nil || $receiver == null){
-$1;
-} else {
-_st(_st(self["@div"])._asJQuery())._remove();
-};
-return self}, function($ctx1) {$ctx1.fill(self,"supprime",{},globals.FdJWidgetBenevole)})},
-args: [],
-source: "supprime\x0a\x09div ifNotNil: [ div asJQuery remove ]",
-messageSends: ["ifNotNil:", "remove", "asJQuery"],
-referencedClasses: []
-}),
-globals.FdJWidgetBenevole);
 
 
-
-smalltalk.addClass('FdJWidgetBenevoles', globals.Widget, ['benevoles', 'div', 'presentateur'], 'Benevoles');
+smalltalk.addClass('FdJWidgetBenevoles', globals.FdJWidget, [], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "ajoute:",
@@ -904,12 +967,12 @@ protocol: 'as yet unclassified',
 fn: function (unBenevole){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@benevoles"])._add_(self._creeWidget_(unBenevole));
+self._creeWidget_(unBenevole);
 self._update();
 return self}, function($ctx1) {$ctx1.fill(self,"ajoute:",{unBenevole:unBenevole},globals.FdJWidgetBenevoles)})},
 args: ["unBenevole"],
-source: "ajoute: unBenevole\x0a\x09benevoles add: (self creeWidget: unBenevole).\x0a\x09self update",
-messageSends: ["add:", "creeWidget:", "update"],
+source: "ajoute: unBenevole\x0a\x09self creeWidget: unBenevole.\x0a\x09self update",
+messageSends: ["creeWidget:", "update"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevoles);
@@ -922,15 +985,15 @@ fn: function (desBenevoles){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 self._vide();
-self["@benevoles"]=_st(desBenevoles)._collect_((function(b){
+_st(desBenevoles)._do_((function(b){
 return smalltalk.withContext(function($ctx2) {
 return self._creeWidget_(b);
 }, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
 self._update();
 return self}, function($ctx1) {$ctx1.fill(self,"associe:",{desBenevoles:desBenevoles},globals.FdJWidgetBenevoles)})},
 args: ["desBenevoles"],
-source: "associe: desBenevoles\x0a\x09\x22liste de modele Benevole\x22\x0a\x09self vide.\x0a\x09benevoles := desBenevoles collect: [ :b | self creeWidget: b ].\x0a\x09self update",
-messageSends: ["vide", "collect:", "creeWidget:", "update"],
+source: "associe: desBenevoles\x0a\x09\x22liste de modele Benevole\x22\x0a\x09self vide.\x0a\x09desBenevoles do: [ :b | self creeWidget: b ].\x0a\x09self update",
+messageSends: ["vide", "do:", "creeWidget:", "update"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevoles);
@@ -943,50 +1006,13 @@ fn: function (unBenevole){
 var self=this;
 function $FdJWidgetBenevole(){return globals.FdJWidgetBenevole||(typeof FdJWidgetBenevole=="undefined"?nil:FdJWidgetBenevole)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=_st($FdJWidgetBenevole())._new();
-_st($2)._presentateur_(self["@presentateur"]);
-_st($2)._associe_(unBenevole);
-$3=_st($2)._yourself();
-$1=$3;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"creeWidget:",{unBenevole:unBenevole},globals.FdJWidgetBenevoles)})},
+($ctx1.supercall = true, globals.FdJWidgetBenevoles.superclass.fn.prototype._ajoute_.apply(_st(self), [_st(_st($FdJWidgetBenevole())._new())._associe_(unBenevole)]));
+$ctx1.supercall = false;
+return self}, function($ctx1) {$ctx1.fill(self,"creeWidget:",{unBenevole:unBenevole},globals.FdJWidgetBenevoles)})},
 args: ["unBenevole"],
-source: "creeWidget: unBenevole\x0a\x09^ FdJWidgetBenevole new\x0a\x09\x09\x09presentateur: presentateur;\x0a\x09\x09\x09associe: unBenevole;\x0a\x09\x09\x09yourself",
-messageSends: ["presentateur:", "new", "associe:", "yourself"],
+source: "creeWidget: unBenevole\x0a\x09super ajoute:\x0a\x09\x09(FdJWidgetBenevole new associe: unBenevole)",
+messageSends: ["ajoute:", "associe:", "new"],
 referencedClasses: ["FdJWidgetBenevole"]
-}),
-globals.FdJWidgetBenevoles);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "initialize",
-protocol: 'initialization',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-globals.FdJWidgetBenevoles.superclass.fn.prototype._initialize.apply(_st(self), []);
-self["@benevoles"]=[];
-return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.FdJWidgetBenevoles)})},
-args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x0a\x09benevoles := #()",
-messageSends: ["initialize"],
-referencedClasses: []
-}),
-globals.FdJWidgetBenevoles);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "presentateur:",
-protocol: 'as yet unclassified',
-fn: function (unPresentateur){
-var self=this;
-self["@presentateur"]=unPresentateur;
-return self},
-args: ["unPresentateur"],
-source: "presentateur: unPresentateur\x0a\x09presentateur := unPresentateur",
-messageSends: [],
-referencedClasses: []
 }),
 globals.FdJWidgetBenevoles);
 
@@ -997,13 +1023,13 @@ protocol: 'as yet unclassified',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@benevoles"])._do_((function(b){
+_st(self["@widgets"])._do_((function(b){
 return smalltalk.withContext(function($ctx2) {
 return _st(b)._renderOn_(html);
 }, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"renderBenevolesOn:",{html:html},globals.FdJWidgetBenevoles)})},
 args: ["html"],
-source: "renderBenevolesOn: html\x0a\x09benevoles do: [ :b | b renderOn: html ]",
+source: "renderBenevolesOn: html\x0a\x09widgets do: [ :b | b renderOn: html ]",
 messageSends: ["do:", "renderOn:"],
 referencedClasses: []
 }),
@@ -1031,22 +1057,6 @@ globals.FdJWidgetBenevoles);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "supprime",
-protocol: 'as yet unclassified',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(_st(self["@div"])._asJQuery())._remove();
-return self}, function($ctx1) {$ctx1.fill(self,"supprime",{},globals.FdJWidgetBenevoles)})},
-args: [],
-source: "supprime\x0a\x09\x22supprime le tag de base\x22\x0a\x09div asJQuery remove",
-messageSends: ["remove", "asJQuery"],
-referencedClasses: []
-}),
-globals.FdJWidgetBenevoles);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "update",
 protocol: 'as yet unclassified',
 fn: function (){
@@ -1067,29 +1077,9 @@ referencedClasses: []
 }),
 globals.FdJWidgetBenevoles);
 
-smalltalk.addMethod(
-smalltalk.method({
-selector: "vide",
-protocol: 'as yet unclassified',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-_st(self["@benevoles"])._do_((function(b){
-return smalltalk.withContext(function($ctx2) {
-return _st(b)._supprime();
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
-_st(self["@benevoles"]).__eq([]);
-return self}, function($ctx1) {$ctx1.fill(self,"vide",{},globals.FdJWidgetBenevoles)})},
-args: [],
-source: "vide\x0a\x09\x22supprime les widgets Benevole mais laisse la racine\x22\x0a\x09benevoles do: [ :b | b supprime ].\x0a\x09benevoles = #()",
-messageSends: ["do:", "supprime", "="],
-referencedClasses: []
-}),
-globals.FdJWidgetBenevoles);
 
 
-
-smalltalk.addClass('FdJWidgetSelectionneur', globals.Widget, ['presentateur', 'div', 'liste', 'input'], 'Benevoles');
+smalltalk.addClass('FdJWidgetSelectionneur', globals.FdJWidget, ['liste', 'input'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "filtre",
@@ -1104,21 +1094,6 @@ return $1;
 args: [],
 source: "filtre\x0a\x09^ input asJQuery val",
 messageSends: ["val", "asJQuery"],
-referencedClasses: []
-}),
-globals.FdJWidgetSelectionneur);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "presentateur:",
-protocol: 'as yet unclassified',
-fn: function (unPresentateur){
-var self=this;
-self["@presentateur"]=unPresentateur;
-return self},
-args: ["unPresentateur"],
-source: "presentateur: unPresentateur\x0a\x09presentateur := unPresentateur",
-messageSends: [],
 referencedClasses: []
 }),
 globals.FdJWidgetSelectionneur);
@@ -1165,28 +1140,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"selectionne:",{benevoles:benevol
 args: ["benevoles"],
 source: "selectionne: benevoles\x0a\x09liste associe: benevoles",
 messageSends: ["associe:"],
-referencedClasses: []
-}),
-globals.FdJWidgetSelectionneur);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "supprime",
-protocol: 'as yet unclassified',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$receiver;
-$1=self["@div"];
-if(($receiver = $1) == nil || $receiver == null){
-$1;
-} else {
-_st(_st(self["@div"])._asJQuery())._remove();
-};
-return self}, function($ctx1) {$ctx1.fill(self,"supprime",{},globals.FdJWidgetSelectionneur)})},
-args: [],
-source: "supprime\x0a\x09div ifNotNil: [ div asJQuery remove ]",
-messageSends: ["ifNotNil:", "remove", "asJQuery"],
 referencedClasses: []
 }),
 globals.FdJWidgetSelectionneur);

@@ -139,7 +139,7 @@ $ctx1.sendIdx["supprime"]=1;
 _st(self["@distributeur"])._supprime();
 return self}, function($ctx1) {$ctx1.fill(self,"termine",{},globals.FdJApplication)})},
 args: [],
-source: "termine\x0a\x09selectionneur supprime.\x0a\x09distributeur supprime",
+source: "termine\x0a\x09selectionneur supprime.\x0a\x09distributeur supprime\x0a\x09\x22'body' asJQuery children remove\x22",
 messageSends: ["supprime"],
 referencedClasses: []
 }),

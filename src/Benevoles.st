@@ -56,6 +56,7 @@ selectionne: benevole
 termine
 	selectionneur supprime.
 	distributeur supprime
+	"'body' asJQuery children remove"
 ! !
 
 Object subclass: #FdJAssociation

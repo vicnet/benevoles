@@ -55,15 +55,23 @@ fn: function (texte){
 var self=this;
 var selectionnes;
 return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(texte)._isEmpty();
+if(smalltalk.assert($1)){
+selectionnes=[];
+selectionnes;
+} else {
 selectionnes=_st(self["@benevoles"])._select_((function(b){
 return smalltalk.withContext(function($ctx2) {
 return _st(_st(b)._estDisponible()).__and(_st(_st(b)._nom())._includesSubString_(texte));
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,3)})}));
+selectionnes;
+};
 _st(self["@selectionneur"])._selectionne_(selectionnes);
 return self}, function($ctx1) {$ctx1.fill(self,"filtre:",{texte:texte,selectionnes:selectionnes},globals.FdJApplication)})},
 args: ["texte"],
-source: "filtre: texte\x0a\x09| selectionnes |\x0a\x09selectionnes := benevoles select: [ :b | b estDisponible & (b nom includesSubString: texte)].\x0a\x09selectionneur selectionne: selectionnes",
-messageSends: ["select:", "&", "estDisponible", "includesSubString:", "nom", "selectionne:"],
+source: "filtre: texte\x0a\x09| selectionnes |\x0a\x09texte isEmpty\x0a\x09\x09ifTrue: [ selectionnes := #() ]\x0a\x09\x09ifFalse: [ selectionnes := benevoles select: [ :b | b estDisponible & (b nom includesSubString: texte)] ].\x0a\x09selectionneur selectionne: selectionnes",
+messageSends: ["ifTrue:ifFalse:", "isEmpty", "select:", "&", "estDisponible", "includesSubString:", "nom", "selectionne:"],
 referencedClasses: []
 }),
 globals.FdJApplication);
@@ -74,34 +82,38 @@ selector: "initialize",
 protocol: 'initialization',
 fn: function (){
 var self=this;
-var liste;
+var barre;
 function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
+function $FdJWidgetBarre(){return globals.FdJWidgetBarre||(typeof FdJWidgetBarre=="undefined"?nil:FdJWidgetBarre)}
 function $FdJWidgetSelectionneur(){return globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
 function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$4,$2,$5,$6;
-globals.FdJApplication.superclass.fn.prototype._initialize.apply(_st(self), []);
+var $1,$2,$3,$4,$5;
+($ctx1.supercall = true, globals.FdJApplication.superclass.fn.prototype._initialize.apply(_st(self), []));
+$ctx1.supercall = false;
 self["@benevoles"]=_st($FdJBenevole())._exemples();
-$1=_st($FdJWidgetSelectionneur())._new();
+$1=_st($FdJWidgetBarre())._new();
 $ctx1.sendIdx["new"]=1;
-_st($1)._presentateur_(self);
+barre=_st($1)._presentateur_(self);
 $ctx1.sendIdx["presentateur:"]=1;
-$3=$1;
-$4="body"._asJQuery();
+self["@selectionneur"]=_st($FdJWidgetSelectionneur())._new();
+$ctx1.sendIdx["new"]=2;
+_st(barre)._ajoute_(self["@selectionneur"]);
+$2=barre;
+$3="body"._asJQuery();
 $ctx1.sendIdx["asJQuery"]=1;
-$2=_st($3)._appendToJQuery_($4);
+_st($2)._appendToJQuery_($3);
 $ctx1.sendIdx["appendToJQuery:"]=1;
-self["@selectionneur"]=$2;
-$5=_st($FdJWidgetBenevoles())._new();
-_st($5)._presentateur_(self);
-$6=_st($5)._appendToJQuery_("body"._asJQuery());
-self["@distributeur"]=$6;
+$4=_st($FdJWidgetBenevoles())._new();
+_st($4)._presentateur_(self);
+$5=_st($4)._appendToJQuery_("body"._asJQuery());
+self["@distributeur"]=$5;
 self._filtre_("OS");
-return self}, function($ctx1) {$ctx1.fill(self,"initialize",{liste:liste},globals.FdJApplication)})},
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre},globals.FdJApplication)})},
 args: [],
-source: "initialize\x0a\x09| liste |\x0a\x09super initialize.\x0a\x09\x0a\x09benevoles := FdJBenevole exemples.\x0a\x09\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09self filtre: 'OS'",
-messageSends: ["initialize", "exemples", "presentateur:", "new", "appendToJQuery:", "asJQuery", "filtre:"],
-referencedClasses: ["FdJBenevole", "FdJWidgetSelectionneur", "FdJWidgetBenevoles"]
+source: "initialize\x0a\x09| barre |\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09benevoles := FdJBenevole exemples.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09\x22exemple de filtrage\x22\x0a\x09self filtre: 'OS'",
+messageSends: ["initialize", "exemples", "presentateur:", "new", "ajoute:", "appendToJQuery:", "asJQuery", "filtre:"],
+referencedClasses: ["FdJBenevole", "FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetBenevoles"]
 }),
 globals.FdJApplication);
 
@@ -804,6 +816,24 @@ globals.FdJWidget);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "nom",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st(_st(self._class())._asString())._trimLeft_("FdJWidget"))._asLowercase();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"nom",{},globals.FdJWidget)})},
+args: [],
+source: "nom\x0a\x09^ (self class asString trimLeft: 'FdJWidget') asLowercase",
+messageSends: ["asLowercase", "trimLeft:", "asString", "class"],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "presentateur:",
 protocol: 'as yet unclassified',
 fn: function (unPresentateur){
@@ -813,6 +843,45 @@ return self},
 args: ["unPresentateur"],
 source: "presentateur: unPresentateur\x0a\x09presentateur := unPresentateur",
 messageSends: [],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@div"]=_st(_st(html)._div())._class_(self._nom());
+_st(self["@div"])._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._renderWidgetsOn_(html);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidget)})},
+args: ["html"],
+source: "renderOn: html\x0a\x09div := html div class: self nom.\x0a\x09div with: [ self renderWidgetsOn: html]",
+messageSends: ["class:", "div", "nom", "with:", "renderWidgetsOn:"],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderWidgetsOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self["@widgets"])._do_((function(b){
+return smalltalk.withContext(function($ctx2) {
+return _st(b)._renderOn_(html);
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"renderWidgetsOn:",{html:html},globals.FdJWidget)})},
+args: ["html"],
+source: "renderWidgetsOn: html\x0a\x09widgets do: [ :b | b renderOn: html ]",
+messageSends: ["do:", "renderOn:"],
 referencedClasses: []
 }),
 globals.FdJWidget);
@@ -860,6 +929,9 @@ referencedClasses: []
 }),
 globals.FdJWidget);
 
+
+
+smalltalk.addClass('FdJWidgetBarre', globals.FdJWidget, [], 'Benevoles');
 
 
 smalltalk.addClass('FdJWidgetBenevole', globals.FdJWidget, ['benevole'], 'Benevoles');
@@ -1023,14 +1095,11 @@ protocol: 'as yet unclassified',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@widgets"])._do_((function(b){
-return smalltalk.withContext(function($ctx2) {
-return _st(b)._renderOn_(html);
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
+self._renderWidgetsOn_(html);
 return self}, function($ctx1) {$ctx1.fill(self,"renderBenevolesOn:",{html:html},globals.FdJWidgetBenevoles)})},
 args: ["html"],
-source: "renderBenevolesOn: html\x0a\x09widgets do: [ :b | b renderOn: html ]",
-messageSends: ["do:", "renderOn:"],
+source: "renderBenevolesOn: html\x0a\x09self renderWidgetsOn: html",
+messageSends: ["renderWidgetsOn:"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevoles);

@@ -25,24 +25,33 @@ Object subclass: #FdJApplication
 
 filtre: texte
 	| selectionnes |
-	selectionnes := benevoles select: [ :b | b estDisponible & (b nom includesSubString: texte)].
+	texte isEmpty
+		ifTrue: [ selectionnes := #() ]
+		ifFalse: [ selectionnes := benevoles select: [ :b | b estDisponible & (b nom includesSubString: texte)] ].
 	selectionneur selectionne: selectionnes
 !
 
 initialize
-	| liste |
+	| barre |
 	super initialize.
 	
+	"Modele"
 	benevoles := FdJBenevole exemples.
 	
-	selectionneur := FdJWidgetSelectionneur	new
-		presentateur: self;
-		appendToJQuery: 'body' asJQuery.
-	
+	"Widgets"
+	barre := FdJWidgetBarre new
+		presentateur: self.
+
+	selectionneur := FdJWidgetSelectionneur	new.
+	barre ajoute: selectionneur.
+
+	barre appendToJQuery: 'body' asJQuery.
+
 	distributeur := FdJWidgetBenevoles new
 		presentateur: self;
 		appendToJQuery: 'body' asJQuery.
 
+	"exemple de filtrage"
 	self filtre: 'OS'
 !
 
@@ -257,8 +266,21 @@ initialize
 	widgets := #()
 !
 
+nom
+	^ (self class asString trimLeft: 'FdJWidget') asLowercase
+!
+
 presentateur: unPresentateur
 	presentateur := unPresentateur
+!
+
+renderOn: html
+	div := html div class: self nom.
+	div with: [ self renderWidgetsOn: html]
+!
+
+renderWidgetsOn: html
+	widgets do: [ :b | b renderOn: html ]
 !
 
 supprime
@@ -271,6 +293,10 @@ vide
 	widgets do: [ :w | w supprime ].
 	widgets := #()
 ! !
+
+FdJWidget subclass: #FdJWidgetBarre
+	instanceVariableNames: ''
+	package: 'Benevoles'!
 
 FdJWidget subclass: #FdJWidgetBenevole
 	instanceVariableNames: 'benevole'
@@ -324,7 +350,7 @@ creeWidget: unBenevole
 !
 
 renderBenevolesOn: html
-	widgets do: [ :b | b renderOn: html ]
+	self renderWidgetsOn: html
 !
 
 renderOn: html

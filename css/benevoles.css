@@ -1,5 +1,8 @@
 body {
     font-family: Lucida Grande, Tahoma, sans-serif;
+/*    background: #ffebcd;*/
+    background: #ffa62f;
+    background: white;
 }
 .benevole {
     width: 30%;
@@ -27,12 +30,25 @@ body {
     padding: 5px;
     font-size: 120%;
 }
+.selectionneur .benevoles {
+    position: fixed;
+    left:0px;
+    bottom: 42px;
+    width: 100%;
+}
 .selectionneur .benevole {
     font-size: 120%;
+    background: white;
 }
-.selectionneur .identite {
+.selectionneur .benevole * {
     display: inline;
 }
-.selectionneur .association {
-    display:inline;
+.barre {
+    background: lightgray;
+    width: 100%;
+    position: fixed;
+    left:0px;
+    bottom: 0px;
+    padding: 5px;
+    height: 36px;
 }

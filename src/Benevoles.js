@@ -2,6 +2,44 @@ define("benevoles/Benevoles", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_
 smalltalk.addPackage('Benevoles');
 smalltalk.packages["Benevoles"].transport = {"type":"amd","amdNamespace":"benevoles"};
 
+smalltalk.addClass('FdJAnnonce', globals.Object, [], 'Benevoles');
+
+
+smalltalk.addClass('FdJBenevoleChangeEtat', globals.FdJAnnonce, ['benevole'], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "benevole",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@benevole"];
+return $1;
+},
+args: [],
+source: "benevole\x0a\x09^ benevole",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJBenevoleChangeEtat);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "benevole:",
+protocol: 'accessing',
+fn: function (anObject){
+var self=this;
+self["@benevole"]=anObject;
+return self},
+args: ["anObject"],
+source: "benevole: anObject\x0a\x09benevole := anObject",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJBenevoleChangeEtat);
+
+
+
 smalltalk.addClass('FdJAnnonceur', globals.Announcer, [], 'Benevoles');
 
 globals.FdJAnnonceur.klass.iVarNames = ['current'];
@@ -87,6 +125,8 @@ function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefi
 function $FdJWidgetBarre(){return globals.FdJWidgetBarre||(typeof FdJWidgetBarre=="undefined"?nil:FdJWidgetBarre)}
 function $FdJWidgetSelectionneur(){return globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
 function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
+function $FdJAnnonceur(){return globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
+function $FdJBenevoleChangeEtat(){return globals.FdJBenevoleChangeEtat||(typeof FdJBenevoleChangeEtat=="undefined"?nil:FdJBenevoleChangeEtat)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5;
 ($ctx1.supercall = true, globals.FdJApplication.superclass.fn.prototype._initialize.apply(_st(self), []));
@@ -108,12 +148,41 @@ $4=_st($FdJWidgetBenevoles())._new();
 _st($4)._presentateur_(self);
 $5=_st($4)._appendToJQuery_("body"._asJQuery());
 self["@distributeur"]=$5;
-self._filtre_("OS");
+_st(_st($FdJAnnonceur())._current())._on_do_($FdJBenevoleChangeEtat(),(function(evt){
+return smalltalk.withContext(function($ctx2) {
+return self._onBenevoleChangeEtat_(_st(evt)._benevole());
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,1)})}));
+_st(_st(self["@benevoles"])._first())._encours();
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre},globals.FdJApplication)})},
 args: [],
-source: "initialize\x0a\x09| barre |\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09benevoles := FdJBenevole exemples.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09\x22exemple de filtrage\x22\x0a\x09self filtre: 'OS'",
-messageSends: ["initialize", "exemples", "presentateur:", "new", "ajoute:", "appendToJQuery:", "asJQuery", "filtre:"],
-referencedClasses: ["FdJBenevole", "FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetBenevoles"]
+source: "initialize\x0a\x09| barre |\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09benevoles := FdJBenevole exemples.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22exemple de filtrage\x22\x0a\x09benevoles first encours",
+messageSends: ["initialize", "exemples", "presentateur:", "new", "ajoute:", "appendToJQuery:", "asJQuery", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "encours", "first"],
+referencedClasses: ["FdJBenevole", "FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetBenevoles", "FdJAnnonceur", "FdJBenevoleChangeEtat"]
+}),
+globals.FdJApplication);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onBenevoleChangeEtat:",
+protocol: 'initialization',
+fn: function (benevole){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+self._filtre_(_st(self["@selectionneur"])._filtre());
+$1=_st(benevole)._estEncours();
+if(smalltalk.assert($1)){
+_st(self["@distributeur"])._ajoute_(benevole);
+};
+$2=_st(benevole)._estDistribue();
+if(smalltalk.assert($2)){
+_st(self["@distributeur"])._supprime_(benevole);
+};
+return self}, function($ctx1) {$ctx1.fill(self,"onBenevoleChangeEtat:",{benevole:benevole},globals.FdJApplication)})},
+args: ["benevole"],
+source: "onBenevoleChangeEtat: benevole\x0a\x09self filtre: (selectionneur filtre).\x0a\x09benevole estEncours ifTrue: [\x0a\x09\x09distributeur ajoute: benevole ].\x0a\x09benevole estDistribue ifTrue: [\x0a\x09\x09distributeur supprime: benevole ]",
+messageSends: ["filtre:", "filtre", "ifTrue:", "estEncours", "ajoute:", "estDistribue", "supprime:"],
+referencedClasses: []
 }),
 globals.FdJApplication);
 
@@ -124,17 +193,21 @@ protocol: 'initialization',
 fn: function (benevole){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $1,$2,$3,$4;
 $1=_st(benevole)._estDisponible();
 if(smalltalk.assert($1)){
-_st(benevole)._encours();
-self._filtre_(_st(self["@selectionneur"])._filtre());
-_st(self["@distributeur"])._ajoute_(benevole);
+$2=_st(benevole)._encours();
+return $2;
+};
+$3=_st(benevole)._estEncours();
+if(smalltalk.assert($3)){
+$4=_st(benevole)._distribue();
+return $4;
 };
 return self}, function($ctx1) {$ctx1.fill(self,"selectionne:",{benevole:benevole},globals.FdJApplication)})},
 args: ["benevole"],
-source: "selectionne: benevole\x0a\x09benevole estDisponible ifTrue: [\x0a\x09\x09benevole encours.\x0a\x09\x09self filtre: (selectionneur filtre).\x0a\x09\x09distributeur ajoute: benevole ]",
-messageSends: ["ifTrue:", "estDisponible", "encours", "filtre:", "filtre", "ajoute:"],
+source: "selectionne: benevole\x0a\x09benevole estDisponible ifTrue: [\x0a\x09\x09^ benevole encours ].\x0a\x09benevole estEncours ifTrue: [\x0a\x09\x09^ benevole distribue ]",
+messageSends: ["ifTrue:", "estDisponible", "encours", "estEncours", "distribue"],
 referencedClasses: []
 }),
 globals.FdJApplication);
@@ -251,20 +324,41 @@ smalltalk.addClass('FdJBenevole', globals.Object, ['nom', 'prenom', 'assoc', 'ts
 globals.FdJBenevole.comment="- tshirt: un TShirt\x0a- etat: pas encore venu, en cours de traitement, terminé";
 smalltalk.addMethod(
 smalltalk.method({
-selector: "announceur",
+selector: "annonce",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-function $FdJAnnounceur(){return globals.FdJAnnounceur||(typeof FdJAnnounceur=="undefined"?nil:FdJAnnounceur)}
+function $FdJBenevoleChangeEtat(){return globals.FdJBenevoleChangeEtat||(typeof FdJBenevoleChangeEtat=="undefined"?nil:FdJBenevoleChangeEtat)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+$1=_st($FdJBenevoleChangeEtat())._new();
+_st($1)._benevole_(self);
+$2=_st($1)._yourself();
+_st(self._annonceur())._announce_($2);
+return self}, function($ctx1) {$ctx1.fill(self,"annonce",{},globals.FdJBenevole)})},
+args: [],
+source: "annonce\x0a\x09self annonceur announce: (FdJBenevoleChangeEtat new benevole: self; yourself)",
+messageSends: ["announce:", "annonceur", "benevole:", "new", "yourself"],
+referencedClasses: ["FdJBenevoleChangeEtat"]
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "annonceur",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $FdJAnnonceur(){return globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st($FdJAnnounceur())._current();
+$1=_st($FdJAnnonceur())._current();
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"announceur",{},globals.FdJBenevole)})},
+}, function($ctx1) {$ctx1.fill(self,"annonceur",{},globals.FdJBenevole)})},
 args: [],
-source: "announceur\x0a\x09^ FdJAnnounceur current",
+source: "annonceur\x0a\x09^ FdJAnnonceur current",
 messageSends: ["current"],
-referencedClasses: ["FdJAnnounceur"]
+referencedClasses: ["FdJAnnonceur"]
 }),
 globals.FdJBenevole);
 
@@ -306,11 +400,13 @@ selector: "distribue",
 protocol: 'accessing',
 fn: function (){
 var self=this;
+return smalltalk.withContext(function($ctx1) { 
 self["@etat"]="distribue";
-return self},
+self._annonce();
+return self}, function($ctx1) {$ctx1.fill(self,"distribue",{},globals.FdJBenevole)})},
 args: [],
-source: "distribue\x0a\x09etat := #distribue",
-messageSends: [],
+source: "distribue\x0a\x09etat := #distribue.\x0a\x09self annonce",
+messageSends: ["annonce"],
 referencedClasses: []
 }),
 globals.FdJBenevole);
@@ -321,11 +417,13 @@ selector: "encours",
 protocol: 'accessing',
 fn: function (){
 var self=this;
+return smalltalk.withContext(function($ctx1) { 
 self["@etat"]="encours";
-return self},
+self._annonce();
+return self}, function($ctx1) {$ctx1.fill(self,"encours",{},globals.FdJBenevole)})},
 args: [],
-source: "encours\x0a\x09etat := #encours",
-messageSends: [],
+source: "encours\x0a\x09etat := #encours.\x0a\x09self annonce",
+messageSends: ["annonce"],
 referencedClasses: []
 }),
 globals.FdJBenevole);
@@ -911,6 +1009,23 @@ globals.FdJWidget);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "supprime:",
+protocol: 'as yet unclassified',
+fn: function (unWidget){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(unWidget)._supprime();
+_st(self["@widgets"])._remove_(unWidget);
+return self}, function($ctx1) {$ctx1.fill(self,"supprime:",{unWidget:unWidget},globals.FdJWidget)})},
+args: ["unWidget"],
+source: "supprime: unWidget\x0a\x09\x22suppression html\x22\x0a\x09unWidget supprime.\x0a\x09\x22suppression liste\x22\x0a\x09widgets remove: unWidget",
+messageSends: ["supprime", "remove:"],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "vide",
 protocol: 'as yet unclassified',
 fn: function (){
@@ -945,6 +1060,23 @@ self["@benevole"]=unBenevole;
 return self},
 args: ["unBenevole"],
 source: "associe: unBenevole\x0a\x09benevole := unBenevole",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJWidgetBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "benevole",
+protocol: 'rendering',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@benevole"];
+return $1;
+},
+args: [],
+source: "benevole\x0a\x09^ benevole",
 messageSends: [],
 referencedClasses: []
 }),
@@ -1120,6 +1252,32 @@ return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.F
 args: ["html"],
 source: "renderOn: html\x0a\x09div := html div class: 'benevoles'.\x0a\x09div with: [ self renderBenevolesOn: html]",
 messageSends: ["class:", "div", "with:", "renderBenevolesOn:"],
+referencedClasses: []
+}),
+globals.FdJWidgetBenevoles);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "supprime:",
+protocol: 'as yet unclassified',
+fn: function (unBenevole){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $early={};
+try {
+($ctx1.supercall = true, globals.FdJWidgetBenevoles.superclass.fn.prototype._supprime_.apply(_st(self), [_st(self["@widgets"])._detect_ifNone_((function(w){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st(w)._benevole()).__eq_eq(unBenevole);
+}, function($ctx2) {$ctx2.fillBlock({w:w},$ctx1,1)})}),(function(){
+throw $early=[self];
+}))]));
+$ctx1.supercall = false;
+return self}
+catch(e) {if(e===$early)return e[0]; throw e}
+}, function($ctx1) {$ctx1.fill(self,"supprime:",{unBenevole:unBenevole},globals.FdJWidgetBenevoles)})},
+args: ["unBenevole"],
+source: "supprime: unBenevole\x0a\x09super supprime: (\x0a\x09\x09widgets detect: [ :w | w benevole == unBenevole ] ifNone: [ ^ self ])",
+messageSends: ["supprime:", "detect:ifNone:", "==", "benevole"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevoles);

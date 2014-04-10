@@ -1,4 +1,22 @@
 Smalltalk createPackage: 'Benevoles'!
+Object subclass: #FdJAnnonce
+	instanceVariableNames: ''
+	package: 'Benevoles'!
+
+FdJAnnonce subclass: #FdJBenevoleChangeEtat
+	instanceVariableNames: 'benevole'
+	package: 'Benevoles'!
+
+!FdJBenevoleChangeEtat methodsFor: 'accessing'!
+
+benevole
+	^ benevole
+!
+
+benevole: anObject
+	benevole := anObject
+! !
+
 Announcer subclass: #FdJAnnonceur
 	instanceVariableNames: ''
 	package: 'Benevoles'!
@@ -51,15 +69,26 @@ initialize
 		presentateur: self;
 		appendToJQuery: 'body' asJQuery.
 
+	FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |
+		self onBenevoleChangeEtat: evt benevole ].
+
 	"exemple de filtrage"
-	self filtre: 'OS'
+	benevoles first encours
+!
+
+onBenevoleChangeEtat: benevole
+	self filtre: (selectionneur filtre).
+	benevole estEncours ifTrue: [
+		distributeur ajoute: benevole ].
+	benevole estDistribue ifTrue: [
+		distributeur supprime: benevole ]
 !
 
 selectionne: benevole
 	benevole estDisponible ifTrue: [
-		benevole encours.
-		self filtre: (selectionneur filtre).
-		distributeur ajoute: benevole ]
+		^ benevole encours ].
+	benevole estEncours ifTrue: [
+		^ benevole distribue ]
 !
 
 termine
@@ -106,8 +135,12 @@ Object subclass: #FdJBenevole
 
 !FdJBenevole methodsFor: 'accessing'!
 
-announceur
-	^ FdJAnnounceur current
+annonce
+	self annonceur announce: (FdJBenevoleChangeEtat new benevole: self; yourself)
+!
+
+annonceur
+	^ FdJAnnonceur current
 !
 
 association
@@ -119,11 +152,13 @@ association: uneAssoc
 !
 
 distribue
-	etat := #distribue
+	etat := #distribue.
+	self annonce
 !
 
 encours
-	etat := #encours
+	etat := #encours.
+	self annonce
 !
 
 estDisponible
@@ -288,6 +323,13 @@ supprime
 	div := nil
 !
 
+supprime: unWidget
+	"suppression html"
+	unWidget supprime.
+	"suppression liste"
+	widgets remove: unWidget
+!
+
 vide
 	"supprime les widgets mais laisse la racine"
 	widgets do: [ :w | w supprime ].
@@ -306,6 +348,10 @@ FdJWidget subclass: #FdJWidgetBenevole
 
 associe: unBenevole
 	benevole := unBenevole
+!
+
+benevole
+	^ benevole
 !
 
 renderAssociationOn: html
@@ -356,6 +402,11 @@ renderBenevolesOn: html
 renderOn: html
 	div := html div class: 'benevoles'.
 	div with: [ self renderBenevolesOn: html]
+!
+
+supprime: unBenevole
+	super supprime: (
+		widgets detect: [ :w | w benevole == unBenevole ] ifNone: [ ^ self ])
 !
 
 update

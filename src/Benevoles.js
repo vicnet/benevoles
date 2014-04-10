@@ -1,4 +1,4 @@
-define("benevoles/Benevoles", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Announcements", "amber_core/Kernel-Objects", "amber_core/Web"], function(smalltalk,nil,_st, globals){
+define("benevoles/Benevoles", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Kernel-Announcements", "amber_core/Web"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Benevoles');
 smalltalk.packages["Benevoles"].transport = {"type":"amd","amdNamespace":"benevoles"};
 
@@ -364,6 +364,34 @@ globals.FdJBenevole);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "asJSON",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var variables;
+function $HashedCollection(){return globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+variables=_st($HashedCollection())._new();
+_st(variables)._at_put_("nom",self["@nom"]);
+$ctx1.sendIdx["at:put:"]=1;
+_st(variables)._at_put_("prenom",self["@prenom"]);
+$ctx1.sendIdx["at:put:"]=2;
+_st(variables)._at_put_("etat",self["@etat"]);
+$ctx1.sendIdx["at:put:"]=3;
+_st(variables)._at_put_("assoc",_st(self["@assoc"])._nom());
+$1=variables;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"asJSON",{variables:variables},globals.FdJBenevole)})},
+args: [],
+source: "asJSON\x0a\x09| variables |\x0a\x09variables := HashedCollection new.\x0a\x09variables at: 'nom' put: nom.\x0a\x09variables at: 'prenom' put: prenom.\x0a\x09variables at: 'etat' put: etat.\x0a\x09variables at: 'assoc' put: assoc nom.\x0a\x22\x09variables at: 'tshirt' put: .\x22\x0a\x09^ variables",
+messageSends: ["new", "at:put:", "nom"],
+referencedClasses: ["HashedCollection"]
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "association",
 protocol: 'accessing',
 fn: function (){
@@ -620,6 +648,45 @@ smalltalk.addClass('FdJBenevoles', globals.Object, ['liste'], 'Benevoles');
 
 
 smalltalk.addClass('FdJStock', globals.Object, ['tshirts'], 'Benevoles');
+
+
+smalltalk.addClass('FdJStockage', globals.Object, [], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "charger",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+function $JSON(){return globals.JSON||(typeof JSON=="undefined"?nil:JSON)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st($JSON())._parse_(_st(localStorage)._getItem_("FdJBenevoles"));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"charger",{},globals.FdJStockage)})},
+args: [],
+source: "charger\x0a\x09\x22stockage charger nom\x22\x0a\x09^ JSON parse: (localStorage getItem: 'FdJBenevoles')",
+messageSends: ["parse:", "getItem:"],
+referencedClasses: ["JSON"]
+}),
+globals.FdJStockage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "sauver",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
+return smalltalk.withContext(function($ctx1) { 
+_st(localStorage)._setItem_value_("FdJBenevoles",_st(_st($FdJBenevole())._exemple())._asJSONString());
+return self}, function($ctx1) {$ctx1.fill(self,"sauver",{},globals.FdJStockage)})},
+args: [],
+source: "sauver\x0a\x09localStorage setItem: 'FdJBenevoles' value: (FdJBenevole exemple asJSONString)",
+messageSends: ["setItem:value:", "asJSONString", "exemple"],
+referencedClasses: ["FdJBenevole"]
+}),
+globals.FdJStockage);
+
 
 
 smalltalk.addClass('FdJTShirt', globals.Object, ['type', 'taille', 'spec'], 'Benevoles');

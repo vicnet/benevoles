@@ -143,6 +143,17 @@ annonceur
 	^ FdJAnnonceur current
 !
 
+asJSON
+	| variables |
+	variables := HashedCollection new.
+	variables at: 'nom' put: nom.
+	variables at: 'prenom' put: prenom.
+	variables at: 'etat' put: etat.
+	variables at: 'assoc' put: assoc nom.
+"	variables at: 'tshirt' put: ."
+	^ variables
+!
+
 association
 	^ assoc
 !
@@ -219,6 +230,21 @@ Object subclass: #FdJBenevoles
 Object subclass: #FdJStock
 	instanceVariableNames: 'tshirts'
 	package: 'Benevoles'!
+
+Object subclass: #FdJStockage
+	instanceVariableNames: ''
+	package: 'Benevoles'!
+
+!FdJStockage methodsFor: 'as yet unclassified'!
+
+charger
+	"stockage charger nom"
+	^ JSON parse: (localStorage getItem: 'FdJBenevoles')
+!
+
+sauver
+	localStorage setItem: 'FdJBenevoles' value: (FdJBenevole exemple asJSONString)
+! !
 
 Object subclass: #FdJTShirt
 	instanceVariableNames: 'type taille spec'

@@ -184,6 +184,14 @@ estEncours
 	^ etat==#encours
 !
 
+fromJSON: objet
+	nom := objet nom.
+	prenom := objet prenom.
+	etat := (objet etat) asSymbol.
+	"assoc := (objet assoc) nom."
+	"tshirt :="
+!
+
 nom
 	^ nom
 !
@@ -242,8 +250,25 @@ charger
 	^ JSON parse: (localStorage getItem: 'FdJBenevoles')
 !
 
+charger: objet
+	^ objet fromJSON: (JSON parse: (sessionStorage getItem: objet class name))
+!
+
 sauver
 	localStorage setItem: 'FdJBenevoles' value: (FdJBenevole exemple asJSONString)
+!
+
+sauver: objet
+	sessionStorage setItem: (objet class name) value: objet asJSONString
+! !
+
+FdJStockage class instanceVariableNames: 'instance'!
+
+!FdJStockage class methodsFor: 'as yet unclassified'!
+
+instance
+	instance ifNil: [ instance := self new ].
+	^ instance
 ! !
 
 Object subclass: #FdJTShirt

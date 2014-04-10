@@ -512,6 +512,24 @@ globals.FdJBenevole);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "fromJSON:",
+protocol: 'accessing',
+fn: function (objet){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@nom"]=_st(objet)._nom();
+self["@prenom"]=_st(objet)._prenom();
+self["@etat"]=_st(_st(objet)._etat())._asSymbol();
+return self}, function($ctx1) {$ctx1.fill(self,"fromJSON:",{objet:objet},globals.FdJBenevole)})},
+args: ["objet"],
+source: "fromJSON: objet\x0a\x09nom := objet nom.\x0a\x09prenom := objet prenom.\x0a\x09etat := (objet etat) asSymbol.\x0a\x09\x22assoc := (objet assoc) nom.\x22\x0a\x09\x22tshirt :=\x22",
+messageSends: ["nom", "prenom", "asSymbol", "etat"],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "nom",
 protocol: 'accessing',
 fn: function (){
@@ -672,6 +690,25 @@ globals.FdJStockage);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "charger:",
+protocol: 'as yet unclassified',
+fn: function (objet){
+var self=this;
+function $JSON(){return globals.JSON||(typeof JSON=="undefined"?nil:JSON)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(objet)._fromJSON_(_st($JSON())._parse_(_st(sessionStorage)._getItem_(_st(_st(objet)._class())._name())));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"charger:",{objet:objet},globals.FdJStockage)})},
+args: ["objet"],
+source: "charger: objet\x0a\x09^ objet fromJSON: (JSON parse: (sessionStorage getItem: objet class name))",
+messageSends: ["fromJSON:", "parse:", "getItem:", "name", "class"],
+referencedClasses: ["JSON"]
+}),
+globals.FdJStockage);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "sauver",
 protocol: 'as yet unclassified',
 fn: function (){
@@ -687,6 +724,48 @@ referencedClasses: ["FdJBenevole"]
 }),
 globals.FdJStockage);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "sauver:",
+protocol: 'as yet unclassified',
+fn: function (objet){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(sessionStorage)._setItem_value_(_st(_st(objet)._class())._name(),_st(objet)._asJSONString());
+return self}, function($ctx1) {$ctx1.fill(self,"sauver:",{objet:objet},globals.FdJStockage)})},
+args: ["objet"],
+source: "sauver: objet\x0a\x09sessionStorage setItem: (objet class name) value: objet asJSONString",
+messageSends: ["setItem:value:", "name", "class", "asJSONString"],
+referencedClasses: []
+}),
+globals.FdJStockage);
+
+
+globals.FdJStockage.klass.iVarNames = ['instance'];
+smalltalk.addMethod(
+smalltalk.method({
+selector: "instance",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=self["@instance"];
+if(($receiver = $1) == null || $receiver.isNil){
+self["@instance"]=self._new();
+self["@instance"];
+} else {
+$1;
+};
+$2=self["@instance"];
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"instance",{},globals.FdJStockage.klass)})},
+args: [],
+source: "instance\x0a\x09instance ifNil: [ instance := self new ].\x0a\x09^ instance",
+messageSends: ["ifNil:", "new"],
+referencedClasses: []
+}),
+globals.FdJStockage.klass);
 
 
 smalltalk.addClass('FdJTShirt', globals.Object, ['type', 'taille', 'spec'], 'Benevoles');

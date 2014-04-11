@@ -184,10 +184,12 @@ estEncours
 	^ etat==#encours
 !
 
-fromJSON: objet
-	nom := objet nom.
-	prenom := objet prenom.
-	etat := (objet etat) asSymbol.
+fromJSON: variables
+	nom := variables at: 'nom'.
+	prenom := variables at: 'prenom'.
+	etat := variables at: 'etat'
+		ifPresent: [ :v | v asSymbol ]
+		ifAbsent: [ nil ]
 	"assoc := (objet assoc) nom."
 	"tshirt :="
 !
@@ -235,6 +237,28 @@ Object subclass: #FdJBenevoles
 	instanceVariableNames: 'liste'
 	package: 'Benevoles'!
 
+!FdJBenevoles methodsFor: 'as yet unclassified'!
+
+benevoles
+	^ liste
+!
+
+benevoles: desBenevoles
+	liste := desBenevoles
+!
+
+fromJSON: variables
+	liste := FdJStockage instance
+				chargerListe: (variables at: 'liste')
+				avec: FdJBenevole
+! !
+
+!FdJBenevoles class methodsFor: 'as yet unclassified'!
+
+exemple
+	^ self new benevoles: FdJBenevole exemples
+! !
+
 Object subclass: #FdJStock
 	instanceVariableNames: 'tshirts'
 	package: 'Benevoles'!
@@ -245,21 +269,50 @@ Object subclass: #FdJStockage
 
 !FdJStockage methodsFor: 'as yet unclassified'!
 
-charger
-	"stockage charger nom"
-	^ JSON parse: (localStorage getItem: 'FdJBenevoles')
+charger: entite
+	^ self charger: entite depuis: (self jsonPour: entite)
 !
 
-charger: objet
-	^ objet fromJSON: (JSON parse: (sessionStorage getItem: objet class name))
+charger: entite depuis: json
+	|objet|
+	objet := entite isClass
+		ifTrue: [ entite new ]
+		ifFalse: [ entite ].
+	^ objet fromJSON: json
 !
 
-sauver
-	localStorage setItem: 'FdJBenevoles' value: (FdJBenevole exemple asJSONString)
+chargerListe: liste avec: entite
+	^ liste collect: [ :o | self charger: entite depuis: (self variablesPour: o) ]
+!
+
+jsonPour: objet
+	^ self variablesPour: (
+		JSON parse: (self stockagePour: objet))
+!
+
+nomPour: entite
+	entite isClass ifTrue: [ ^ entite name ].
+	entite isString ifTrue: [ ^ entite ].
+	^ entite class name
 !
 
 sauver: objet
-	sessionStorage setItem: (objet class name) value: objet asJSONString
+	sessionStorage
+		setItem: (self nomPour: objet)
+		value: objet asJSONString
+!
+
+stockagePour: objet
+	"objet peut être une classe, une chaine ou un objet"
+	^ sessionStorage getItem: (self nomPour: objet)
+!
+
+variablesPour: json
+	| variables |
+	variables := HashedCollection new.
+	json keysAndValuesDo: [ :k :v | 
+		variables at: k put: v ].
+	^ variables
 ! !
 
 FdJStockage class instanceVariableNames: 'instance'!

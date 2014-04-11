@@ -235,6 +235,22 @@ globals.FdJApplication);
 smalltalk.addClass('FdJAssociation', globals.Object, ['nom', 'logo'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
+selector: "fromJSON:",
+protocol: 'accessing',
+fn: function (variables){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@nom"]=_st(variables)._at_("nom");
+return self}, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},globals.FdJAssociation)})},
+args: ["variables"],
+source: "fromJSON: variables\x0a\x09nom := variables at: 'nom'.\x0a\x09\x22logo := variables at: 'logo'\x22",
+messageSends: ["at:"],
+referencedClasses: []
+}),
+globals.FdJAssociation);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "logo",
 protocol: 'accessing',
 fn: function (){
@@ -318,6 +334,116 @@ messageSends: ["nom:", "new", "yourself"],
 referencedClasses: []
 }),
 globals.FdJAssociation.klass);
+
+
+smalltalk.addClass('FdJAssociations', globals.Object, ['liste'], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "associations:",
+protocol: 'as yet unclassified',
+fn: function (desAssociations){
+var self=this;
+function $HashedCollection(){return globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
+return smalltalk.withContext(function($ctx1) { 
+self["@liste"]=_st($HashedCollection())._new();
+_st(desAssociations)._do_((function(a){
+return smalltalk.withContext(function($ctx2) {
+return _st(self["@liste"])._at_put_(_st(a)._nom(),a);
+}, function($ctx2) {$ctx2.fillBlock({a:a},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"associations:",{desAssociations:desAssociations},globals.FdJAssociations)})},
+args: ["desAssociations"],
+source: "associations: desAssociations\x0a\x09liste := HashedCollection new.\x0a\x09desAssociations do: [ :a |\x0a\x09\x09liste at: a nom put: a ]",
+messageSends: ["new", "do:", "at:put:", "nom"],
+referencedClasses: ["HashedCollection"]
+}),
+globals.FdJAssociations);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "at:",
+protocol: 'as yet unclassified',
+fn: function (nom){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self["@liste"])._at_ifAbsent_(nom,(function(){
+return nil;
+}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"at:",{nom:nom},globals.FdJAssociations)})},
+args: ["nom"],
+source: "at: nom\x0a\x09^ liste at: nom ifAbsent: [ nil ]",
+messageSends: ["at:ifAbsent:"],
+referencedClasses: []
+}),
+globals.FdJAssociations);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "fromJSON:",
+protocol: 'as yet unclassified',
+fn: function (variables){
+var self=this;
+function $FdJAssociation(){return globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
+return smalltalk.withContext(function($ctx1) { 
+self["@liste"]=_st(_st(variables)._at_("liste"))._collect_((function(v){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st($FdJAssociation())._new())._fromJSON_(v);
+}, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},globals.FdJAssociations)})},
+args: ["variables"],
+source: "fromJSON: variables\x0a\x09liste := (variables at: 'liste') collect: [ :v |\x0a\x09\x09\x09FdJAssociation new fromJSON: v\x0a\x09\x09]",
+messageSends: ["collect:", "at:", "fromJSON:", "new"],
+referencedClasses: ["FdJAssociation"]
+}),
+globals.FdJAssociations);
+
+
+globals.FdJAssociations.klass.iVarNames = ['instance'];
+smalltalk.addMethod(
+smalltalk.method({
+selector: "exemple",
+protocol: 'exemples',
+fn: function (){
+var self=this;
+function $Array(){return globals.Array||(typeof Array=="undefined"?nil:Array)}
+function $FdJAssociation(){return globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._instance())._associations_(_st($Array())._with_(_st($FdJAssociation())._exemple()));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"exemple",{},globals.FdJAssociations.klass)})},
+args: [],
+source: "exemple\x0a\x09^ self instance\x0a\x09\x09associations: (Array with: FdJAssociation exemple)",
+messageSends: ["associations:", "instance", "with:", "exemple"],
+referencedClasses: ["Array", "FdJAssociation"]
+}),
+globals.FdJAssociations.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "instance",
+protocol: 'exemples',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=self["@instance"];
+if(($receiver = $1) == null || $receiver.isNil){
+self["@instance"]=self._new();
+self["@instance"];
+} else {
+$1;
+};
+$2=self["@instance"];
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"instance",{},globals.FdJAssociations.klass)})},
+args: [],
+source: "instance\x0a\x09instance ifNil: [ instance := self new ].\x0a\x09^ instance",
+messageSends: ["ifNil:", "new"],
+referencedClasses: []
+}),
+globals.FdJAssociations.klass);
 
 
 smalltalk.addClass('FdJBenevole', globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'etat'], 'Benevoles');
@@ -516,21 +642,30 @@ selector: "fromJSON:",
 protocol: 'accessing',
 fn: function (variables){
 var self=this;
+function $FdJAssociations(){return globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
 return smalltalk.withContext(function($ctx1) { 
 self["@nom"]=_st(variables)._at_("nom");
 $ctx1.sendIdx["at:"]=1;
 self["@prenom"]=_st(variables)._at_("prenom");
+$ctx1.sendIdx["at:"]=2;
 self["@etat"]=_st(variables)._at_ifPresent_ifAbsent_("etat",(function(v){
 return smalltalk.withContext(function($ctx2) {
 return _st(v)._asSymbol();
 }, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,1)})}),(function(){
 return nil;
 }));
+$ctx1.sendIdx["at:ifPresent:ifAbsent:"]=1;
+self["@assoc"]=_st(variables)._at_ifPresent_ifAbsent_("assoc",(function(v){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st($FdJAssociations())._instance())._at_(v);
+}, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,3)})}),(function(){
+return nil;
+}));
 return self}, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},globals.FdJBenevole)})},
 args: ["variables"],
-source: "fromJSON: variables\x0a\x09nom := variables at: 'nom'.\x0a\x09prenom := variables at: 'prenom'.\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ]\x0a\x09\x22assoc := (objet assoc) nom.\x22\x0a\x09\x22tshirt :=\x22",
-messageSends: ["at:", "at:ifPresent:ifAbsent:", "asSymbol"],
-referencedClasses: []
+source: "fromJSON: variables\x0a\x09nom := variables at: 'nom'.\x0a\x09prenom := variables at: 'prenom'.\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09\x22tshirt :=\x22",
+messageSends: ["at:", "at:ifPresent:ifAbsent:", "asSymbol", "instance"],
+referencedClasses: ["FdJAssociations"]
 }),
 globals.FdJBenevole);
 
@@ -707,15 +842,17 @@ selector: "fromJSON:",
 protocol: 'as yet unclassified',
 fn: function (variables){
 var self=this;
-function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
 function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
 return smalltalk.withContext(function($ctx1) { 
-self["@liste"]=_st(_st($FdJStockage())._instance())._chargerListe_avec_(_st(variables)._at_("liste"),$FdJBenevole());
+self["@liste"]=_st(_st(variables)._at_("liste"))._collect_((function(v){
+return smalltalk.withContext(function($ctx2) {
+return _st(_st($FdJBenevole())._new())._fromJSON_(v);
+}, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},globals.FdJBenevoles)})},
 args: ["variables"],
-source: "fromJSON: variables\x0a\x09liste := FdJStockage instance\x0a\x09\x09\x09\x09chargerListe: (variables at: 'liste')\x0a\x09\x09\x09\x09avec: FdJBenevole",
-messageSends: ["chargerListe:avec:", "instance", "at:"],
-referencedClasses: ["FdJStockage", "FdJBenevole"]
+source: "fromJSON: variables\x0a\x09liste := (variables at: 'liste') collect: [ :v |\x0a\x09\x09\x09FdJBenevole new fromJSON: v\x0a\x09\x09]",
+messageSends: ["collect:", "at:", "fromJSON:", "new"],
+referencedClasses: ["FdJBenevole"]
 }),
 globals.FdJBenevoles);
 
@@ -723,7 +860,7 @@ globals.FdJBenevoles);
 smalltalk.addMethod(
 smalltalk.method({
 selector: "exemple",
-protocol: 'as yet unclassified',
+protocol: 'exemples',
 fn: function (){
 var self=this;
 function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
@@ -746,25 +883,25 @@ smalltalk.addClass('FdJStock', globals.Object, ['tshirts'], 'Benevoles');
 smalltalk.addClass('FdJStockage', globals.Object, [], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
-selector: "charger:",
+selector: "charge:",
 protocol: 'as yet unclassified',
 fn: function (entite){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=self._charger_depuis_(entite,self._jsonPour_(entite));
+$1=self._charge_depuis_(entite,self._jsonPour_(entite));
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"charger:",{entite:entite},globals.FdJStockage)})},
+}, function($ctx1) {$ctx1.fill(self,"charge:",{entite:entite},globals.FdJStockage)})},
 args: ["entite"],
-source: "charger: entite\x0a\x09^ self charger: entite depuis: (self jsonPour: entite)",
-messageSends: ["charger:depuis:", "jsonPour:"],
+source: "charge: entite\x0a\x09^ self charge: entite depuis: (self jsonPour: entite)",
+messageSends: ["charge:depuis:", "jsonPour:"],
 referencedClasses: []
 }),
 globals.FdJStockage);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "charger:depuis:",
+selector: "charge:depuis:",
 protocol: 'as yet unclassified',
 fn: function (entite,json){
 var self=this;
@@ -779,31 +916,10 @@ objet=entite;
 };
 $2=_st(objet)._fromJSON_(json);
 return $2;
-}, function($ctx1) {$ctx1.fill(self,"charger:depuis:",{entite:entite,json:json,objet:objet},globals.FdJStockage)})},
+}, function($ctx1) {$ctx1.fill(self,"charge:depuis:",{entite:entite,json:json,objet:objet},globals.FdJStockage)})},
 args: ["entite", "json"],
-source: "charger: entite depuis: json\x0a\x09|objet|\x0a\x09objet := entite isClass\x0a\x09\x09ifTrue: [ entite new ]\x0a\x09\x09ifFalse: [ entite ].\x0a\x09^ objet fromJSON: json",
+source: "charge: entite depuis: json\x0a\x09|objet|\x0a\x09objet := entite isClass\x0a\x09\x09ifTrue: [ entite new ]\x0a\x09\x09ifFalse: [ entite ].\x0a\x09^ objet fromJSON: json",
 messageSends: ["ifTrue:ifFalse:", "isClass", "new", "fromJSON:"],
-referencedClasses: []
-}),
-globals.FdJStockage);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "chargerListe:avec:",
-protocol: 'as yet unclassified',
-fn: function (liste,entite){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st(liste)._collect_((function(o){
-return smalltalk.withContext(function($ctx2) {
-return self._charger_depuis_(entite,self._variablesPour_(o));
-}, function($ctx2) {$ctx2.fillBlock({o:o},$ctx1,1)})}));
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"chargerListe:avec:",{liste:liste,entite:entite},globals.FdJStockage)})},
-args: ["liste", "entite"],
-source: "chargerListe: liste avec: entite\x0a\x09^ liste collect: [ :o | self charger: entite depuis: (self variablesPour: o) ]",
-messageSends: ["collect:", "charger:depuis:", "variablesPour:"],
 referencedClasses: []
 }),
 globals.FdJStockage);
@@ -857,15 +973,15 @@ globals.FdJStockage);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "sauver:",
+selector: "sauve:",
 protocol: 'as yet unclassified',
 fn: function (objet){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 _st(sessionStorage)._setItem_value_(self._nomPour_(objet),_st(objet)._asJSONString());
-return self}, function($ctx1) {$ctx1.fill(self,"sauver:",{objet:objet},globals.FdJStockage)})},
+return self}, function($ctx1) {$ctx1.fill(self,"sauve:",{objet:objet},globals.FdJStockage)})},
 args: ["objet"],
-source: "sauver: objet\x0a\x09sessionStorage\x0a\x09\x09setItem: (self nomPour: objet)\x0a\x09\x09value: objet asJSONString",
+source: "sauve: objet\x0a\x09sessionStorage\x0a\x09\x09setItem: (self nomPour: objet)\x0a\x09\x09value: objet asJSONString",
 messageSends: ["setItem:value:", "nomPour:", "asJSONString"],
 referencedClasses: []
 }),
@@ -897,20 +1013,37 @@ fn: function (json){
 var self=this;
 var variables;
 function $HashedCollection(){return globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
+function $Array(){return globals.Array||(typeof Array=="undefined"?nil:Array)}
 return smalltalk.withContext(function($ctx1) { 
-var $1;
+var $1,$2,$3,$4,$5,$6;
+$1=_st(_st(_st(json)._class())._name()).__eq("JSObjectProxy");
+if(smalltalk.assert($1)){
 variables=_st($HashedCollection())._new();
+variables;
 _st(json)._keysAndValuesDo_((function(k,v){
 return smalltalk.withContext(function($ctx2) {
-return _st(variables)._at_put_(k,v);
-}, function($ctx2) {$ctx2.fillBlock({k:k,v:v},$ctx1,1)})}));
-$1=variables;
-return $1;
+$2=variables;
+$3=self._variablesPour_(v);
+$ctx2.sendIdx["variablesPour:"]=1;
+return _st($2)._at_put_(k,$3);
+}, function($ctx2) {$ctx2.fillBlock({k:k,v:v},$ctx1,2)})}));
+$4=variables;
+return $4;
+};
+$5=_st(json)._isKindOf_($Array());
+if(smalltalk.assert($5)){
+$6=_st(json)._collect_((function(o){
+return smalltalk.withContext(function($ctx2) {
+return self._variablesPour_(o);
+}, function($ctx2) {$ctx2.fillBlock({o:o},$ctx1,4)})}));
+return $6;
+};
+return json;
 }, function($ctx1) {$ctx1.fill(self,"variablesPour:",{json:json,variables:variables},globals.FdJStockage)})},
 args: ["json"],
-source: "variablesPour: json\x0a\x09| variables |\x0a\x09variables := HashedCollection new.\x0a\x09json keysAndValuesDo: [ :k :v | \x0a\x09\x09variables at: k put: v ].\x0a\x09^ variables",
-messageSends: ["new", "keysAndValuesDo:", "at:put:"],
-referencedClasses: ["HashedCollection"]
+source: "variablesPour: json\x0a\x09| variables |\x0a\x09(json class name = 'JSObjectProxy') ifTrue: [\x0a\x09\x09variables := HashedCollection new.\x0a\x09\x09json keysAndValuesDo: [ :k :v |\x0a\x09\x09\x09variables at: k put: (self variablesPour: v) ].\x0a\x09\x09^ variables\x0a\x09\x09].\x0a\x09(json isKindOf: Array) ifTrue: [\x0a\x09\x09^ json collect: [ :o |\x0a\x09\x09\x09self variablesPour: o ]\x0a\x09\x09\x09].\x0a\x09^ json",
+messageSends: ["ifTrue:", "=", "name", "class", "new", "keysAndValuesDo:", "at:put:", "variablesPour:", "isKindOf:", "collect:"],
+referencedClasses: ["HashedCollection", "Array"]
 }),
 globals.FdJStockage);
 

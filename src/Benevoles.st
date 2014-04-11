@@ -103,6 +103,11 @@ Object subclass: #FdJAssociation
 
 !FdJAssociation methodsFor: 'accessing'!
 
+fromJSON: variables
+	nom := variables at: 'nom'.
+	"logo := variables at: 'logo'"
+!
+
 logo
 	^ logo
 !
@@ -124,6 +129,42 @@ nom: anObject
 exemple
 	"Genère un échantillon"
 	^ self new nom: 'Joc-ere'; yourself
+! !
+
+Object subclass: #FdJAssociations
+	instanceVariableNames: 'liste'
+	package: 'Benevoles'!
+
+!FdJAssociations methodsFor: 'as yet unclassified'!
+
+associations: desAssociations
+	liste := HashedCollection new.
+	desAssociations do: [ :a |
+		liste at: a nom put: a ]
+!
+
+at: nom
+	^ liste at: nom ifAbsent: [ nil ]
+!
+
+fromJSON: variables
+	liste := (variables at: 'liste') collect: [ :v |
+			FdJAssociation new fromJSON: v
+		]
+! !
+
+FdJAssociations class instanceVariableNames: 'instance'!
+
+!FdJAssociations class methodsFor: 'exemples'!
+
+exemple
+	^ self instance
+		associations: (Array with: FdJAssociation exemple)
+!
+
+instance
+	instance ifNil: [ instance := self new ].
+	^ instance
 ! !
 
 Object subclass: #FdJBenevole
@@ -189,8 +230,10 @@ fromJSON: variables
 	prenom := variables at: 'prenom'.
 	etat := variables at: 'etat'
 		ifPresent: [ :v | v asSymbol ]
-		ifAbsent: [ nil ]
-	"assoc := (objet assoc) nom."
+		ifAbsent: [ nil ].
+	assoc := variables at: 'assoc'
+		ifPresent: [ :v | FdJAssociations instance at: v ]
+		ifAbsent: [ nil ].
 	"tshirt :="
 !
 
@@ -248,12 +291,12 @@ benevoles: desBenevoles
 !
 
 fromJSON: variables
-	liste := FdJStockage instance
-				chargerListe: (variables at: 'liste')
-				avec: FdJBenevole
+	liste := (variables at: 'liste') collect: [ :v |
+			FdJBenevole new fromJSON: v
+		]
 ! !
 
-!FdJBenevoles class methodsFor: 'as yet unclassified'!
+!FdJBenevoles class methodsFor: 'exemples'!
 
 exemple
 	^ self new benevoles: FdJBenevole exemples
@@ -269,20 +312,16 @@ Object subclass: #FdJStockage
 
 !FdJStockage methodsFor: 'as yet unclassified'!
 
-charger: entite
-	^ self charger: entite depuis: (self jsonPour: entite)
+charge: entite
+	^ self charge: entite depuis: (self jsonPour: entite)
 !
 
-charger: entite depuis: json
+charge: entite depuis: json
 	|objet|
 	objet := entite isClass
 		ifTrue: [ entite new ]
 		ifFalse: [ entite ].
 	^ objet fromJSON: json
-!
-
-chargerListe: liste avec: entite
-	^ liste collect: [ :o | self charger: entite depuis: (self variablesPour: o) ]
 !
 
 jsonPour: objet
@@ -296,7 +335,7 @@ nomPour: entite
 	^ entite class name
 !
 
-sauver: objet
+sauve: objet
 	sessionStorage
 		setItem: (self nomPour: objet)
 		value: objet asJSONString
@@ -309,10 +348,17 @@ stockagePour: objet
 
 variablesPour: json
 	| variables |
-	variables := HashedCollection new.
-	json keysAndValuesDo: [ :k :v | 
-		variables at: k put: v ].
-	^ variables
+	(json class name = 'JSObjectProxy') ifTrue: [
+		variables := HashedCollection new.
+		json keysAndValuesDo: [ :k :v |
+			variables at: k put: (self variablesPour: v) ].
+		^ variables
+		].
+	(json isKindOf: Array) ifTrue: [
+		^ json collect: [ :o |
+			self variablesPour: o ]
+			].
+	^ json
 ! !
 
 FdJStockage class instanceVariableNames: 'instance'!

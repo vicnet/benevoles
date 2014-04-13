@@ -120,8 +120,10 @@ selector: "initialize",
 protocol: 'initialization',
 fn: function (){
 var self=this;
-var barre;
-function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
+var barre,b;
+function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
+function $FdJAssociations(){return globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
+function $FdJBenevoles(){return globals.FdJBenevoles||(typeof FdJBenevoles=="undefined"?nil:FdJBenevoles)}
 function $FdJWidgetBarre(){return globals.FdJWidgetBarre||(typeof FdJWidgetBarre=="undefined"?nil:FdJWidgetBarre)}
 function $FdJWidgetSelectionneur(){return globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
 function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
@@ -131,7 +133,17 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$2,$3,$4,$5;
 ($ctx1.supercall = true, globals.FdJApplication.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
-self["@benevoles"]=_st($FdJBenevole())._exemples();
+_st($FdJStockage())._charge_sinon_($FdJAssociations(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st($FdJAssociations())._exemple();
+$ctx2.sendIdx["exemple"]=1;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["charge:sinon:"]=1;
+b=_st($FdJStockage())._charge_sinon_($FdJBenevoles(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st($FdJBenevoles())._exemple();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+self["@benevoles"]=_st(b)._benevoles();
 $1=_st($FdJWidgetBarre())._new();
 $ctx1.sendIdx["new"]=1;
 barre=_st($1)._presentateur_(self);
@@ -151,13 +163,13 @@ self["@distributeur"]=$5;
 _st(_st($FdJAnnonceur())._current())._on_do_($FdJBenevoleChangeEtat(),(function(evt){
 return smalltalk.withContext(function($ctx2) {
 return self._onBenevoleChangeEtat_(_st(evt)._benevole());
-}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,1)})}));
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,3)})}));
 _st(_st(self["@benevoles"])._first())._encours();
-return self}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre},globals.FdJApplication)})},
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre,b:b},globals.FdJApplication)})},
 args: [],
-source: "initialize\x0a\x09| barre |\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09benevoles := FdJBenevole exemples.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22exemple de filtrage\x22\x0a\x09benevoles first encours",
-messageSends: ["initialize", "exemples", "presentateur:", "new", "ajoute:", "appendToJQuery:", "asJQuery", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "encours", "first"],
-referencedClasses: ["FdJBenevole", "FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetBenevoles", "FdJAnnonceur", "FdJBenevoleChangeEtat"]
+source: "initialize\x0a\x09| barre b |\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09FdJStockage charge: FdJAssociations sinon: [ FdJAssociations exemple ].\x0a\x09b := FdJStockage charge: FdJBenevoles sinon: [ FdJBenevoles exemple ].\x0a\x09benevoles := b benevoles.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22exemple de filtrage\x22\x0a\x09benevoles first encours",
+messageSends: ["initialize", "charge:sinon:", "exemple", "benevoles", "presentateur:", "new", "ajoute:", "appendToJQuery:", "asJQuery", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "encours", "first"],
+referencedClasses: ["FdJStockage", "FdJAssociations", "FdJBenevoles", "FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetBenevoles", "FdJAnnonceur", "FdJBenevoleChangeEtat"]
 }),
 globals.FdJApplication);
 
@@ -926,19 +938,70 @@ globals.FdJStockage);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "charge:sinon:",
+protocol: 'as yet unclassified',
+fn: function (entite,block){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$receiver;
+$1=self._jsonPour_(entite);
+if(($receiver = $1) == null || $receiver.isNil){
+$2=_st(block)._value();
+return $2;
+} else {
+var s;
+s=$receiver;
+$3=self._charge_depuis_(entite,s);
+return $3;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"charge:sinon:",{entite:entite,block:block},globals.FdJStockage)})},
+args: ["entite", "block"],
+source: "charge: entite sinon: block\x0a\x09(self jsonPour: entite)\x0a\x09\x09ifNil: [\x0a\x09\x09\x09^ block value ]\x0a\x09\x09ifNotNil: [:s |\x0a\x09\x09\x09^ self charge: entite depuis: s ]",
+messageSends: ["ifNil:ifNotNil:", "jsonPour:", "value", "charge:depuis:"],
+referencedClasses: []
+}),
+globals.FdJStockage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "existe:",
+protocol: 'as yet unclassified',
+fn: function (objet){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st(sessionStorage)._getItem_(self._nomPour_(objet)))._isNil();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"existe:",{objet:objet},globals.FdJStockage)})},
+args: ["objet"],
+source: "existe: objet\x0a\x09^ (sessionStorage getItem: (self nomPour: objet)) isNil",
+messageSends: ["isNil", "getItem:", "nomPour:"],
+referencedClasses: []
+}),
+globals.FdJStockage);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "jsonPour:",
 protocol: 'as yet unclassified',
 fn: function (objet){
 var self=this;
 function $JSON(){return globals.JSON||(typeof JSON=="undefined"?nil:JSON)}
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=self._variablesPour_(_st($JSON())._parse_(self._stockagePour_(objet)));
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"jsonPour:",{objet:objet},globals.FdJStockage)})},
+var $1,$2,$receiver;
+$1=self._stockagePour_(objet);
+if(($receiver = $1) == null || $receiver.isNil){
+return nil;
+} else {
+var s;
+s=$receiver;
+$2=self._variablesPour_(_st($JSON())._parse_(s));
+return $2;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"jsonPour:",{objet:objet},globals.FdJStockage)})},
 args: ["objet"],
-source: "jsonPour: objet\x0a\x09^ self variablesPour: (\x0a\x09\x09JSON parse: (self stockagePour: objet))",
-messageSends: ["variablesPour:", "parse:", "stockagePour:"],
+source: "jsonPour: objet\x0a\x09(self stockagePour: objet)\x0a\x09\x09ifNil: [ ^ nil ]\x0a\x09\x09ifNotNil: [ :s |\x0a\x09\x09\x09^ self variablesPour: (JSON parse: s) ]",
+messageSends: ["ifNil:ifNotNil:", "stockagePour:", "variablesPour:", "parse:"],
 referencedClasses: ["JSON"]
 }),
 globals.FdJStockage);
@@ -1012,11 +1075,12 @@ protocol: 'as yet unclassified',
 fn: function (json){
 var self=this;
 var variables;
+function $JSObjectProxy(){return globals.JSObjectProxy||(typeof JSObjectProxy=="undefined"?nil:JSObjectProxy)}
 function $HashedCollection(){return globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
 function $Array(){return globals.Array||(typeof Array=="undefined"?nil:Array)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$5,$6;
-$1=_st(_st(_st(json)._class())._name()).__eq("JSObjectProxy");
+$1=_st(_st(json)._class()).__eq_eq($JSObjectProxy());
 if(smalltalk.assert($1)){
 variables=_st($HashedCollection())._new();
 variables;
@@ -1041,14 +1105,66 @@ return $6;
 return json;
 }, function($ctx1) {$ctx1.fill(self,"variablesPour:",{json:json,variables:variables},globals.FdJStockage)})},
 args: ["json"],
-source: "variablesPour: json\x0a\x09| variables |\x0a\x09(json class name = 'JSObjectProxy') ifTrue: [\x0a\x09\x09variables := HashedCollection new.\x0a\x09\x09json keysAndValuesDo: [ :k :v |\x0a\x09\x09\x09variables at: k put: (self variablesPour: v) ].\x0a\x09\x09^ variables\x0a\x09\x09].\x0a\x09(json isKindOf: Array) ifTrue: [\x0a\x09\x09^ json collect: [ :o |\x0a\x09\x09\x09self variablesPour: o ]\x0a\x09\x09\x09].\x0a\x09^ json",
-messageSends: ["ifTrue:", "=", "name", "class", "new", "keysAndValuesDo:", "at:put:", "variablesPour:", "isKindOf:", "collect:"],
-referencedClasses: ["HashedCollection", "Array"]
+source: "variablesPour: json\x0a\x09| variables |\x0a\x09(json class == JSObjectProxy) ifTrue: [\x0a\x09\x09variables := HashedCollection new.\x0a\x09\x09json keysAndValuesDo: [ :k :v |\x0a\x09\x09\x09variables at: k put: (self variablesPour: v) ].\x0a\x09\x09^ variables\x0a\x09\x09].\x0a\x09(json isKindOf: Array) ifTrue: [\x0a\x09\x09^ json collect: [ :o |\x0a\x09\x09\x09self variablesPour: o ]\x0a\x09\x09\x09].\x0a\x09^ json",
+messageSends: ["ifTrue:", "==", "class", "new", "keysAndValuesDo:", "at:put:", "variablesPour:", "isKindOf:", "collect:"],
+referencedClasses: ["JSObjectProxy", "HashedCollection", "Array"]
+}),
+globals.FdJStockage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "vide",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(sessionStorage)._clear();
+return self}, function($ctx1) {$ctx1.fill(self,"vide",{},globals.FdJStockage)})},
+args: [],
+source: "vide\x0a\x09sessionStorage clear",
+messageSends: ["clear"],
+referencedClasses: []
 }),
 globals.FdJStockage);
 
 
 globals.FdJStockage.klass.iVarNames = ['instance'];
+smalltalk.addMethod(
+smalltalk.method({
+selector: "charge:",
+protocol: 'as yet unclassified',
+fn: function (entite){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._instance())._charge_(entite);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"charge:",{entite:entite},globals.FdJStockage.klass)})},
+args: ["entite"],
+source: "charge: entite\x0a\x09^ self instance charge: entite",
+messageSends: ["charge:", "instance"],
+referencedClasses: []
+}),
+globals.FdJStockage.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "charge:sinon:",
+protocol: 'as yet unclassified',
+fn: function (entite,block){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._instance())._charge_sinon_(entite,block);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"charge:sinon:",{entite:entite,block:block},globals.FdJStockage.klass)})},
+args: ["entite", "block"],
+source: "charge: entite sinon: block\x0a\x09^ self instance charge: entite sinon: block",
+messageSends: ["charge:sinon:", "instance"],
+referencedClasses: []
+}),
+globals.FdJStockage.klass);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "instance",

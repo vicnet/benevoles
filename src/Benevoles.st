@@ -50,11 +50,13 @@ filtre: texte
 !
 
 initialize
-	| barre |
+	| barre b |
 	super initialize.
 	
 	"Modele"
-	benevoles := FdJBenevole exemples.
+	FdJStockage charge: FdJAssociations sinon: [ FdJAssociations exemple ].
+	b := FdJStockage charge: FdJBenevoles sinon: [ FdJBenevoles exemple ].
+	benevoles := b benevoles.
 	
 	"Widgets"
 	barre := FdJWidgetBarre new
@@ -324,9 +326,23 @@ charge: entite depuis: json
 	^ objet fromJSON: json
 !
 
+charge: entite sinon: block
+	(self jsonPour: entite)
+		ifNil: [
+			^ block value ]
+		ifNotNil: [:s |
+			^ self charge: entite depuis: s ]
+!
+
+existe: objet
+	^ (sessionStorage getItem: (self nomPour: objet)) isNil
+!
+
 jsonPour: objet
-	^ self variablesPour: (
-		JSON parse: (self stockagePour: objet))
+	(self stockagePour: objet)
+		ifNil: [ ^ nil ]
+		ifNotNil: [ :s |
+			^ self variablesPour: (JSON parse: s) ]
 !
 
 nomPour: entite
@@ -348,7 +364,7 @@ stockagePour: objet
 
 variablesPour: json
 	| variables |
-	(json class name = 'JSObjectProxy') ifTrue: [
+	(json class == JSObjectProxy) ifTrue: [
 		variables := HashedCollection new.
 		json keysAndValuesDo: [ :k :v |
 			variables at: k put: (self variablesPour: v) ].
@@ -359,11 +375,23 @@ variablesPour: json
 			self variablesPour: o ]
 			].
 	^ json
+!
+
+vide
+	sessionStorage clear
 ! !
 
 FdJStockage class instanceVariableNames: 'instance'!
 
 !FdJStockage class methodsFor: 'as yet unclassified'!
+
+charge: entite
+	^ self instance charge: entite
+!
+
+charge: entite sinon: block
+	^ self instance charge: entite sinon: block
+!
 
 instance
 	instance ifNil: [ instance := self new ].

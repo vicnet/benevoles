@@ -880,6 +880,7 @@ selector: "filtre:",
 protocol: 'as yet unclassified',
 fn: function (texte){
 var self=this;
+var minus;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3;
 $1=_st(texte)._isEmpty();
@@ -887,15 +888,17 @@ if(smalltalk.assert($1)){
 $2=[];
 return $2;
 };
+minus=_st(texte)._asLowercase();
+$ctx1.sendIdx["asLowercase"]=1;
 $3=_st(self["@liste"])._select_((function(b){
 return smalltalk.withContext(function($ctx2) {
-return _st(_st(b)._estDisponible()).__and(_st(_st(b)._nom())._includesSubString_(texte));
+return _st(_st(b)._estDisponible()).__and(_st(_st(_st(b)._nom())._asLowercase())._includesSubString_(texte));
 }, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,2)})}));
 return $3;
-}, function($ctx1) {$ctx1.fill(self,"filtre:",{texte:texte},globals.FdJBenevoles)})},
+}, function($ctx1) {$ctx1.fill(self,"filtre:",{texte:texte,minus:minus},globals.FdJBenevoles)})},
 args: ["texte"],
-source: "filtre: texte\x0a\x09texte isEmpty ifTrue: [ ^  #() ].\x0a\x09^ liste select: [ :b |\x0a\x09\x09b estDisponible & (b nom includesSubString: texte) ]",
-messageSends: ["ifTrue:", "isEmpty", "select:", "&", "estDisponible", "includesSubString:", "nom"],
+source: "filtre: texte\x0a\x09| minus |\x0a\x09texte isEmpty ifTrue: [ ^  #() ].\x0a\x09minus := texte asLowercase.\x0a\x09^ liste select: [ :b |\x0a\x09\x09b estDisponible & (b nom asLowercase includesSubString: texte) ]",
+messageSends: ["ifTrue:", "isEmpty", "asLowercase", "select:", "&", "estDisponible", "includesSubString:", "nom"],
 referencedClasses: []
 }),
 globals.FdJBenevoles);

@@ -299,9 +299,11 @@ benevoles: desBenevoles
 !
 
 filtre: texte
+	| minus |
 	texte isEmpty ifTrue: [ ^  #() ].
+	minus := texte asLowercase.
 	^ liste select: [ :b |
-		b estDisponible & (b nom includesSubString: texte) ]
+		b estDisponible & (b nom asLowercase includesSubString: texte) ]
 !
 
 fromJSON: variables

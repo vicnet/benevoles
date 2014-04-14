@@ -81,6 +81,7 @@ initialize
 onBenevoleChangeEtat: benevole
 	self filtre: (selectionneur filtre).
 	benevole estEncours ifTrue: [
+		selectionneur defiltre.
 		distributeur ajoute: benevole ].
 	benevole estDistribue ifTrue: [
 		distributeur supprime: benevole ].
@@ -567,7 +568,7 @@ renderIdentiteOn: html
 !
 
 renderOn: html
-	div := html div class: 'benevole'.
+	super renderOn: html.
 	div with: [ self renderIdentiteOn: html.
 				self renderAssociationOn: html].
 	div onClick: [ presentateur selectionne: benevole ]
@@ -600,11 +601,6 @@ renderBenevolesOn: html
 	self renderWidgetsOn: html
 !
 
-renderOn: html
-	div := html div class: 'benevoles'.
-	div with: [ self renderBenevolesOn: html]
-!
-
 supprime: unBenevole
 	super supprime: (
 		widgets detect: [ :w | w benevole == unBenevole ] ifNone: [ ^ self ])
@@ -620,12 +616,16 @@ FdJWidget subclass: #FdJWidgetSelectionneur
 
 !FdJWidgetSelectionneur methodsFor: 'as yet unclassified'!
 
+defiltre
+	input asJQuery val: ''
+!
+
 filtre
 	^ input asJQuery val
 !
 
 renderOn: html
-	div := html div class: 'selectionneur'.
+	super renderOn: html.
 	div with: [
 		input := html input.
 		input onKeyUp: [ presentateur filtre: (self filtre) ].

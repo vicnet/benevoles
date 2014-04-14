@@ -41,22 +41,22 @@ Object subclass: #FdJApplication
 
 !FdJApplication methodsFor: 'initialization'!
 
+charge
+	"Charge le modele (ou créé un exemple)"
+	FdJStockage charge: FdJAssociations sinon: [ FdJAssociations exemple ].
+	benevoles := FdJStockage charge: FdJBenevoles sinon: [ FdJBenevoles exemple ]
+!
+
 filtre: texte
-	| selectionnes |
-	texte isEmpty
-		ifTrue: [ selectionnes := #() ]
-		ifFalse: [ selectionnes := benevoles select: [ :b | b estDisponible & (b nom includesSubString: texte)] ].
-	selectionneur selectionne: selectionnes
+	selectionneur selectionne: (benevoles filtre: texte)
 !
 
 initialize
-	| barre b |
+	| barre |
 	super initialize.
 	
 	"Modele"
-	FdJStockage charge: FdJAssociations sinon: [ FdJAssociations exemple ].
-	b := FdJStockage charge: FdJBenevoles sinon: [ FdJBenevoles exemple ].
-	benevoles := b benevoles.
+	self charge.
 	
 	"Widgets"
 	barre := FdJWidgetBarre new
@@ -74,8 +74,8 @@ initialize
 	FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |
 		self onBenevoleChangeEtat: evt benevole ].
 
-	"exemple de filtrage"
-	benevoles first encours
+	"init"
+	distributeur associe: (benevoles selectionnes)
 !
 
 onBenevoleChangeEtat: benevole
@@ -83,7 +83,12 @@ onBenevoleChangeEtat: benevole
 	benevole estEncours ifTrue: [
 		distributeur ajoute: benevole ].
 	benevole estDistribue ifTrue: [
-		distributeur supprime: benevole ]
+		distributeur supprime: benevole ].
+	self sauve
+!
+
+sauve
+	FdJStockage sauve: benevoles
 !
 
 selectionne: benevole
@@ -191,7 +196,7 @@ asJSON
 	variables := HashedCollection new.
 	variables at: 'nom' put: nom.
 	variables at: 'prenom' put: prenom.
-	variables at: 'etat' put: etat.
+	etat ifNotNil: [ variables at: 'etat' put: etat ].
 	variables at: 'assoc' put: assoc nom.
 "	variables at: 'tshirt' put: ."
 	^ variables
@@ -292,10 +297,20 @@ benevoles: desBenevoles
 	liste := desBenevoles
 !
 
+filtre: texte
+	texte isEmpty ifTrue: [ ^  #() ].
+	^ liste select: [ :b |
+		b estDisponible & (b nom includesSubString: texte) ]
+!
+
 fromJSON: variables
 	liste := (variables at: 'liste') collect: [ :v |
 			FdJBenevole new fromJSON: v
 		]
+!
+
+selectionnes
+	^ liste select: [ :b | b estEncours ]
 ! !
 
 !FdJBenevoles class methodsFor: 'exemples'!
@@ -396,6 +411,14 @@ charge: entite sinon: block
 instance
 	instance ifNil: [ instance := self new ].
 	^ instance
+!
+
+sauve: objet
+	^ self instance sauve: objet
+!
+
+vide
+	^ self instance vide
 ! !
 
 Object subclass: #FdJTShirt

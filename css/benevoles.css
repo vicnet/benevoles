@@ -36,6 +36,18 @@ body {
     bottom: 42px;
     width: 100%;
 }
+.selectionneur .suite {
+    position: fixed;
+    left:0px;
+    bottom: 81px;
+    width: 30%;
+    padding: 5px;
+    border: solid;
+    border-radius: 10px;
+    font-size: 140%;
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.3) rgba(0,0,0,.3) rgba(0,0,0,.6);
+    display: none;
+}
 .selectionneur .benevole {
     font-size: 120%;
     background: white;

@@ -48,7 +48,15 @@ charge
 !
 
 filtre: texte
-	selectionneur selectionne: (benevoles filtre: texte)
+	| max liste |
+	max := 1.
+	liste := benevoles filtre: texte max: max+1.
+	(liste size <= max)
+		ifTrue: [
+			selectionneur selectionne: liste max: false ]
+		ifFalse: [
+			liste removeLast.
+			selectionneur selectionne: liste max: true ]
 !
 
 initialize
@@ -298,12 +306,25 @@ benevoles: desBenevoles
 	liste := desBenevoles
 !
 
-filtre: texte
-	| minus |
+filtre: texte max: max
+	| minus cpt |
 	texte isEmpty ifTrue: [ ^  #() ].
+	cpt := max.
+	"teste le nom"
 	minus := texte asLowercase.
+	^ self filtre: minus max: max avec: [ :b :m |
+		b nom asLowercase includesSubString: m ]
+!
+
+filtre: texte max: max avec: block
+	| cpt |
+	cpt := max.
+	"teste le block"
 	^ liste select: [ :b |
-		b estDisponible & (b nom asLowercase includesSubString: texte) ]
+		b estDisponible & (cpt>0) & (block value: b value: texte)
+			ifTrue: [ cpt := cpt-1. true]
+			ifFalse: [ false ]
+		]
 !
 
 fromJSON: variables
@@ -613,7 +634,7 @@ update
 ! !
 
 FdJWidget subclass: #FdJWidgetSelectionneur
-	instanceVariableNames: 'liste input'
+	instanceVariableNames: 'liste input suite'
 	package: 'Benevoles'!
 
 !FdJWidgetSelectionneur methodsFor: 'as yet unclassified'!
@@ -634,10 +655,19 @@ renderOn: html
 		
 		liste := FdJWidgetBenevoles new.
 		liste presentateur: presentateur.
-		liste renderOn: html ]
+		liste renderOn: html.
+
+		suite := html div class: 'suite'; with: '...']
 !
 
 selectionne: benevoles
+	suite asJQuery show: 400.
+	liste associe: benevoles
+!
+
+selectionne: benevoles max: max
+	max	ifTrue:  [ suite asJQuery fadeIn ]
+		ifFalse: [ suite asJQuery fadeOut ].
 	liste associe: benevoles
 ! !
 

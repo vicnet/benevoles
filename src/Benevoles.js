@@ -119,12 +119,23 @@ selector: "filtre:",
 protocol: 'initialization',
 fn: function (texte){
 var self=this;
+var max,liste;
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@selectionneur"])._selectionne_(_st(self["@benevoles"])._filtre_(texte));
-return self}, function($ctx1) {$ctx1.fill(self,"filtre:",{texte:texte},globals.FdJApplication)})},
+var $1;
+max=(1);
+liste=_st(self["@benevoles"])._filtre_max_(texte,_st(max).__plus((1)));
+$1=_st(_st(liste)._size()).__lt_eq(max);
+if(smalltalk.assert($1)){
+_st(self["@selectionneur"])._selectionne_max_(liste,false);
+$ctx1.sendIdx["selectionne:max:"]=1;
+} else {
+_st(liste)._removeLast();
+_st(self["@selectionneur"])._selectionne_max_(liste,true);
+};
+return self}, function($ctx1) {$ctx1.fill(self,"filtre:",{texte:texte,max:max,liste:liste},globals.FdJApplication)})},
 args: ["texte"],
-source: "filtre: texte\x0a\x09selectionneur selectionne: (benevoles filtre: texte)",
-messageSends: ["selectionne:", "filtre:"],
+source: "filtre: texte\x0a\x09| max liste |\x0a\x09max := 1.\x0a\x09liste := benevoles filtre: texte max: max+1.\x0a\x09(liste size <= max)\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09selectionneur selectionne: liste max: false ]\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09liste removeLast.\x0a\x09\x09\x09selectionneur selectionne: liste max: true ]",
+messageSends: ["filtre:max:", "+", "ifTrue:ifFalse:", "<=", "size", "selectionne:max:", "removeLast"],
 referencedClasses: []
 }),
 globals.FdJApplication);
@@ -876,11 +887,11 @@ globals.FdJBenevoles);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "filtre:",
+selector: "filtre:max:",
 protocol: 'as yet unclassified',
-fn: function (texte){
+fn: function (texte,max){
 var self=this;
-var minus;
+var minus,cpt;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3;
 $1=_st(texte)._isEmpty();
@@ -888,17 +899,49 @@ if(smalltalk.assert($1)){
 $2=[];
 return $2;
 };
+cpt=max;
 minus=_st(texte)._asLowercase();
 $ctx1.sendIdx["asLowercase"]=1;
-$3=_st(self["@liste"])._select_((function(b){
+$3=self._filtre_max_avec_(minus,max,(function(b,m){
 return smalltalk.withContext(function($ctx2) {
-return _st(_st(b)._estDisponible()).__and(_st(_st(_st(b)._nom())._asLowercase())._includesSubString_(texte));
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,2)})}));
+return _st(_st(_st(b)._nom())._asLowercase())._includesSubString_(m);
+}, function($ctx2) {$ctx2.fillBlock({b:b,m:m},$ctx1,2)})}));
 return $3;
-}, function($ctx1) {$ctx1.fill(self,"filtre:",{texte:texte,minus:minus},globals.FdJBenevoles)})},
-args: ["texte"],
-source: "filtre: texte\x0a\x09| minus |\x0a\x09texte isEmpty ifTrue: [ ^  #() ].\x0a\x09minus := texte asLowercase.\x0a\x09^ liste select: [ :b |\x0a\x09\x09b estDisponible & (b nom asLowercase includesSubString: texte) ]",
-messageSends: ["ifTrue:", "isEmpty", "asLowercase", "select:", "&", "estDisponible", "includesSubString:", "nom"],
+}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,minus:minus,cpt:cpt},globals.FdJBenevoles)})},
+args: ["texte", "max"],
+source: "filtre: texte max: max\x0a\x09| minus cpt |\x0a\x09texte isEmpty ifTrue: [ ^  #() ].\x0a\x09cpt := max.\x0a\x09\x22teste le nom\x22\x0a\x09minus := texte asLowercase.\x0a\x09^ self filtre: minus max: max avec: [ :b :m |\x0a\x09\x09b nom asLowercase includesSubString: m ]",
+messageSends: ["ifTrue:", "isEmpty", "asLowercase", "filtre:max:avec:", "includesSubString:", "nom"],
+referencedClasses: []
+}),
+globals.FdJBenevoles);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "filtre:max:avec:",
+protocol: 'as yet unclassified',
+fn: function (texte,max,block){
+var self=this;
+var cpt;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+cpt=max;
+$1=_st(self["@liste"])._select_((function(b){
+return smalltalk.withContext(function($ctx2) {
+$2=_st(_st(_st(b)._estDisponible()).__and(_st(cpt).__gt((0)))).__and(_st(block)._value_value_(b,texte));
+$ctx2.sendIdx["&"]=1;
+if(smalltalk.assert($2)){
+cpt=_st(cpt).__minus((1));
+cpt;
+return true;
+} else {
+return false;
+};
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"filtre:max:avec:",{texte:texte,max:max,block:block,cpt:cpt},globals.FdJBenevoles)})},
+args: ["texte", "max", "block"],
+source: "filtre: texte max: max avec: block\x0a\x09| cpt |\x0a\x09cpt := max.\x0a\x09\x22teste le block\x22\x0a\x09^ liste select: [ :b |\x0a\x09\x09b estDisponible & (cpt>0) & (block value: b value: texte)\x0a\x09\x09\x09ifTrue: [ cpt := cpt-1. true]\x0a\x09\x09\x09ifFalse: [ false ]\x0a\x09\x09]",
+messageSends: ["select:", "ifTrue:ifFalse:", "&", "estDisponible", ">", "value:value:", "-"],
 referencedClasses: []
 }),
 globals.FdJBenevoles);
@@ -1968,7 +2011,7 @@ globals.FdJWidgetBenevoles);
 
 
 
-smalltalk.addClass('FdJWidgetSelectionneur', globals.FdJWidget, ['liste', 'input'], 'Benevoles');
+smalltalk.addClass('FdJWidgetSelectionneur', globals.FdJWidget, ['liste', 'input', 'suite'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "defiltre",
@@ -2011,6 +2054,7 @@ fn: function (html){
 var self=this;
 function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
 ($ctx1.supercall = true, globals.FdJWidgetSelectionneur.superclass.fn.prototype._renderOn_.apply(_st(self), [html]));
 $ctx1.supercall = false;
 $ctx1.sendIdx["renderOn:"]=1;
@@ -2025,12 +2069,18 @@ return _st(self["@presentateur"])._filtre_(self._filtre());
 self["@liste"]=_st($FdJWidgetBenevoles())._new();
 self["@liste"];
 _st(self["@liste"])._presentateur_(self["@presentateur"]);
-return _st(self["@liste"])._renderOn_(html);
+_st(self["@liste"])._renderOn_(html);
+$1=_st(html)._div();
+_st($1)._class_("suite");
+$2=_st($1)._with_("...");
+self["@suite"]=$2;
+return self["@suite"];
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetSelectionneur)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09input := html input.\x0a\x09\x09input onKeyUp: [ presentateur filtre: (self filtre) ].\x0a\x09\x09\x0a\x09\x09liste := FdJWidgetBenevoles new.\x0a\x09\x09liste presentateur: presentateur.\x0a\x09\x09liste renderOn: html ]",
-messageSends: ["renderOn:", "with:", "input", "onKeyUp:", "filtre:", "filtre", "new", "presentateur:"],
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09input := html input.\x0a\x09\x09input onKeyUp: [ presentateur filtre: (self filtre) ].\x0a\x09\x09\x0a\x09\x09liste := FdJWidgetBenevoles new.\x0a\x09\x09liste presentateur: presentateur.\x0a\x09\x09liste renderOn: html.\x0a\x0a\x09\x09suite := html div class: 'suite'; with: '...']",
+messageSends: ["renderOn:", "with:", "input", "onKeyUp:", "filtre:", "filtre", "new", "presentateur:", "class:", "div"],
 referencedClasses: ["FdJWidgetBenevoles"]
 }),
 globals.FdJWidgetSelectionneur);
@@ -2042,11 +2092,36 @@ protocol: 'as yet unclassified',
 fn: function (benevoles){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+_st(_st(self["@suite"])._asJQuery())._show_((400));
 _st(self["@liste"])._associe_(benevoles);
 return self}, function($ctx1) {$ctx1.fill(self,"selectionne:",{benevoles:benevoles},globals.FdJWidgetSelectionneur)})},
 args: ["benevoles"],
-source: "selectionne: benevoles\x0a\x09liste associe: benevoles",
-messageSends: ["associe:"],
+source: "selectionne: benevoles\x0a\x09suite asJQuery show: 400.\x0a\x09liste associe: benevoles",
+messageSends: ["show:", "asJQuery", "associe:"],
+referencedClasses: []
+}),
+globals.FdJWidgetSelectionneur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "selectionne:max:",
+protocol: 'as yet unclassified',
+fn: function (benevoles,max){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+if(smalltalk.assert(max)){
+$1=_st(self["@suite"])._asJQuery();
+$ctx1.sendIdx["asJQuery"]=1;
+_st($1)._fadeIn();
+} else {
+_st(_st(self["@suite"])._asJQuery())._fadeOut();
+};
+_st(self["@liste"])._associe_(benevoles);
+return self}, function($ctx1) {$ctx1.fill(self,"selectionne:max:",{benevoles:benevoles,max:max},globals.FdJWidgetSelectionneur)})},
+args: ["benevoles", "max"],
+source: "selectionne: benevoles max: max\x0a\x09max\x09ifTrue:  [ suite asJQuery fadeIn ]\x0a\x09\x09ifFalse: [ suite asJQuery fadeOut ].\x0a\x09liste associe: benevoles",
+messageSends: ["ifTrue:ifFalse:", "fadeIn", "asJQuery", "fadeOut", "associe:"],
 referencedClasses: []
 }),
 globals.FdJWidgetSelectionneur);

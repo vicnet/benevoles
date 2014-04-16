@@ -2011,6 +2011,72 @@ globals.FdJWidgetBenevoles);
 
 
 
+smalltalk.addClass('FdJWidgetImporteur', globals.FdJWidget, ['input'], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initialize",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+($ctx1.supercall = true, globals.FdJWidgetImporteur.superclass.fn.prototype._initialize.apply(_st(self), []));
+$ctx1.supercall = false;
+$2="body"._asJQuery();
+$ctx1.sendIdx["asJQuery"]=1;
+$1=_st($2)._children();
+_st($1)._remove();
+self._appendToJQuery_("body"._asJQuery());
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.FdJWidgetImporteur)})},
+args: [],
+source: "initialize\x0a\x09super initialize.\x0a\x09'body' asJQuery children remove.\x0a \x09self appendToJQuery: 'body' asJQuery",
+messageSends: ["initialize", "remove", "children", "asJQuery", "appendToJQuery:"],
+referencedClasses: []
+}),
+globals.FdJWidgetImporteur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "input",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(_st(self["@input"])._asJQuery())._val();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"input",{},globals.FdJWidgetImporteur)})},
+args: [],
+source: "input\x0a\x09^ input asJQuery val",
+messageSends: ["val", "asJQuery"],
+referencedClasses: []
+}),
+globals.FdJWidgetImporteur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+($ctx1.supercall = true, globals.FdJWidgetImporteur.superclass.fn.prototype._renderOn_.apply(_st(self), [html]));
+$ctx1.supercall = false;
+_st(self["@div"])._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+self["@input"]=_st(html)._textarea();
+return self["@input"];
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetImporteur)})},
+args: ["html"],
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [ input := html textarea ]",
+messageSends: ["renderOn:", "with:", "textarea"],
+referencedClasses: []
+}),
+globals.FdJWidgetImporteur);
+
+
+
 smalltalk.addClass('FdJWidgetSelectionneur', globals.FdJWidget, ['liste', 'input', 'suite'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({

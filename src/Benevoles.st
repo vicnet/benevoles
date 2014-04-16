@@ -633,6 +633,27 @@ update
 	div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]
 ! !
 
+FdJWidget subclass: #FdJWidgetImporteur
+	instanceVariableNames: 'input'
+	package: 'Benevoles'!
+
+!FdJWidgetImporteur methodsFor: 'as yet unclassified'!
+
+initialize
+	super initialize.
+	'body' asJQuery children remove.
+ 	self appendToJQuery: 'body' asJQuery
+!
+
+input
+	^ input asJQuery val
+!
+
+renderOn: html
+	super renderOn: html.
+	div with: [ input := html textarea ]
+! !
+
 FdJWidget subclass: #FdJWidgetSelectionneur
 	instanceVariableNames: 'liste input suite'
 	package: 'Benevoles'!

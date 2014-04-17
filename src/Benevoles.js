@@ -84,7 +84,7 @@ referencedClasses: []
 globals.FdJAnnonceur.klass);
 
 
-smalltalk.addClass('FdJApplication', globals.Object, ['benevoles', 'selectionneur', 'distributeur'], 'Benevoles');
+smalltalk.addClass('FdJApplication', globals.Object, ['benevoles', 'selectionneur', 'distributeur', 'importeur'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "charge",
@@ -142,6 +142,25 @@ globals.FdJApplication);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "importe:",
+protocol: 'initialization',
+fn: function (texte){
+var self=this;
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+_st($Transcript())._show_(texte);
+$1=_st($Transcript())._cr();
+return self}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte},globals.FdJApplication)})},
+args: ["texte"],
+source: "importe: texte\x0a\x09Transcript show: texte; cr",
+messageSends: ["show:", "cr"],
+referencedClasses: ["Transcript"]
+}),
+globals.FdJApplication);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "initialize",
 protocol: 'initialization',
 fn: function (){
@@ -149,30 +168,39 @@ var self=this;
 var barre;
 function $FdJWidgetBarre(){return globals.FdJWidgetBarre||(typeof FdJWidgetBarre=="undefined"?nil:FdJWidgetBarre)}
 function $FdJWidgetSelectionneur(){return globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
+function $FdJWidgetImporteur(){return globals.FdJWidgetImporteur||(typeof FdJWidgetImporteur=="undefined"?nil:FdJWidgetImporteur)}
 function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 function $FdJAnnonceur(){return globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
 function $FdJBenevoleChangeEtat(){return globals.FdJBenevoleChangeEtat||(typeof FdJBenevoleChangeEtat=="undefined"?nil:FdJBenevoleChangeEtat)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5;
+var $2,$1,$3,$4,$5,$6,$7;
+$2="body"._asJQuery();
+$ctx1.sendIdx["asJQuery"]=1;
+$1=_st($2)._children();
+_st($1)._remove();
 ($ctx1.supercall = true, globals.FdJApplication.superclass.fn.prototype._initialize.apply(_st(self), []));
 $ctx1.supercall = false;
 self._charge();
-$1=_st($FdJWidgetBarre())._new();
+$3=_st($FdJWidgetBarre())._new();
 $ctx1.sendIdx["new"]=1;
-barre=_st($1)._presentateur_(self);
+barre=_st($3)._presentateur_(self);
 $ctx1.sendIdx["presentateur:"]=1;
 self["@selectionneur"]=_st($FdJWidgetSelectionneur())._new();
 $ctx1.sendIdx["new"]=2;
 _st(barre)._ajoute_(self["@selectionneur"]);
-$2=barre;
-$3="body"._asJQuery();
-$ctx1.sendIdx["asJQuery"]=1;
-_st($2)._appendToJQuery_($3);
+$ctx1.sendIdx["ajoute:"]=1;
+self["@importeur"]=_st($FdJWidgetImporteur())._new();
+$ctx1.sendIdx["new"]=3;
+_st(barre)._ajoute_(self["@importeur"]);
+$4=barre;
+$5="body"._asJQuery();
+$ctx1.sendIdx["asJQuery"]=2;
+_st($4)._appendToJQuery_($5);
 $ctx1.sendIdx["appendToJQuery:"]=1;
-$4=_st($FdJWidgetBenevoles())._new();
-_st($4)._presentateur_(self);
-$5=_st($4)._appendToJQuery_("body"._asJQuery());
-self["@distributeur"]=$5;
+$6=_st($FdJWidgetBenevoles())._new();
+_st($6)._presentateur_(self);
+$7=_st($6)._appendToJQuery_("body"._asJQuery());
+self["@distributeur"]=$7;
 _st(_st($FdJAnnonceur())._current())._on_do_($FdJBenevoleChangeEtat(),(function(evt){
 return smalltalk.withContext(function($ctx2) {
 return self._onBenevoleChangeEtat_(_st(evt)._benevole());
@@ -180,9 +208,9 @@ return self._onBenevoleChangeEtat_(_st(evt)._benevole());
 _st(self["@distributeur"])._associe_(_st(self["@benevoles"])._selectionnes());
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre},globals.FdJApplication)})},
 args: [],
-source: "initialize\x0a\x09| barre |\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes)",
-messageSends: ["initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "asJQuery", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes"],
-referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetBenevoles", "FdJAnnonceur", "FdJBenevoleChangeEtat"]
+source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes)",
+messageSends: ["remove", "children", "asJQuery", "initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes"],
+referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetBenevoles", "FdJAnnonceur", "FdJBenevoleChangeEtat"]
 }),
 globals.FdJApplication);
 
@@ -2011,30 +2039,7 @@ globals.FdJWidgetBenevoles);
 
 
 
-smalltalk.addClass('FdJWidgetImporteur', globals.FdJWidget, ['input'], 'Benevoles');
-smalltalk.addMethod(
-smalltalk.method({
-selector: "initialize",
-protocol: 'as yet unclassified',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
-($ctx1.supercall = true, globals.FdJWidgetImporteur.superclass.fn.prototype._initialize.apply(_st(self), []));
-$ctx1.supercall = false;
-$2="body"._asJQuery();
-$ctx1.sendIdx["asJQuery"]=1;
-$1=_st($2)._children();
-_st($1)._remove();
-self._appendToJQuery_("body"._asJQuery());
-return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.FdJWidgetImporteur)})},
-args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09'body' asJQuery children remove.\x0a \x09self appendToJQuery: 'body' asJQuery",
-messageSends: ["initialize", "remove", "children", "asJQuery", "appendToJQuery:"],
-referencedClasses: []
-}),
-globals.FdJWidgetImporteur);
-
+smalltalk.addClass('FdJWidgetImporteur', globals.FdJWidget, ['input', 'dlg'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "input",
@@ -2055,22 +2060,73 @@ globals.FdJWidgetImporteur);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "renderDlgOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$5,$6,$4,$2;
+$1=_st(html)._div();
+$ctx1.sendIdx["div"]=1;
+_st($1)._class_("dialog");
+$ctx1.sendIdx["class:"]=1;
+$2=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+self["@input"]=_st(html)._textarea();
+self["@input"];
+$3=_st(html)._div();
+_st($3)._class_("actions");
+$4=_st($3)._with_((function(){
+return smalltalk.withContext(function($ctx3) {
+$5=_st(html)._button();
+_st($5)._with_("import");
+$6=_st($5)._onClick_((function(){
+return smalltalk.withContext(function($ctx4) {
+_st(self["@presentateur"])._importe_(self._input());
+return _st(_st(self["@dlg"])._asJQuery())._fadeOut();
+}, function($ctx4) {$ctx4.fillBlock({},$ctx3,3)})}));
+return $6;
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+$ctx2.sendIdx["with:"]=2;
+return $4;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+self["@dlg"]=$2;
+return self}, function($ctx1) {$ctx1.fill(self,"renderDlgOn:",{html:html},globals.FdJWidgetImporteur)})},
+args: ["html"],
+source: "renderDlgOn: html\x0a\x09dlg := html div\x0a\x09\x09class: 'dialog';\x0a\x09\x09with: [\x0a\x09\x09\x09input := html textarea.\x0a\x09\x09\x09html div class: 'actions';\x0a\x09\x09\x09\x09 with: [\x0a\x09\x09\x09\x09\x09 html button with: 'import';\x0a\x09\x09\x09\x09\x09 \x09  onClick: [\x0a\x09\x09\x09\x09\x09\x09\x09  presentateur importe: self input.\x0a\x09\x09\x09\x09\x09\x09\x09  dlg asJQuery fadeOut\x0a\x09\x09\x09\x09\x09\x09\x09  ]\x0a\x09\x09\x09\x09\x09 ]\x0a\x09\x09]",
+messageSends: ["class:", "div", "with:", "textarea", "button", "onClick:", "importe:", "input", "fadeOut", "asJQuery"],
+referencedClasses: []
+}),
+globals.FdJWidgetImporteur);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "renderOn:",
 protocol: 'as yet unclassified',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
 ($ctx1.supercall = true, globals.FdJWidgetImporteur.superclass.fn.prototype._renderOn_.apply(_st(self), [html]));
 $ctx1.supercall = false;
 _st(self["@div"])._with_((function(){
 return smalltalk.withContext(function($ctx2) {
-self["@input"]=_st(html)._textarea();
-return self["@input"];
+self._renderDlgOn_(html);
+$1=_st(html)._button();
+_st($1)._class_("boutton");
+_st($1)._with_("I");
+$2=_st($1)._onClick_((function(){
+return smalltalk.withContext(function($ctx3) {
+return _st(_st(self["@dlg"])._asJQuery())._fadeToggle();
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+return $2;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetImporteur)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [ input := html textarea ]",
-messageSends: ["renderOn:", "with:", "textarea"],
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09self renderDlgOn: html.\x0a\x09\x09html button\x0a\x09\x09\x09class: 'boutton';\x0a\x09\x09\x09with: 'I';\x0a\x09\x09\x09onClick: [ dlg asJQuery fadeToggle ]\x0a\x09\x09]",
+messageSends: ["renderOn:", "with:", "renderDlgOn:", "class:", "button", "onClick:", "fadeToggle", "asJQuery"],
 referencedClasses: []
 }),
 globals.FdJWidgetImporteur);

@@ -36,7 +36,7 @@ new
 ! !
 
 Object subclass: #FdJApplication
-	instanceVariableNames: 'benevoles selectionneur distributeur'
+	instanceVariableNames: 'benevoles selectionneur distributeur importeur'
 	package: 'Benevoles'!
 
 !FdJApplication methodsFor: 'initialization'!
@@ -59,8 +59,13 @@ filtre: texte
 			selectionneur selectionne: liste max: true ]
 !
 
+importe: texte
+	Transcript show: texte; cr
+!
+
 initialize
 	| barre |
+	'body' asJQuery children remove.
 	super initialize.
 	
 	"Modele"
@@ -72,6 +77,9 @@ initialize
 
 	selectionneur := FdJWidgetSelectionneur	new.
 	barre ajoute: selectionneur.
+	
+	importeur := FdJWidgetImporteur new.
+	barre ajoute: importeur.
 
 	barre appendToJQuery: 'body' asJQuery.
 
@@ -634,24 +642,40 @@ update
 ! !
 
 FdJWidget subclass: #FdJWidgetImporteur
-	instanceVariableNames: 'input'
+	instanceVariableNames: 'input dlg'
 	package: 'Benevoles'!
 
 !FdJWidgetImporteur methodsFor: 'as yet unclassified'!
-
-initialize
-	super initialize.
-	'body' asJQuery children remove.
- 	self appendToJQuery: 'body' asJQuery
-!
 
 input
 	^ input asJQuery val
 !
 
+renderDlgOn: html
+	dlg := html div
+		class: 'dialog';
+		with: [
+			input := html textarea.
+			html div class: 'actions';
+				 with: [
+					 html button with: 'import';
+					 	  onClick: [
+							  presentateur importe: self input.
+							  dlg asJQuery fadeOut
+							  ]
+					 ]
+		]
+!
+
 renderOn: html
 	super renderOn: html.
-	div with: [ input := html textarea ]
+	div with: [
+		self renderDlgOn: html.
+		html button
+			class: 'boutton';
+			with: 'I';
+			onClick: [ dlg asJQuery fadeToggle ]
+		]
 ! !
 
 FdJWidget subclass: #FdJWidgetSelectionneur

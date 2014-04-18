@@ -236,7 +236,7 @@ asJSON
 	variables at: 'prenom' put: prenom.
 	etat ifNotNil: [ variables at: 'etat' put: etat ].
 	variables at: 'assoc' put: assoc nom.
-"	variables at: 'tshirt' put: ."
+	tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].
 	^ variables
 !
 
@@ -279,7 +279,9 @@ fromJSON: variables
 	assoc := variables at: 'assoc'
 		ifPresent: [ :v | FdJAssociations instance at: v ]
 		ifAbsent: [ FdJAssociations instance festival ].
-	"tshirt :="
+	tshirt := variables at: 'tshirt'
+		ifPresent: [ :v | FdJTShirt at: v ]
+		ifAbsent: [ nil ]
 !
 
 nom
@@ -296,6 +298,14 @@ prenom
 
 prenom: chaine
 	prenom := chaine
+!
+
+tshirt
+	^ tshirt
+!
+
+tshirt: unTShirt
+	tshirt := unTShirt
 ! !
 
 !FdJBenevole class methodsFor: 'exemples'!
@@ -304,6 +314,7 @@ exemple
 	^ self new nom: 'OSELE';
 			 prenom: 'Vincent';
 			 association: (FdJAssociation exemple);
+			 tshirt: (FdJTShirt at: 'h-m');
 			 yourself
 !
 
@@ -317,7 +328,7 @@ exemples
 			 association: association).
 	benevoles add: (self new nom: 'MEILLEIS';
 			 prenom: 'George';
-			 association: association).
+			 association: FdJAssociations instance festival).
 	^ benevoles
 ! !
 
@@ -492,6 +503,10 @@ spec: vide, lsf, dv...!
 
 !FdJTShirt methodsFor: 'accessing'!
 
+id
+	^ type, '-', taille, (spec ifNotNil: [ '-', spec ] ifNil: [ '' ])
+!
+
 spec
 	^ spec
 !
@@ -516,34 +531,32 @@ type: anObject
 	type := anObject
 ! !
 
+FdJTShirt class instanceVariableNames: 'tshirts'!
+
 !FdJTShirt class methodsFor: 'as yet unclassified'!
 
-h3xl
-	^ self new type: #H; taille: #X3L; yourself
+at: id
+	^ self tshirts at: id
 !
 
-hl
-	^ self new type: #H; taille: #L; yourself
+tshirts
+	| t |
+	tshirts ifNil: [
+		tshirts := HashedCollection new.
+		#(#h #f) do: [ :genre |
+			#(#xs #s #m #l #xl #xxl '3xl') do: [ :taille |
+				t := self new type: genre; taille: taille.
+				tshirts at: t id put: t.
+				t := self new type: genre; taille: taille; spec: 'lsf'.
+				tshirts at: t id put: t
+				]
+			]
+		].
+	^ tshirts
 !
 
-hm
-	^ self new type: #H; taille: #M; yourself
-!
-
-hs
-	^ self new type: #H; taille: #S; yourself
-!
-
-hxl
-	^ self new type: #H; taille: #XL; yourself
-!
-
-hxs
-	^ self new type: #H; taille: #XS; yourself
-!
-
-hxxl
-	^ self new type: #H; taille: #XXL; yourself
+vide
+	tshirts := nil
 ! !
 
 Widget subclass: #FdJWidget
@@ -629,9 +642,24 @@ renderIdentiteOn: html
 
 renderOn: html
 	super renderOn: html.
-	div with: [ self renderIdentiteOn: html.
-				self renderAssociationOn: html].
+	div with: [
+		html div class: 'info'; with: [
+			self renderIdentiteOn: html.
+			self renderAssociationOn: html ].
+			self renderTShirtOn: html ].
 	div onClick: [ presentateur selectionne: benevole ]
+!
+
+renderTShirtOn: html
+	| d |
+	d := html div class: 'tshirt'.
+	benevole tshirt ifNotNil: [ :t |
+		d with: [
+			html div with: t type asUppercase.
+			html div with: t taille asUppercase.
+			html div with: (t spec ifNil: [ '' ])
+			]
+		]
 ! !
 
 FdJWidget subclass: #FdJWidgetBenevoles

@@ -6,24 +6,36 @@ body {
 }
 .benevole {
     width: 30%;
+    height: 80px;
     padding: 5px;
     border: solid;
     border-radius: 10px;
     font-size: 200%;
 }
-.prenom {
+.benevole .prenom {
     margin: 5px;
     display: inline;
 }
-.nom {
+.benevole .nom {
     display: inline;
     margin: 5px;
     font-size: 80%;
 }
-.association {
+.benevole .info {
+    float: left;
+}
+.benevole .association {
     margin: 5px;
     font-size: 80%;
     font-style:italic;
+}
+.benevole .tshirt {
+    float: right;
+    border: solid;
+    width: 100px;
+    height: 75px;
+    font-size: 70%;
+    text-align: center;
 }
 .selectionneur {
     width: 30%;
@@ -54,9 +66,13 @@ body {
 .selectionneur .benevole {
     font-size: 120%;
     background: white;
+    height: auto;
 }
 .selectionneur .benevole * {
     display: inline;
+}
+.selectionneur .benevole .tshirt {
+    display: none;
 }
 .barre {
     background: lightgray;

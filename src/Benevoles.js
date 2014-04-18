@@ -628,7 +628,7 @@ var self=this;
 var variables;
 function $HashedCollection(){return globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$receiver;
+var $1,$2,$3,$receiver;
 variables=_st($HashedCollection())._new();
 _st(variables)._at_put_("nom",self["@nom"]);
 $ctx1.sendIdx["at:put:"]=1;
@@ -642,12 +642,19 @@ _st(variables)._at_put_("etat",self["@etat"]);
 $ctx1.sendIdx["at:put:"]=3;
 };
 _st(variables)._at_put_("assoc",_st(self["@assoc"])._nom());
-$2=variables;
-return $2;
+$ctx1.sendIdx["at:put:"]=4;
+$2=self["@tshirt"];
+if(($receiver = $2) == null || $receiver.isNil){
+$2;
+} else {
+_st(variables)._at_put_("tshirt",_st(self["@tshirt"])._id());
+};
+$3=variables;
+return $3;
 }, function($ctx1) {$ctx1.fill(self,"asJSON",{variables:variables},globals.FdJBenevole)})},
 args: [],
-source: "asJSON\x0a\x09| variables |\x0a\x09variables := HashedCollection new.\x0a\x09variables at: 'nom' put: nom.\x0a\x09variables at: 'prenom' put: prenom.\x0a\x09etat ifNotNil: [ variables at: 'etat' put: etat ].\x0a\x09variables at: 'assoc' put: assoc nom.\x0a\x22\x09variables at: 'tshirt' put: .\x22\x0a\x09^ variables",
-messageSends: ["new", "at:put:", "ifNotNil:", "nom"],
+source: "asJSON\x0a\x09| variables |\x0a\x09variables := HashedCollection new.\x0a\x09variables at: 'nom' put: nom.\x0a\x09variables at: 'prenom' put: prenom.\x0a\x09etat ifNotNil: [ variables at: 'etat' put: etat ].\x0a\x09variables at: 'assoc' put: assoc nom.\x0a\x09tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].\x0a\x09^ variables",
+messageSends: ["new", "at:put:", "ifNotNil:", "nom", "id"],
 referencedClasses: ["HashedCollection"]
 }),
 globals.FdJBenevole);
@@ -779,6 +786,7 @@ protocol: 'accessing',
 fn: function (variables){
 var self=this;
 function $FdJAssociations(){return globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
+function $FdJTShirt(){return globals.FdJTShirt||(typeof FdJTShirt=="undefined"?nil:FdJTShirt)}
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 self["@nom"]=_st(variables)._at_("nom");
@@ -797,15 +805,23 @@ return smalltalk.withContext(function($ctx2) {
 $1=_st($FdJAssociations())._instance();
 $ctx2.sendIdx["instance"]=1;
 return _st($1)._at_(v);
+$ctx2.sendIdx["at:"]=3;
 }, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,3)})}),(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st(_st($FdJAssociations())._instance())._festival();
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
+$ctx1.sendIdx["at:ifPresent:ifAbsent:"]=2;
+self["@tshirt"]=_st(variables)._at_ifPresent_ifAbsent_("tshirt",(function(v){
+return smalltalk.withContext(function($ctx2) {
+return _st($FdJTShirt())._at_(v);
+}, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,5)})}),(function(){
+return nil;
+}));
 return self}, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},globals.FdJBenevole)})},
 args: ["variables"],
-source: "fromJSON: variables\x0a\x09nom := variables at: 'nom'.\x0a\x09prenom := variables at: 'prenom'.\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ FdJAssociations instance festival ].\x0a\x09\x22tshirt :=\x22",
+source: "fromJSON: variables\x0a\x09nom := variables at: 'nom'.\x0a\x09prenom := variables at: 'prenom'.\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ FdJAssociations instance festival ].\x0a\x09tshirt := variables at: 'tshirt'\x0a\x09\x09ifPresent: [ :v | FdJTShirt at: v ]\x0a\x09\x09ifAbsent: [ nil ]",
 messageSends: ["at:", "at:ifPresent:ifAbsent:", "asSymbol", "instance", "festival"],
-referencedClasses: ["FdJAssociations"]
+referencedClasses: ["FdJAssociations", "FdJTShirt"]
 }),
 globals.FdJBenevole);
 
@@ -873,6 +889,38 @@ referencedClasses: []
 }),
 globals.FdJBenevole);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "tshirt",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@tshirt"];
+return $1;
+},
+args: [],
+source: "tshirt\x0a\x09^ tshirt",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "tshirt:",
+protocol: 'accessing',
+fn: function (unTShirt){
+var self=this;
+self["@tshirt"]=unTShirt;
+return self},
+args: ["unTShirt"],
+source: "tshirt: unTShirt\x0a\x09tshirt := unTShirt",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
 
 smalltalk.addMethod(
 smalltalk.method({
@@ -881,20 +929,22 @@ protocol: 'exemples',
 fn: function (){
 var self=this;
 function $FdJAssociation(){return globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
+function $FdJTShirt(){return globals.FdJTShirt||(typeof FdJTShirt=="undefined"?nil:FdJTShirt)}
 return smalltalk.withContext(function($ctx1) { 
 var $2,$3,$1;
 $2=self._new();
 _st($2)._nom_("OSELE");
 _st($2)._prenom_("Vincent");
 _st($2)._association_(_st($FdJAssociation())._exemple());
+_st($2)._tshirt_(_st($FdJTShirt())._at_("h-m"));
 $3=_st($2)._yourself();
 $1=$3;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"exemple",{},globals.FdJBenevole.klass)})},
 args: [],
-source: "exemple\x0a\x09^ self new nom: 'OSELE';\x0a\x09\x09\x09 prenom: 'Vincent';\x0a\x09\x09\x09 association: (FdJAssociation exemple);\x0a\x09\x09\x09 yourself",
-messageSends: ["nom:", "new", "prenom:", "association:", "exemple", "yourself"],
-referencedClasses: ["FdJAssociation"]
+source: "exemple\x0a\x09^ self new nom: 'OSELE';\x0a\x09\x09\x09 prenom: 'Vincent';\x0a\x09\x09\x09 association: (FdJAssociation exemple);\x0a\x09\x09\x09 tshirt: (FdJTShirt at: 'h-m');\x0a\x09\x09\x09 yourself",
+messageSends: ["nom:", "new", "prenom:", "association:", "exemple", "tshirt:", "at:", "yourself"],
+referencedClasses: ["FdJAssociation", "FdJTShirt"]
 }),
 globals.FdJBenevole.klass);
 
@@ -907,6 +957,7 @@ var self=this;
 var benevoles,association;
 function $Array(){return globals.Array||(typeof Array=="undefined"?nil:Array)}
 function $FdJAssociation(){return globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
+function $FdJAssociations(){return globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$3,$4,$2,$5,$6,$7;
 benevoles=_st($Array())._new();
@@ -930,15 +981,15 @@ $ctx1.sendIdx["add:"]=2;
 $5=self._new();
 _st($5)._nom_("MEILLEIS");
 _st($5)._prenom_("George");
-$6=_st($5)._association_(association);
+$6=_st($5)._association_(_st(_st($FdJAssociations())._instance())._festival());
 _st(benevoles)._add_($6);
 $7=benevoles;
 return $7;
 }, function($ctx1) {$ctx1.fill(self,"exemples",{benevoles:benevoles,association:association},globals.FdJBenevole.klass)})},
 args: [],
-source: "exemples\x0a\x09| benevoles association |\x0a\x09benevoles := Array new.\x0a\x09association := FdJAssociation exemple.\x0a\x09benevoles add: self exemple.\x0a\x09benevoles add: (self new nom: 'DUPOND';\x0a\x09\x09\x09 prenom: 'Gérard';\x0a\x09\x09\x09 association: association).\x0a\x09benevoles add: (self new nom: 'MEILLEIS';\x0a\x09\x09\x09 prenom: 'George';\x0a\x09\x09\x09 association: association).\x0a\x09^ benevoles",
-messageSends: ["new", "exemple", "add:", "nom:", "prenom:", "association:"],
-referencedClasses: ["Array", "FdJAssociation"]
+source: "exemples\x0a\x09| benevoles association |\x0a\x09benevoles := Array new.\x0a\x09association := FdJAssociation exemple.\x0a\x09benevoles add: self exemple.\x0a\x09benevoles add: (self new nom: 'DUPOND';\x0a\x09\x09\x09 prenom: 'Gérard';\x0a\x09\x09\x09 association: association).\x0a\x09benevoles add: (self new nom: 'MEILLEIS';\x0a\x09\x09\x09 prenom: 'George';\x0a\x09\x09\x09 association: FdJAssociations instance festival).\x0a\x09^ benevoles",
+messageSends: ["new", "exemple", "add:", "nom:", "prenom:", "association:", "festival", "instance"],
+referencedClasses: ["Array", "FdJAssociation", "FdJAssociations"]
 }),
 globals.FdJBenevole.klass);
 
@@ -1475,6 +1526,35 @@ smalltalk.addClass('FdJTShirt', globals.Object, ['type', 'taille', 'spec'], 'Ben
 globals.FdJTShirt.comment="type: H(omme) ou F(emme)\x0ataille: XS, S, M...\x0aspec: vide, lsf, dv...";
 smalltalk.addMethod(
 smalltalk.method({
+selector: "id",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$5,$4,$1,$receiver;
+$3=_st(self["@type"]).__comma("-");
+$ctx1.sendIdx[","]=3;
+$2=_st($3).__comma(self["@taille"]);
+$ctx1.sendIdx[","]=2;
+$5=self["@spec"];
+if(($receiver = $5) == null || $receiver.isNil){
+$4="";
+} else {
+$4="-".__comma(self["@spec"]);
+};
+$1=_st($2).__comma($4);
+$ctx1.sendIdx[","]=1;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"id",{},globals.FdJTShirt)})},
+args: [],
+source: "id\x0a\x09^ type, '-', taille, (spec ifNotNil: [ '-', spec ] ifNil: [ '' ])",
+messageSends: [",", "ifNotNil:ifNil:"],
+referencedClasses: []
+}),
+globals.FdJTShirt);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "spec",
 protocol: 'accessing',
 fn: function (){
@@ -1570,156 +1650,91 @@ referencedClasses: []
 globals.FdJTShirt);
 
 
+globals.FdJTShirt.klass.iVarNames = ['tshirts'];
 smalltalk.addMethod(
 smalltalk.method({
-selector: "h3xl",
+selector: "at:",
 protocol: 'as yet unclassified',
-fn: function (){
+fn: function (id){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=self._new();
-_st($2)._type_("H");
-_st($2)._taille_("X3L");
-$3=_st($2)._yourself();
-$1=$3;
+var $1;
+$1=_st(self._tshirts())._at_(id);
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"h3xl",{},globals.FdJTShirt.klass)})},
-args: [],
-source: "h3xl\x0a\x09^ self new type: #H; taille: #X3L; yourself",
-messageSends: ["type:", "new", "taille:", "yourself"],
+}, function($ctx1) {$ctx1.fill(self,"at:",{id:id},globals.FdJTShirt.klass)})},
+args: ["id"],
+source: "at: id\x0a\x09^ self tshirts at: id",
+messageSends: ["at:", "tshirts"],
 referencedClasses: []
 }),
 globals.FdJTShirt.klass);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "hl",
+selector: "tshirts",
 protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
+var t;
+function $HashedCollection(){return globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
+var $1,$2,$3,$4,$5,$6,$7,$8,$receiver;
+$1=self["@tshirts"];
+if(($receiver = $1) == null || $receiver.isNil){
+self["@tshirts"]=_st($HashedCollection())._new();
+$ctx1.sendIdx["new"]=1;
+self["@tshirts"];
+["h", "f"]._do_((function(genre){
+return smalltalk.withContext(function($ctx2) {
+return ["xs", "s", "m", "l", "xl", "xxl", "3xl"]._do_((function(taille){
+return smalltalk.withContext(function($ctx3) {
 $2=self._new();
-_st($2)._type_("H");
-_st($2)._taille_("L");
-$3=_st($2)._yourself();
-$1=$3;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"hl",{},globals.FdJTShirt.klass)})},
+$ctx3.sendIdx["new"]=2;
+_st($2)._type_(genre);
+$ctx3.sendIdx["type:"]=1;
+$3=_st($2)._taille_(taille);
+$ctx3.sendIdx["taille:"]=1;
+t=$3;
+t;
+$4=self["@tshirts"];
+$5=_st(t)._id();
+$ctx3.sendIdx["id"]=1;
+_st($4)._at_put_($5,t);
+$ctx3.sendIdx["at:put:"]=1;
+$6=self._new();
+_st($6)._type_(genre);
+_st($6)._taille_(taille);
+$7=_st($6)._spec_("lsf");
+t=$7;
+t;
+return _st(self["@tshirts"])._at_put_(_st(t)._id(),t);
+}, function($ctx3) {$ctx3.fillBlock({taille:taille},$ctx2,3)})}));
+}, function($ctx2) {$ctx2.fillBlock({genre:genre},$ctx1,2)})}));
+$ctx1.sendIdx["do:"]=1;
+} else {
+$1;
+};
+$8=self["@tshirts"];
+return $8;
+}, function($ctx1) {$ctx1.fill(self,"tshirts",{t:t},globals.FdJTShirt.klass)})},
 args: [],
-source: "hl\x0a\x09^ self new type: #H; taille: #L; yourself",
-messageSends: ["type:", "new", "taille:", "yourself"],
-referencedClasses: []
+source: "tshirts\x0a\x09| t |\x0a\x09tshirts ifNil: [\x0a\x09\x09tshirts := HashedCollection new.\x0a\x09\x09#(#h #f) do: [ :genre |\x0a\x09\x09\x09#(#xs #s #m #l #xl #xxl '3xl') do: [ :taille |\x0a\x09\x09\x09\x09t := self new type: genre; taille: taille.\x0a\x09\x09\x09\x09tshirts at: t id put: t.\x0a\x09\x09\x09\x09t := self new type: genre; taille: taille; spec: 'lsf'.\x0a\x09\x09\x09\x09tshirts at: t id put: t\x0a\x09\x09\x09\x09]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ tshirts",
+messageSends: ["ifNil:", "new", "do:", "type:", "taille:", "at:put:", "id", "spec:"],
+referencedClasses: ["HashedCollection"]
 }),
 globals.FdJTShirt.klass);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "hm",
+selector: "vide",
 protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=self._new();
-_st($2)._type_("H");
-_st($2)._taille_("M");
-$3=_st($2)._yourself();
-$1=$3;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"hm",{},globals.FdJTShirt.klass)})},
+self["@tshirts"]=nil;
+return self},
 args: [],
-source: "hm\x0a\x09^ self new type: #H; taille: #M; yourself",
-messageSends: ["type:", "new", "taille:", "yourself"],
-referencedClasses: []
-}),
-globals.FdJTShirt.klass);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "hs",
-protocol: 'as yet unclassified',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=self._new();
-_st($2)._type_("H");
-_st($2)._taille_("S");
-$3=_st($2)._yourself();
-$1=$3;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"hs",{},globals.FdJTShirt.klass)})},
-args: [],
-source: "hs\x0a\x09^ self new type: #H; taille: #S; yourself",
-messageSends: ["type:", "new", "taille:", "yourself"],
-referencedClasses: []
-}),
-globals.FdJTShirt.klass);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "hxl",
-protocol: 'as yet unclassified',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=self._new();
-_st($2)._type_("H");
-_st($2)._taille_("XL");
-$3=_st($2)._yourself();
-$1=$3;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"hxl",{},globals.FdJTShirt.klass)})},
-args: [],
-source: "hxl\x0a\x09^ self new type: #H; taille: #XL; yourself",
-messageSends: ["type:", "new", "taille:", "yourself"],
-referencedClasses: []
-}),
-globals.FdJTShirt.klass);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "hxs",
-protocol: 'as yet unclassified',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=self._new();
-_st($2)._type_("H");
-_st($2)._taille_("XS");
-$3=_st($2)._yourself();
-$1=$3;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"hxs",{},globals.FdJTShirt.klass)})},
-args: [],
-source: "hxs\x0a\x09^ self new type: #H; taille: #XS; yourself",
-messageSends: ["type:", "new", "taille:", "yourself"],
-referencedClasses: []
-}),
-globals.FdJTShirt.klass);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "hxxl",
-protocol: 'as yet unclassified',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$3,$1;
-$2=self._new();
-_st($2)._type_("H");
-_st($2)._taille_("XXL");
-$3=_st($2)._yourself();
-$1=$3;
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"hxxl",{},globals.FdJTShirt.klass)})},
-args: [],
-source: "hxxl\x0a\x09^ self new type: #H; taille: #XXL; yourself",
-messageSends: ["type:", "new", "taille:", "yourself"],
+source: "vide\x0a\x09tshirts := nil",
+messageSends: [],
 referencedClasses: []
 }),
 globals.FdJTShirt.klass);
@@ -1992,21 +2007,79 @@ protocol: 'rendering',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
 ($ctx1.supercall = true, globals.FdJWidgetBenevole.superclass.fn.prototype._renderOn_.apply(_st(self), [html]));
 $ctx1.supercall = false;
 _st(self["@div"])._with_((function(){
 return smalltalk.withContext(function($ctx2) {
+$1=_st(html)._div();
+_st($1)._class_("info");
+$2=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx3) {
 self._renderIdentiteOn_(html);
 return self._renderAssociationOn_(html);
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+$2;
+return self._renderTShirtOn_(html);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
 _st(self["@div"])._onClick_((function(){
 return smalltalk.withContext(function($ctx2) {
 return _st(self["@presentateur"])._selectionne_(self["@benevole"]);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [ self renderIdentiteOn: html.\x0a\x09\x09\x09\x09self renderAssociationOn: html].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
-messageSends: ["renderOn:", "with:", "renderIdentiteOn:", "renderAssociationOn:", "onClick:", "selectionne:"],
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09\x09self renderTShirtOn: html ].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
+messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderTShirtOn:", "onClick:", "selectionne:"],
+referencedClasses: []
+}),
+globals.FdJWidgetBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderTShirtOn:",
+protocol: 'rendering',
+fn: function (html){
+var self=this;
+var d;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4,$5,$6,$8,$7,$receiver;
+$1=_st(html)._div();
+$ctx1.sendIdx["div"]=1;
+d=_st($1)._class_("tshirt");
+$2=_st(self["@benevole"])._tshirt();
+if(($receiver = $2) == null || $receiver.isNil){
+$2;
+} else {
+var t;
+t=$receiver;
+_st(d)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$3=_st(html)._div();
+$ctx2.sendIdx["div"]=2;
+$4=_st(_st(t)._type())._asUppercase();
+$ctx2.sendIdx["asUppercase"]=1;
+_st($3)._with_($4);
+$ctx2.sendIdx["with:"]=2;
+$5=_st(html)._div();
+$ctx2.sendIdx["div"]=3;
+_st($5)._with_(_st(_st(t)._taille())._asUppercase());
+$ctx2.sendIdx["with:"]=3;
+$6=_st(html)._div();
+$8=_st(t)._spec();
+if(($receiver = $8) == null || $receiver.isNil){
+$7="";
+} else {
+$7=$8;
+};
+return _st($6)._with_($7);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+$ctx1.sendIdx["with:"]=1;
+};
+return self}, function($ctx1) {$ctx1.fill(self,"renderTShirtOn:",{html:html,d:d},globals.FdJWidgetBenevole)})},
+args: ["html"],
+source: "renderTShirtOn: html\x0a\x09| d |\x0a\x09d := html div class: 'tshirt'.\x0a\x09benevole tshirt ifNotNil: [ :t |\x0a\x09\x09d with: [\x0a\x09\x09\x09html div with: t type asUppercase.\x0a\x09\x09\x09html div with: t taille asUppercase.\x0a\x09\x09\x09html div with: (t spec ifNil: [ '' ])\x0a\x09\x09\x09]\x0a\x09\x09]",
+messageSends: ["class:", "div", "ifNotNil:", "tshirt", "with:", "asUppercase", "type", "taille", "ifNil:", "spec"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevole);

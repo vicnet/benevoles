@@ -60,7 +60,20 @@ filtre: texte
 !
 
 importe: texte
-	Transcript show: texte; cr
+	| tous |
+	tous := jQuery
+		parse: texte
+		config: #{ 'delimiter'->','. 'header'->false. 'dynamicTyping'->false }.
+	tous results do: [ :res | self importeBenevole: res ]
+!
+
+importeBenevole: table
+	| b |
+	b := FdJStockage charge: FdJBenevole depuis: #{
+		'nom' -> (table at: 1).
+		'prenom' -> (table at: 2)
+		}.
+	benevoles ajoute: b
 !
 
 initialize
@@ -152,7 +165,11 @@ nom: anObject
 
 exemple
 	"Genère un échantillon"
-	^ self new nom: 'Joc-ere'; yourself
+	^ self new nom: 'Joc-ere'
+!
+
+festival
+	^ self new nom: 'Festival'
 ! !
 
 Object subclass: #FdJAssociations
@@ -171,6 +188,10 @@ at: nom
 	^ liste at: nom ifAbsent: [ nil ]
 !
 
+festival
+	^ liste at: 'Festival'
+!
+
 fromJSON: variables
 	liste := (variables at: 'liste') collect: [ :v |
 			FdJAssociation new fromJSON: v
@@ -183,7 +204,7 @@ FdJAssociations class instanceVariableNames: 'instance'!
 
 exemple
 	^ self instance
-		associations: (Array with: FdJAssociation exemple)
+		associations: (Array with: FdJAssociation festival with: FdJAssociation exemple)
 !
 
 instance
@@ -257,7 +278,7 @@ fromJSON: variables
 		ifAbsent: [ nil ].
 	assoc := variables at: 'assoc'
 		ifPresent: [ :v | FdJAssociations instance at: v ]
-		ifAbsent: [ nil ].
+		ifAbsent: [ FdJAssociations instance festival ].
 	"tshirt :="
 !
 
@@ -305,6 +326,10 @@ Object subclass: #FdJBenevoles
 	package: 'Benevoles'!
 
 !FdJBenevoles methodsFor: 'as yet unclassified'!
+
+ajoute: unBenevole
+	liste add: unBenevole
+!
 
 benevoles
 	^ liste
@@ -434,6 +459,10 @@ FdJStockage class instanceVariableNames: 'instance'!
 
 charge: entite
 	^ self instance charge: entite
+!
+
+charge: entite depuis: json
+	^ self instance charge: entite depuis: json
 !
 
 charge: entite sinon: block

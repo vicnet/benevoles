@@ -9,11 +9,17 @@
     <script type='text/javascript'>
       require.config({
         paths: {
-          'benevoles': 'src'
+          'benevoles': 'src',
+          'lib': 'lib'
+        },
+        shim: {
+          'lib/jquery.parse.min': {
+            deps: ['jquery']
+          }
         }
       });
 
-      require(['amber/devel', 'benevoles/Benevoles'], function (amber) {
+      require(['amber/devel', 'benevoles/Benevoles', 'lib/jquery.parse.min'], function (amber) {
         amber.initialize({'transport.defaultAmdNamespace': 'benevoles'});
         amber.popupHelios();
         //amber.globals.Browser._open();

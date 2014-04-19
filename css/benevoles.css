@@ -6,7 +6,6 @@ body {
 }
 .benevole {
     width: 30%;
-    height: 80px;
     padding: 5px;
     border: solid;
     border-radius: 10px;
@@ -22,7 +21,8 @@ body {
     font-size: 80%;
 }
 .benevole .info {
-    float: left;
+/*    float: left;*/
+    display: inline-block;
 }
 .benevole .association {
     margin: 5px;
@@ -31,11 +31,19 @@ body {
 }
 .benevole .tshirt {
     float: right;
-    border: solid;
     width: 100px;
     height: 75px;
     font-size: 70%;
+    font-weight:900;
     text-align: center;
+}
+.tshirt.homme {
+    background: url('../img/tshirt-h.png');
+    background-size:100% 100%;
+}
+.tshirt.femme {
+    background: url('../img/tshirt-f.png');
+    background-size:100% 100%;
 }
 .selectionneur {
     width: 30%;
@@ -54,7 +62,7 @@ body {
 .selectionneur .suite {
     position: fixed;
     left:0px;
-    bottom: 81px;
+    bottom: 197px;
     width: 30%;
     padding: 5px;
     border: solid;
@@ -66,7 +74,7 @@ body {
 .selectionneur .benevole {
     font-size: 120%;
     background: white;
-    height: auto;
+    display: block;
 }
 .selectionneur .benevole * {
     display: inline;

@@ -122,7 +122,7 @@ var self=this;
 var max,liste;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-max=(1);
+max=(4);
 liste=_st(self["@benevoles"])._filtre_max_(texte,_st(max).__plus((1)));
 $1=_st(_st(liste)._size()).__lt_eq(max);
 if(smalltalk.assert($1)){
@@ -134,7 +134,7 @@ _st(self["@selectionneur"])._selectionne_max_(liste,true);
 };
 return self}, function($ctx1) {$ctx1.fill(self,"filtre:",{texte:texte,max:max,liste:liste},globals.FdJApplication)})},
 args: ["texte"],
-source: "filtre: texte\x0a\x09| max liste |\x0a\x09max := 1.\x0a\x09liste := benevoles filtre: texte max: max+1.\x0a\x09(liste size <= max)\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09selectionneur selectionne: liste max: false ]\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09liste removeLast.\x0a\x09\x09\x09selectionneur selectionne: liste max: true ]",
+source: "filtre: texte\x0a\x09| max liste |\x0a\x09max := 4.\x0a\x09liste := benevoles filtre: texte max: max+1.\x0a\x09(liste size <= max)\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09selectionneur selectionne: liste max: false ]\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09liste removeLast.\x0a\x09\x09\x09selectionneur selectionne: liste max: true ]",
 messageSends: ["filtre:max:", "+", "ifTrue:ifFalse:", "<=", "size", "selectionne:max:", "removeLast"],
 referencedClasses: []
 }),
@@ -2043,10 +2043,11 @@ fn: function (html){
 var self=this;
 var d;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6,$8,$7,$receiver;
+var $1,$2,$3,$5,$4,$6,$7,$9,$8,$10,$receiver;
 $1=_st(html)._div();
 $ctx1.sendIdx["div"]=1;
 d=_st($1)._class_("tshirt");
+$ctx1.sendIdx["class:"]=1;
 $2=_st(self["@benevole"])._tshirt();
 if(($receiver = $2) == null || $receiver.isNil){
 $2;
@@ -2057,29 +2058,38 @@ _st(d)._with_((function(){
 return smalltalk.withContext(function($ctx2) {
 $3=_st(html)._div();
 $ctx2.sendIdx["div"]=2;
-$4=_st(_st(t)._type())._asUppercase();
+$5=_st(t)._type();
+$ctx2.sendIdx["type"]=1;
+$4=_st($5)._asUppercase();
 $ctx2.sendIdx["asUppercase"]=1;
 _st($3)._with_($4);
 $ctx2.sendIdx["with:"]=2;
-$5=_st(html)._div();
-$ctx2.sendIdx["div"]=3;
-_st($5)._with_(_st(_st(t)._taille())._asUppercase());
-$ctx2.sendIdx["with:"]=3;
 $6=_st(html)._div();
-$8=_st(t)._spec();
-if(($receiver = $8) == null || $receiver.isNil){
-$7="";
+$ctx2.sendIdx["div"]=3;
+_st($6)._with_(_st(_st(t)._taille())._asUppercase());
+$ctx2.sendIdx["with:"]=3;
+$7=_st(html)._div();
+$9=_st(t)._spec();
+if(($receiver = $9) == null || $receiver.isNil){
+$8="";
 } else {
-$7=$8;
+$8=$9;
 };
-return _st($6)._with_($7);
+return _st($7)._with_($8);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
 $ctx1.sendIdx["with:"]=1;
+$10=_st(_st(t)._type()).__eq("h");
+if(smalltalk.assert($10)){
+_st(d)._class_("tshirt homme");
+$ctx1.sendIdx["class:"]=2;
+} else {
+_st(d)._class_("tshirt femme");
+};
 };
 return self}, function($ctx1) {$ctx1.fill(self,"renderTShirtOn:",{html:html,d:d},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderTShirtOn: html\x0a\x09| d |\x0a\x09d := html div class: 'tshirt'.\x0a\x09benevole tshirt ifNotNil: [ :t |\x0a\x09\x09d with: [\x0a\x09\x09\x09html div with: t type asUppercase.\x0a\x09\x09\x09html div with: t taille asUppercase.\x0a\x09\x09\x09html div with: (t spec ifNil: [ '' ])\x0a\x09\x09\x09]\x0a\x09\x09]",
-messageSends: ["class:", "div", "ifNotNil:", "tshirt", "with:", "asUppercase", "type", "taille", "ifNil:", "spec"],
+source: "renderTShirtOn: html\x0a\x09| d |\x0a\x09d := html div class: 'tshirt'.\x0a\x09benevole tshirt ifNotNil: [ :t |\x0a\x09\x09d with: [\x0a\x09\x09\x09html div with: t type asUppercase.\x0a\x09\x09\x09html div with: t taille asUppercase.\x0a\x09\x09\x09html div with: (t spec ifNil: [ '' ])\x0a\x09\x09\x09].\x0a\x09\x09t type = #h\x0a\x09\x09\x09ifTrue: [d class: 'tshirt homme']\x0a\x09\x09\x09ifFalse: [d class: 'tshirt femme']\x0a\x09\x09]",
+messageSends: ["class:", "div", "ifNotNil:", "tshirt", "with:", "asUppercase", "type", "taille", "ifNil:", "spec", "ifTrue:ifFalse:", "="],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevole);

@@ -49,7 +49,7 @@ charge
 
 filtre: texte
 	| max liste |
-	max := 1.
+	max := 4.
 	liste := benevoles filtre: texte max: max+1.
 	(liste size <= max)
 		ifTrue: [
@@ -658,7 +658,10 @@ renderTShirtOn: html
 			html div with: t type asUppercase.
 			html div with: t taille asUppercase.
 			html div with: (t spec ifNil: [ '' ])
-			]
+			].
+		t type = #h
+			ifTrue: [d class: 'tshirt homme']
+			ifFalse: [d class: 'tshirt femme']
 		]
 ! !
 

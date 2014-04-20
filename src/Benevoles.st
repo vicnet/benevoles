@@ -60,20 +60,8 @@ filtre: texte
 !
 
 importe: texte
-	| tous |
-	tous := jQuery
-		parse: texte
-		config: #{ 'delimiter'->','. 'header'->false. 'dynamicTyping'->false }.
-	tous results do: [ :res | self importeBenevole: res ]
-!
-
-importeBenevole: table
-	| b |
-	b := FdJStockage charge: FdJBenevole depuis: #{
-		'nom' -> (table at: 1).
-		'prenom' -> (table at: 2)
-		}.
-	benevoles ajoute: b
+	benevoles ajouteTous:
+		(FdJImporteur new importe: texte)
 !
 
 initialize
@@ -342,6 +330,10 @@ ajoute: unBenevole
 	liste add: unBenevole
 !
 
+ajouteTous: desBenevoles
+	liste addAll: desBenevoles
+!
+
 benevoles
 	^ liste
 !
@@ -385,6 +377,27 @@ selectionnes
 
 exemple
 	^ self new benevoles: FdJBenevole exemples
+! !
+
+Object subclass: #FdJImporteur
+	instanceVariableNames: ''
+	package: 'Benevoles'!
+
+!FdJImporteur methodsFor: 'as yet unclassified'!
+
+importe: texte
+	| tous |
+	tous := jQuery
+		parse: texte
+		config: #{ 'delimiter'->','. 'header'->false. 'dynamicTyping'->false }.
+	^ tous results collect: [ :res | self importeBenevole: res ]
+!
+
+importeBenevole: table
+	^ FdJStockage charge: FdJBenevole depuis: #{
+		'nom' -> (table at: 1).
+		'prenom' -> (table at: 2)
+		}
 ! !
 
 Object subclass: #FdJStock

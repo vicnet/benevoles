@@ -146,42 +146,14 @@ selector: "importe:",
 protocol: 'initialization',
 fn: function (texte){
 var self=this;
-var tous;
+function $FdJImporteur(){return globals.FdJImporteur||(typeof FdJImporteur=="undefined"?nil:FdJImporteur)}
 return smalltalk.withContext(function($ctx1) { 
-tous=_st(jQuery)._parse_config_(texte,globals.HashedCollection._newFromPairs_(["delimiter",",","header",false,"dynamicTyping",false]));
-_st(_st(tous)._results())._do_((function(res){
-return smalltalk.withContext(function($ctx2) {
-return self._importeBenevole_(res);
-}, function($ctx2) {$ctx2.fillBlock({res:res},$ctx1,1)})}));
-return self}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,tous:tous},globals.FdJApplication)})},
+_st(self["@benevoles"])._ajouteTous_(_st(_st($FdJImporteur())._new())._importe_(texte));
+return self}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte},globals.FdJApplication)})},
 args: ["texte"],
-source: "importe: texte\x0a\x09| tous |\x0a\x09tous := jQuery\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->false. 'dynamicTyping'->false }.\x0a\x09tous results do: [ :res | self importeBenevole: res ]",
-messageSends: ["parse:config:", "do:", "results", "importeBenevole:"],
-referencedClasses: []
-}),
-globals.FdJApplication);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "importeBenevole:",
-protocol: 'initialization',
-fn: function (table){
-var self=this;
-var b;
-function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
-function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
-$2=_st(table)._at_((1));
-$ctx1.sendIdx["at:"]=1;
-$1=globals.HashedCollection._newFromPairs_(["nom",$2,"prenom",_st(table)._at_((2))]);
-b=_st($FdJStockage())._charge_depuis_($FdJBenevole(),$1);
-_st(self["@benevoles"])._ajoute_(b);
-return self}, function($ctx1) {$ctx1.fill(self,"importeBenevole:",{table:table,b:b},globals.FdJApplication)})},
-args: ["table"],
-source: "importeBenevole: table\x0a\x09| b |\x0a\x09b := FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (table at: 1).\x0a\x09\x09'prenom' -> (table at: 2)\x0a\x09\x09}.\x0a\x09benevoles ajoute: b",
-messageSends: ["charge:depuis:", "at:", "ajoute:"],
-referencedClasses: ["FdJStockage", "FdJBenevole"]
+source: "importe: texte\x0a\x09benevoles ajouteTous:\x0a\x09\x09(FdJImporteur new importe: texte)",
+messageSends: ["ajouteTous:", "importe:", "new"],
+referencedClasses: ["FdJImporteur"]
 }),
 globals.FdJApplication);
 
@@ -1013,6 +985,22 @@ globals.FdJBenevoles);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "ajouteTous:",
+protocol: 'as yet unclassified',
+fn: function (desBenevoles){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self["@liste"])._addAll_(desBenevoles);
+return self}, function($ctx1) {$ctx1.fill(self,"ajouteTous:",{desBenevoles:desBenevoles},globals.FdJBenevoles)})},
+args: ["desBenevoles"],
+source: "ajouteTous: desBenevoles\x0a\x09liste addAll: desBenevoles",
+messageSends: ["addAll:"],
+referencedClasses: []
+}),
+globals.FdJBenevoles);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "benevoles",
 protocol: 'as yet unclassified',
 fn: function (){
@@ -1164,6 +1152,55 @@ messageSends: ["benevoles:", "new", "exemples"],
 referencedClasses: ["FdJBenevole"]
 }),
 globals.FdJBenevoles.klass);
+
+
+smalltalk.addClass('FdJImporteur', globals.Object, [], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "importe:",
+protocol: 'as yet unclassified',
+fn: function (texte){
+var self=this;
+var tous;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+tous=_st(jQuery)._parse_config_(texte,globals.HashedCollection._newFromPairs_(["delimiter",",","header",false,"dynamicTyping",false]));
+$1=_st(_st(tous)._results())._collect_((function(res){
+return smalltalk.withContext(function($ctx2) {
+return self._importeBenevole_(res);
+}, function($ctx2) {$ctx2.fillBlock({res:res},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,tous:tous},globals.FdJImporteur)})},
+args: ["texte"],
+source: "importe: texte\x0a\x09| tous |\x0a\x09tous := jQuery\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->false. 'dynamicTyping'->false }.\x0a\x09^ tous results collect: [ :res | self importeBenevole: res ]",
+messageSends: ["parse:config:", "collect:", "results", "importeBenevole:"],
+referencedClasses: []
+}),
+globals.FdJImporteur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "importeBenevole:",
+protocol: 'as yet unclassified',
+fn: function (table){
+var self=this;
+function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
+function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
+return smalltalk.withContext(function($ctx1) { 
+var $3,$2,$1;
+$3=_st(table)._at_((1));
+$ctx1.sendIdx["at:"]=1;
+$2=globals.HashedCollection._newFromPairs_(["nom",$3,"prenom",_st(table)._at_((2))]);
+$1=_st($FdJStockage())._charge_depuis_($FdJBenevole(),$2);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"importeBenevole:",{table:table},globals.FdJImporteur)})},
+args: ["table"],
+source: "importeBenevole: table\x0a\x09^ FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (table at: 1).\x0a\x09\x09'prenom' -> (table at: 2)\x0a\x09\x09}",
+messageSends: ["charge:depuis:", "at:"],
+referencedClasses: ["FdJStockage", "FdJBenevole"]
+}),
+globals.FdJImporteur);
+
 
 
 smalltalk.addClass('FdJStock', globals.Object, ['tshirts'], 'Benevoles');

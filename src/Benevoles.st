@@ -359,19 +359,19 @@ filtre: texte max: max
 	texte isEmpty ifTrue: [ ^  #() ].
 	cpt := max.
 	"teste le nom"
-	minus := texte asLowercase.
+	minus := ('^', texte sansAccent) asRegexp.
 	^ self filtre: minus max: max avec: [ :b :m |
-		b nom asLowercase includesSubString: m ]
+		b nom sansAccent match: m ]
 !
 
 filtre: texte max: max avec: block
 	| cpt |
+	(max<=0) ifTrue: [ ^ #() ].
 	cpt := max.
 	"teste le block"
 	^ liste select: [ :b |
 		b estDisponible & (cpt>0) & (block value: b value: texte)
 			ifTrue: [ cpt := cpt-1. true]
-			ifFalse: [ false ]
 		]
 !
 
@@ -842,5 +842,26 @@ selectionne: benevoles max: max
 	max	ifTrue:  [ suite asJQuery fadeIn ]
 		ifFalse: [ suite asJQuery fadeOut ].
 	liste associe: benevoles
+! !
+
+!String methodsFor: '*Benevoles'!
+
+sansAccent
+	| s |
+  	s := self asLowercase.
+	#{ '[àáâãäå]' -> 'a'.
+	   'æ' -> 'ae'.
+	   'ç' -> 'c'.
+	   '[èéêë]' -> 'e'.
+	   '[ìíîï]' -> 'i'.
+	   'ñ' -> 'n'.
+	   '[òóôõö]' -> 'o'.
+	   'œ' -> 'oe'.
+	   '[ùúûü]' -> 'u'.
+	   '[ýÿ]' -> 'y'
+	} keysAndValuesDo: [ :k :v |
+		s := s replace: k with: v
+	].
+	^ s
 ! !
 

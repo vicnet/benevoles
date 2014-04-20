@@ -1,4 +1,4 @@
-define("benevoles/Benevoles", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Kernel-Announcements", "amber_core/Web"], function(smalltalk,nil,_st, globals){
+define("benevoles/Benevoles", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Kernel-Announcements", "amber_core/Web", "amber_core/Kernel-Collections"], function(smalltalk,nil,_st, globals){
 smalltalk.addPackage('Benevoles');
 smalltalk.packages["Benevoles"].transport = {"type":"amd","amdNamespace":"benevoles"};
 
@@ -1083,24 +1083,26 @@ fn: function (texte,max){
 var self=this;
 var minus,cpt;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
+var $1,$2,$4,$3,$5;
 $1=_st(texte)._isEmpty();
 if(smalltalk.assert($1)){
 $2=[];
 return $2;
 };
 cpt=max;
-minus=_st(texte)._asLowercase();
-$ctx1.sendIdx["asLowercase"]=1;
-$3=self._filtre_max_avec_(minus,max,(function(b,m){
+$4=_st(texte)._sansAccent();
+$ctx1.sendIdx["sansAccent"]=1;
+$3="^".__comma($4);
+minus=_st($3)._asRegexp();
+$5=self._filtre_max_avec_(minus,max,(function(b,m){
 return smalltalk.withContext(function($ctx2) {
-return _st(_st(_st(b)._nom())._asLowercase())._includesSubString_(m);
+return _st(_st(_st(b)._nom())._sansAccent())._match_(m);
 }, function($ctx2) {$ctx2.fillBlock({b:b,m:m},$ctx1,2)})}));
-return $3;
+return $5;
 }, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,minus:minus,cpt:cpt},globals.FdJBenevoles)})},
 args: ["texte", "max"],
-source: "filtre: texte max: max\x0a\x09| minus cpt |\x0a\x09texte isEmpty ifTrue: [ ^  #() ].\x0a\x09cpt := max.\x0a\x09\x22teste le nom\x22\x0a\x09minus := texte asLowercase.\x0a\x09^ self filtre: minus max: max avec: [ :b :m |\x0a\x09\x09b nom asLowercase includesSubString: m ]",
-messageSends: ["ifTrue:", "isEmpty", "asLowercase", "filtre:max:avec:", "includesSubString:", "nom"],
+source: "filtre: texte max: max\x0a\x09| minus cpt |\x0a\x09texte isEmpty ifTrue: [ ^  #() ].\x0a\x09cpt := max.\x0a\x09\x22teste le nom\x22\x0a\x09minus := ('^', texte sansAccent) asRegexp.\x0a\x09^ self filtre: minus max: max avec: [ :b :m |\x0a\x09\x09b nom sansAccent match: m ]",
+messageSends: ["ifTrue:", "isEmpty", "asRegexp", ",", "sansAccent", "filtre:max:avec:", "match:", "nom"],
 referencedClasses: []
 }),
 globals.FdJBenevoles);
@@ -1113,25 +1115,28 @@ fn: function (texte,max,block){
 var self=this;
 var cpt;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1;
+var $1,$2,$4,$3;
+$1=_st(max).__lt_eq((0));
+if(smalltalk.assert($1)){
+$2=[];
+return $2;
+};
 cpt=max;
-$1=_st(self["@liste"])._select_((function(b){
+$3=_st(self["@liste"])._select_((function(b){
 return smalltalk.withContext(function($ctx2) {
-$2=_st(_st(_st(b)._estDisponible()).__and(_st(cpt).__gt((0)))).__and(_st(block)._value_value_(b,texte));
+$4=_st(_st(_st(b)._estDisponible()).__and(_st(cpt).__gt((0)))).__and(_st(block)._value_value_(b,texte));
 $ctx2.sendIdx["&"]=1;
-if(smalltalk.assert($2)){
+if(smalltalk.assert($4)){
 cpt=_st(cpt).__minus((1));
 cpt;
 return true;
-} else {
-return false;
 };
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
-return $1;
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,2)})}));
+return $3;
 }, function($ctx1) {$ctx1.fill(self,"filtre:max:avec:",{texte:texte,max:max,block:block,cpt:cpt},globals.FdJBenevoles)})},
 args: ["texte", "max", "block"],
-source: "filtre: texte max: max avec: block\x0a\x09| cpt |\x0a\x09cpt := max.\x0a\x09\x22teste le block\x22\x0a\x09^ liste select: [ :b |\x0a\x09\x09b estDisponible & (cpt>0) & (block value: b value: texte)\x0a\x09\x09\x09ifTrue: [ cpt := cpt-1. true]\x0a\x09\x09\x09ifFalse: [ false ]\x0a\x09\x09]",
-messageSends: ["select:", "ifTrue:ifFalse:", "&", "estDisponible", ">", "value:value:", "-"],
+source: "filtre: texte max: max avec: block\x0a\x09| cpt |\x0a\x09(max<=0) ifTrue: [ ^ #() ].\x0a\x09cpt := max.\x0a\x09\x22teste le block\x22\x0a\x09^ liste select: [ :b |\x0a\x09\x09b estDisponible & (cpt>0) & (block value: b value: texte)\x0a\x09\x09\x09ifTrue: [ cpt := cpt-1. true]\x0a\x09\x09]",
+messageSends: ["ifTrue:", "<=", "select:", "&", "estDisponible", ">", "value:value:", "-"],
 referencedClasses: []
 }),
 globals.FdJBenevoles);
@@ -2656,5 +2661,30 @@ referencedClasses: []
 }),
 globals.FdJWidgetSelectionneur);
 
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "sansAccent",
+protocol: '*Benevoles',
+fn: function (){
+var self=this;
+var s;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+s=self._asLowercase();
+_st(globals.HashedCollection._newFromPairs_(["[àáâãäå]","a","æ","ae","ç","c","[èéêë]","e","[ìíîï]","i","ñ","n","[òóôõö]","o","œ","oe","[ùúûü]","u","[ýÿ]","y"]))._keysAndValuesDo_((function(k,v){
+return smalltalk.withContext(function($ctx2) {
+s=_st(s)._replace_with_(k,v);
+return s;
+}, function($ctx2) {$ctx2.fillBlock({k:k,v:v},$ctx1,1)})}));
+$1=s;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"sansAccent",{s:s},globals.String)})},
+args: [],
+source: "sansAccent\x0a\x09| s |\x0a  \x09s := self asLowercase.\x0a\x09#{ '[àáâãäå]' -> 'a'.\x0a\x09   'æ' -> 'ae'.\x0a\x09   'ç' -> 'c'.\x0a\x09   '[èéêë]' -> 'e'.\x0a\x09   '[ìíîï]' -> 'i'.\x0a\x09   'ñ' -> 'n'.\x0a\x09   '[òóôõö]' -> 'o'.\x0a\x09   'œ' -> 'oe'.\x0a\x09   '[ùúûü]' -> 'u'.\x0a\x09   '[ýÿ]' -> 'y'\x0a\x09} keysAndValuesDo: [ :k :v |\x0a\x09\x09s := s replace: k with: v\x0a\x09].\x0a\x09^ s",
+messageSends: ["asLowercase", "keysAndValuesDo:", "replace:with:"],
+referencedClasses: []
+}),
+globals.String);
 
 });

@@ -300,6 +300,25 @@ referencedClasses: []
 }),
 globals.FdJApplication);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "vide",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
+return smalltalk.withContext(function($ctx1) { 
+_st($FdJStockage())._vide();
+$ctx1.sendIdx["vide"]=1;
+_st(self["@benevoles"])._vide();
+return self}, function($ctx1) {$ctx1.fill(self,"vide",{},globals.FdJApplication)})},
+args: [],
+source: "vide\x0a\x09FdJStockage vide.\x0a\x09benevoles vide",
+messageSends: ["vide"],
+referencedClasses: ["FdJStockage"]
+}),
+globals.FdJApplication);
+
 
 
 smalltalk.addClass('FdJAssociation', globals.Object, ['nom', 'logo'], 'Benevoles');
@@ -1158,6 +1177,21 @@ referencedClasses: []
 }),
 globals.FdJBenevoles);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "vide",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+self["@liste"]=[];
+return self},
+args: [],
+source: "vide\x0a\x09liste := #()",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJBenevoles);
+
 
 smalltalk.addMethod(
 smalltalk.method({
@@ -1306,7 +1340,7 @@ globals.FdJImporteur);
 smalltalk.addClass('FdJStock', globals.Object, ['tshirts'], 'Benevoles');
 
 
-smalltalk.addClass('FdJStockage', globals.Object, [], 'Benevoles');
+smalltalk.addClass('FdJStockage', globals.Object, ['stockage'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "charge:",
@@ -1384,12 +1418,27 @@ fn: function (objet){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(_st(sessionStorage)._getItem_(self._nomPour_(objet)))._isNil();
+$1=_st(_st(self["@stockage"])._getItem_(self._nomPour_(objet)))._isNil();
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"existe:",{objet:objet},globals.FdJStockage)})},
 args: ["objet"],
-source: "existe: objet\x0a\x09^ (sessionStorage getItem: (self nomPour: objet)) isNil",
+source: "existe: objet\x0a\x09^ (stockage getItem: (self nomPour: objet)) isNil",
 messageSends: ["isNil", "getItem:", "nomPour:"],
+referencedClasses: []
+}),
+globals.FdJStockage);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initialize",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+self["@stockage"]=sessionStorage;
+return self},
+args: [],
+source: "initialize\x0a\x09\x22stockage := localStorage\x22\x0a\x09stockage := sessionStorage",
+messageSends: [],
 referencedClasses: []
 }),
 globals.FdJStockage);
@@ -1455,10 +1504,10 @@ protocol: 'as yet unclassified',
 fn: function (objet){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(sessionStorage)._setItem_value_(self._nomPour_(objet),_st(objet)._asJSONString());
+_st(self["@stockage"])._setItem_value_(self._nomPour_(objet),_st(objet)._asJSONString());
 return self}, function($ctx1) {$ctx1.fill(self,"sauve:",{objet:objet},globals.FdJStockage)})},
 args: ["objet"],
-source: "sauve: objet\x0a\x09sessionStorage\x0a\x09\x09setItem: (self nomPour: objet)\x0a\x09\x09value: objet asJSONString",
+source: "sauve: objet\x0a\x09stockage\x0a\x09\x09setItem: (self nomPour: objet)\x0a\x09\x09value: objet asJSONString",
 messageSends: ["setItem:value:", "nomPour:", "asJSONString"],
 referencedClasses: []
 }),
@@ -1472,11 +1521,11 @@ fn: function (objet){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(sessionStorage)._getItem_(self._nomPour_(objet));
+$1=_st(self["@stockage"])._getItem_(self._nomPour_(objet));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"stockagePour:",{objet:objet},globals.FdJStockage)})},
 args: ["objet"],
-source: "stockagePour: objet\x0a\x09\x22objet peut être une classe, une chaine ou un objet\x22\x0a\x09^ sessionStorage getItem: (self nomPour: objet)",
+source: "stockagePour: objet\x0a\x09\x22objet peut être une classe, une chaine ou un objet\x22\x0a\x09^ stockage getItem: (self nomPour: objet)",
 messageSends: ["getItem:", "nomPour:"],
 referencedClasses: []
 }),
@@ -1532,10 +1581,10 @@ protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-_st(sessionStorage)._clear();
+_st(self["@stockage"])._clear();
 return self}, function($ctx1) {$ctx1.fill(self,"vide",{},globals.FdJStockage)})},
 args: [],
-source: "vide\x0a\x09sessionStorage clear",
+source: "vide\x0a\x09stockage clear",
 messageSends: ["clear"],
 referencedClasses: []
 }),
@@ -2377,12 +2426,53 @@ globals.FdJWidgetImporteur);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "renderActionsOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+var vide;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$4,$6,$5;
+$1=_st(html)._span();
+$ctx1.sendIdx["span"]=1;
+_st($1)._class_("checkbox");
+$2=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$3=_st(html)._input();
+$ctx2.sendIdx["input"]=1;
+vide=_st($3)._type_("checkbox");
+vide;
+return _st(_st(html)._span())._with_("Vide");
+$ctx2.sendIdx["with:"]=2;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+$4=_st(html)._button();
+_st($4)._with_("import");
+$5=_st($4)._onClick_((function(){
+return smalltalk.withContext(function($ctx2) {
+$6=_st(_st(vide)._element())._checked();
+if(smalltalk.assert($6)){
+_st(self["@presentateur"])._vide();
+};
+_st(self["@presentateur"])._importe_(self._input());
+return _st(_st(self["@dlg"])._asJQuery())._fadeOut();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"renderActionsOn:",{html:html,vide:vide},globals.FdJWidgetImporteur)})},
+args: ["html"],
+source: "renderActionsOn: html\x0a\x09| vide |\x0a\x09html span class: 'checkbox'; with: [ \x0a\x09\x09vide := html input type: 'checkbox'.\x0a\x09\x09html span with: 'Vide'\x0a\x09].\x0a\x09html button with: 'import';\x0a\x09\x09onClick: [\x0a\x09\x09\x09vide element checked ifTrue: [\x0a\x09\x09\x09\x09\x09presentateur vide\x0a\x09\x09\x09\x09].\x0a\x09\x09\x09presentateur importe: self input.\x0a\x09\x09\x09dlg asJQuery fadeOut\x0a\x09\x09]",
+messageSends: ["class:", "span", "with:", "type:", "input", "button", "onClick:", "ifTrue:", "checked", "element", "vide", "importe:", "fadeOut", "asJQuery"],
+referencedClasses: []
+}),
+globals.FdJWidgetImporteur);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "renderDlgOn:",
 protocol: 'as yet unclassified',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$5,$6,$4,$2;
+var $1,$3,$4,$2;
 $1=_st(html)._div();
 $ctx1.sendIdx["div"]=1;
 _st($1)._class_("dialog");
@@ -2395,24 +2485,16 @@ $3=_st(html)._div();
 _st($3)._class_("actions");
 $4=_st($3)._with_((function(){
 return smalltalk.withContext(function($ctx3) {
-$5=_st(html)._button();
-_st($5)._with_("import");
-$6=_st($5)._onClick_((function(){
-return smalltalk.withContext(function($ctx4) {
-_st(self["@presentateur"])._importe_(self._input());
-return _st(_st(self["@dlg"])._asJQuery())._fadeOut();
-}, function($ctx4) {$ctx4.fillBlock({},$ctx3,3)})}));
-return $6;
+return self._renderActionsOn_(html);
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
-$ctx2.sendIdx["with:"]=2;
 return $4;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["with:"]=1;
 self["@dlg"]=$2;
 return self}, function($ctx1) {$ctx1.fill(self,"renderDlgOn:",{html:html},globals.FdJWidgetImporteur)})},
 args: ["html"],
-source: "renderDlgOn: html\x0a\x09dlg := html div\x0a\x09\x09class: 'dialog';\x0a\x09\x09with: [\x0a\x09\x09\x09input := html textarea.\x0a\x09\x09\x09html div class: 'actions';\x0a\x09\x09\x09\x09 with: [\x0a\x09\x09\x09\x09\x09 html button with: 'import';\x0a\x09\x09\x09\x09\x09 \x09  onClick: [\x0a\x09\x09\x09\x09\x09\x09\x09  presentateur importe: self input.\x0a\x09\x09\x09\x09\x09\x09\x09  dlg asJQuery fadeOut\x0a\x09\x09\x09\x09\x09\x09\x09  ]\x0a\x09\x09\x09\x09\x09 ]\x0a\x09\x09]",
-messageSends: ["class:", "div", "with:", "textarea", "button", "onClick:", "importe:", "input", "fadeOut", "asJQuery"],
+source: "renderDlgOn: html\x0a\x09dlg := html div\x0a\x09\x09class: 'dialog';\x0a\x09\x09with: [\x0a\x09\x09\x09input := html textarea.\x0a\x09\x09\x09html div class: 'actions';\x0a\x09\x09\x09\x09 with: [ self renderActionsOn: html ]\x0a\x09\x09]",
+messageSends: ["class:", "div", "with:", "textarea", "renderActionsOn:"],
 referencedClasses: []
 }),
 globals.FdJWidgetImporteur);

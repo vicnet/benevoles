@@ -120,6 +120,11 @@ termine
 	selectionneur supprime.
 	distributeur supprime
 	"'body' asJQuery children remove"
+!
+
+vide
+	FdJStockage vide.
+	benevoles vide
 ! !
 
 Object subclass: #FdJAssociation
@@ -378,6 +383,10 @@ fromJSON: variables
 
 selectionnes
 	^ liste select: [ :b | b estEncours ]
+!
+
+vide
+	liste := #()
 ! !
 
 !FdJBenevoles class methodsFor: 'exemples'!
@@ -433,7 +442,7 @@ Object subclass: #FdJStock
 	package: 'Benevoles'!
 
 Object subclass: #FdJStockage
-	instanceVariableNames: ''
+	instanceVariableNames: 'stockage'
 	package: 'Benevoles'!
 
 !FdJStockage methodsFor: 'as yet unclassified'!
@@ -459,7 +468,12 @@ charge: entite sinon: block
 !
 
 existe: objet
-	^ (sessionStorage getItem: (self nomPour: objet)) isNil
+	^ (stockage getItem: (self nomPour: objet)) isNil
+!
+
+initialize
+	"stockage := localStorage"
+	stockage := sessionStorage
 !
 
 jsonPour: objet
@@ -476,14 +490,14 @@ nomPour: entite
 !
 
 sauve: objet
-	sessionStorage
+	stockage
 		setItem: (self nomPour: objet)
 		value: objet asJSONString
 !
 
 stockagePour: objet
 	"objet peut être une classe, une chaine ou un objet"
-	^ sessionStorage getItem: (self nomPour: objet)
+	^ stockage getItem: (self nomPour: objet)
 !
 
 variablesPour: json
@@ -502,7 +516,7 @@ variablesPour: json
 !
 
 vide
-	sessionStorage clear
+	stockage clear
 ! !
 
 FdJStockage class instanceVariableNames: 'instance'!
@@ -752,19 +766,29 @@ input
 	^ input asJQuery val
 !
 
+renderActionsOn: html
+	| vide |
+	html span class: 'checkbox'; with: [ 
+		vide := html input type: 'checkbox'.
+		html span with: 'Vide'
+	].
+	html button with: 'import';
+		onClick: [
+			vide element checked ifTrue: [
+					presentateur vide
+				].
+			presentateur importe: self input.
+			dlg asJQuery fadeOut
+		]
+!
+
 renderDlgOn: html
 	dlg := html div
 		class: 'dialog';
 		with: [
 			input := html textarea.
 			html div class: 'actions';
-				 with: [
-					 html button with: 'import';
-					 	  onClick: [
-							  presentateur importe: self input.
-							  dlg asJQuery fadeOut
-							  ]
-					 ]
+				 with: [ self renderActionsOn: html ]
 		]
 !
 

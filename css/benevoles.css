@@ -111,14 +111,15 @@ body {
     background: lightgrey;
 }
 .importeur textarea {
-    width: 99.4%;
+    width: 99%;
     height: 87%;
+    margin-bottom: 10px;
 }
 .importeur .actions {
-    margin: 2px;
-    padding: 2px;
-    display: block;
+    width: 100%;
+    height: 15%;
+    margin: 5px;
 }
-.importeur .actions button {
-    margin: 0px
+.importeur .actions .checkbox {
+    margin-right: 15px
 }

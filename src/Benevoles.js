@@ -2356,7 +2356,7 @@ fn: function (html){
 var self=this;
 function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
+var $1,$3,$4,$2;
 ($ctx1.supercall = true, globals.FdJWidgetSelectionneur.superclass.fn.prototype._renderOn_.apply(_st(self), [html]));
 $ctx1.supercall = false;
 $ctx1.sendIdx["renderOn:"]=1;
@@ -2368,21 +2368,30 @@ _st(self["@input"])._onKeyUp_((function(){
 return smalltalk.withContext(function($ctx3) {
 return _st(self["@presentateur"])._filtre_(self._filtre());
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+$1=_st(html)._div();
+$ctx2.sendIdx["div"]=1;
+_st($1)._class_("menu");
+$ctx2.sendIdx["class:"]=1;
+$2=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx3) {
+$3=_st(html)._div();
+_st($3)._class_("suite");
+$4=_st($3)._with_("...");
+self["@suite"]=$4;
+self["@suite"];
 self["@liste"]=_st($FdJWidgetBenevoles())._new();
 self["@liste"];
 _st(self["@liste"])._presentateur_(self["@presentateur"]);
-_st(self["@liste"])._renderOn_(html);
-$1=_st(html)._div();
-_st($1)._class_("suite");
-$2=_st($1)._with_("...");
-self["@suite"]=$2;
-return self["@suite"];
+return _st(self["@liste"])._renderOn_(html);
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,3)})}));
+$ctx2.sendIdx["with:"]=2;
+return $2;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["with:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetSelectionneur)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09input := html input.\x0a\x09\x09input onKeyUp: [ presentateur filtre: (self filtre) ].\x0a\x09\x09\x0a\x09\x09liste := FdJWidgetBenevoles new.\x0a\x09\x09liste presentateur: presentateur.\x0a\x09\x09liste renderOn: html.\x0a\x0a\x09\x09suite := html div class: 'suite'; with: '...']",
-messageSends: ["renderOn:", "with:", "input", "onKeyUp:", "filtre:", "filtre", "new", "presentateur:", "class:", "div"],
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09input := html input.\x0a\x09\x09input onKeyUp: [ presentateur filtre: (self filtre) ].\x0a\x09\x09\x0a\x09\x09html div class: 'menu'; with: [\x0a\x09\x09\x09suite := html div class: 'suite'; with: '...'.\x0a\x09\x09\x09\x0a\x09\x09\x09liste := FdJWidgetBenevoles new.\x0a\x09\x09\x09liste presentateur: presentateur.\x0a\x09\x09\x09liste renderOn: html\x0a\x09\x09\x09]\x0a\x09\x09]",
+messageSends: ["renderOn:", "with:", "input", "onKeyUp:", "filtre:", "filtre", "class:", "div", "new", "presentateur:"],
 referencedClasses: ["FdJWidgetBenevoles"]
 }),
 globals.FdJWidgetSelectionneur);

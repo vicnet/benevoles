@@ -758,11 +758,14 @@ renderOn: html
 		input := html input.
 		input onKeyUp: [ presentateur filtre: (self filtre) ].
 		
-		liste := FdJWidgetBenevoles new.
-		liste presentateur: presentateur.
-		liste renderOn: html.
-
-		suite := html div class: 'suite'; with: '...']
+		html div class: 'menu'; with: [
+			suite := html div class: 'suite'; with: '...'.
+			
+			liste := FdJWidgetBenevoles new.
+			liste presentateur: presentateur.
+			liste renderOn: html
+			]
+		]
 !
 
 selectionne: benevoles

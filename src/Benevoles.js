@@ -2172,21 +2172,21 @@ $2=_st($1)._with_((function(){
 return smalltalk.withContext(function($ctx2) {
 $3=_st(html)._div();
 $ctx2.sendIdx["div"]=2;
-_st($3)._class_("prenom");
+_st($3)._class_("nom");
 $ctx2.sendIdx["class:"]=2;
-$4=_st($3)._with_(_st(self["@benevole"])._prenom());
+$4=_st($3)._with_(_st(self["@benevole"])._nom());
 $ctx2.sendIdx["with:"]=2;
 $4;
 $5=_st(html)._div();
-_st($5)._class_("nom");
-$6=_st($5)._with_(_st(self["@benevole"])._nom());
+_st($5)._class_("prenom");
+$6=_st($5)._with_(_st(self["@benevole"])._prenom());
 return $6;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["with:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"renderIdentiteOn:",{html:html},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderIdentiteOn: html\x0a\x09html div class: 'identite';\x0a\x09\x09with: [ html div class: 'prenom'; with: benevole prenom.\x0a\x09\x09\x09\x09html div class: 'nom'; with: benevole nom]",
-messageSends: ["class:", "div", "with:", "prenom", "nom"],
+source: "renderIdentiteOn: html\x0a\x09html div class: 'identite';\x0a\x09\x09with: [ html div class: 'nom'; with: benevole nom.\x0a\x09\x09\x09\x09html div class: 'prenom'; with: benevole prenom ]",
+messageSends: ["class:", "div", "with:", "nom", "prenom"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevole);
@@ -2672,7 +2672,7 @@ var s;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
 s=self._asLowercase();
-_st(globals.HashedCollection._newFromPairs_(["[àáâãäå]","a","æ","ae","ç","c","[èéêë]","e","[ìíîï]","i","ñ","n","[òóôõö]","o","œ","oe","[ùúûü]","u","[ýÿ]","y"]))._keysAndValuesDo_((function(k,v){
+_st(globals.HashedCollection._newFromPairs_(["[àáâãäå]","a","æ","ae","ç","c","[èéêë]","e","[ìíîï]","i","ñ","n","[òóôõö]","o","œ","oe","[ùúûü]","u","[ýÿ]","y"," ",""]))._keysAndValuesDo_((function(k,v){
 return smalltalk.withContext(function($ctx2) {
 s=_st(s)._replace_with_(k,v);
 return s;
@@ -2681,7 +2681,7 @@ $1=s;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"sansAccent",{s:s},globals.String)})},
 args: [],
-source: "sansAccent\x0a\x09| s |\x0a  \x09s := self asLowercase.\x0a\x09#{ '[àáâãäå]' -> 'a'.\x0a\x09   'æ' -> 'ae'.\x0a\x09   'ç' -> 'c'.\x0a\x09   '[èéêë]' -> 'e'.\x0a\x09   '[ìíîï]' -> 'i'.\x0a\x09   'ñ' -> 'n'.\x0a\x09   '[òóôõö]' -> 'o'.\x0a\x09   'œ' -> 'oe'.\x0a\x09   '[ùúûü]' -> 'u'.\x0a\x09   '[ýÿ]' -> 'y'\x0a\x09} keysAndValuesDo: [ :k :v |\x0a\x09\x09s := s replace: k with: v\x0a\x09].\x0a\x09^ s",
+source: "sansAccent\x0a\x09| s |\x0a  \x09s := self asLowercase.\x0a\x09#{ '[àáâãäå]' -> 'a'.\x0a\x09   'æ' -> 'ae'.\x0a\x09   'ç' -> 'c'.\x0a\x09   '[èéêë]' -> 'e'.\x0a\x09   '[ìíîï]' -> 'i'.\x0a\x09   'ñ' -> 'n'.\x0a\x09   '[òóôõö]' -> 'o'.\x0a\x09   'œ' -> 'oe'.\x0a\x09   '[ùúûü]' -> 'u'.\x0a\x09   '[ýÿ]' -> 'y'.\x0a\x09   ' ' -> ''\x0a\x09} keysAndValuesDo: [ :k :v |\x0a\x09\x09s := s replace: k with: v\x0a\x09].\x0a\x09^ s",
 messageSends: ["asLowercase", "keysAndValuesDo:", "replace:with:"],
 referencedClasses: []
 }),

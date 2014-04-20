@@ -691,8 +691,8 @@ renderAssociationOn: html
 
 renderIdentiteOn: html
 	html div class: 'identite';
-		with: [ html div class: 'prenom'; with: benevole prenom.
-				html div class: 'nom'; with: benevole nom]
+		with: [ html div class: 'nom'; with: benevole nom.
+				html div class: 'prenom'; with: benevole prenom ]
 !
 
 renderOn: html
@@ -858,7 +858,8 @@ sansAccent
 	   '[òóôõö]' -> 'o'.
 	   'œ' -> 'oe'.
 	   '[ùúûü]' -> 'u'.
-	   '[ýÿ]' -> 'y'
+	   '[ýÿ]' -> 'y'.
+	   ' ' -> ''
 	} keysAndValuesDo: [ :k :v |
 		s := s replace: k with: v
 	].

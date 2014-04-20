@@ -12,13 +12,13 @@ body {
     font-size: 200%;
 }
 .benevole .prenom {
-    margin: 5px;
     display: inline;
+    margin: 5px;
+    font-size: 80%;
 }
 .benevole .nom {
     display: inline;
     margin: 5px;
-    font-size: 80%;
 }
 .benevole .info {
 /*    float: left;*/
@@ -76,8 +76,14 @@ body {
     background: white;
     display: block;
 }
+.selectionneur .identite {
+    margin-right: 20px;
+}
 .selectionneur .benevole * {
     display: inline;
+}
+.selectionneur .association {
+    float: right
 }
 .selectionneur .benevole .tshirt {
     display: none;

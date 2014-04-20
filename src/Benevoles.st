@@ -166,10 +166,17 @@ Object subclass: #FdJAssociations
 
 !FdJAssociations methodsFor: 'as yet unclassified'!
 
+ajoute: uneAssociation
+	| association |
+	association := uneAssociation isString
+		ifTrue: [ FdJAssociation new nom: uneAssociation ]
+		ifFalse: [ uneAssociation ].
+	liste at: association nom put: association
+!
+
 associations: desAssociations
 	liste := HashedCollection new.
-	desAssociations do: [ :a |
-		liste at: a nom put: a ]
+	desAssociations do: [ :a | self ajoute: a ]
 !
 
 at: nom
@@ -386,18 +393,39 @@ Object subclass: #FdJImporteur
 !FdJImporteur methodsFor: 'as yet unclassified'!
 
 importe: texte
-	| tous |
+	| tous fields rows |
 	tous := jQuery
 		parse: texte
-		config: #{ 'delimiter'->','. 'header'->false. 'dynamicTyping'->false }.
-	^ tous results collect: [ :res | self importeBenevole: res ]
+		config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.
+	fields := tous results fields.
+	rows := tous results rows.
+	(fields includes: 'Association')
+		ifTrue: [ self importeAssociations: rows ].
+	^ self importeBenevoles: rows
 !
 
-importeBenevole: table
+importeAssociation: row
+	row at: 'Association' ifPresent: [ :assoc |
+		(FdJAssociations instance at: assoc) ifNil: [
+			FdJAssociations instance ajoute: assoc
+			]
+		]
+!
+
+importeAssociations: rows
+	rows do: [ :row | self importeAssociation: row ]
+!
+
+importeBenevole: row
 	^ FdJStockage charge: FdJBenevole depuis: #{
-		'nom' -> (table at: 1).
-		'prenom' -> (table at: 2)
+		'nom' -> (row at: 'Nom').
+		'prenom' -> (row at: 'Prénom').
+		'assoc' -> (row at: 'Association' ifAbsent: [ 'Festival'])
 		}
+!
+
+importeBenevoles: rows
+	^ rows collect: [ :row | self importeBenevole: row ]
 ! !
 
 Object subclass: #FdJStock

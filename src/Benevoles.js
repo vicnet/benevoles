@@ -424,6 +424,31 @@ globals.FdJAssociation.klass);
 smalltalk.addClass('FdJAssociations', globals.Object, ['liste'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
+selector: "ajoute:",
+protocol: 'as yet unclassified',
+fn: function (uneAssociation){
+var self=this;
+var association;
+function $FdJAssociation(){return globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(uneAssociation)._isString();
+if(smalltalk.assert($1)){
+association=_st(_st($FdJAssociation())._new())._nom_(uneAssociation);
+} else {
+association=uneAssociation;
+};
+_st(self["@liste"])._at_put_(_st(association)._nom(),association);
+return self}, function($ctx1) {$ctx1.fill(self,"ajoute:",{uneAssociation:uneAssociation,association:association},globals.FdJAssociations)})},
+args: ["uneAssociation"],
+source: "ajoute: uneAssociation\x0a\x09| association |\x0a\x09association := uneAssociation isString\x0a\x09\x09ifTrue: [ FdJAssociation new nom: uneAssociation ]\x0a\x09\x09ifFalse: [ uneAssociation ].\x0a\x09liste at: association nom put: association",
+messageSends: ["ifTrue:ifFalse:", "isString", "nom:", "new", "at:put:", "nom"],
+referencedClasses: ["FdJAssociation"]
+}),
+globals.FdJAssociations);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "associations:",
 protocol: 'as yet unclassified',
 fn: function (desAssociations){
@@ -433,12 +458,12 @@ return smalltalk.withContext(function($ctx1) {
 self["@liste"]=_st($HashedCollection())._new();
 _st(desAssociations)._do_((function(a){
 return smalltalk.withContext(function($ctx2) {
-return _st(self["@liste"])._at_put_(_st(a)._nom(),a);
+return self._ajoute_(a);
 }, function($ctx2) {$ctx2.fillBlock({a:a},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"associations:",{desAssociations:desAssociations},globals.FdJAssociations)})},
 args: ["desAssociations"],
-source: "associations: desAssociations\x0a\x09liste := HashedCollection new.\x0a\x09desAssociations do: [ :a |\x0a\x09\x09liste at: a nom put: a ]",
-messageSends: ["new", "do:", "at:put:", "nom"],
+source: "associations: desAssociations\x0a\x09liste := HashedCollection new.\x0a\x09desAssociations do: [ :a | self ajoute: a ]",
+messageSends: ["new", "do:", "ajoute:"],
 referencedClasses: ["HashedCollection"]
 }),
 globals.FdJAssociations);
@@ -1161,19 +1186,71 @@ selector: "importe:",
 protocol: 'as yet unclassified',
 fn: function (texte){
 var self=this;
-var tous;
+var tous,fields,rows;
 return smalltalk.withContext(function($ctx1) { 
-var $1;
-tous=_st(jQuery)._parse_config_(texte,globals.HashedCollection._newFromPairs_(["delimiter",",","header",false,"dynamicTyping",false]));
-$1=_st(_st(tous)._results())._collect_((function(res){
-return smalltalk.withContext(function($ctx2) {
-return self._importeBenevole_(res);
-}, function($ctx2) {$ctx2.fillBlock({res:res},$ctx1,1)})}));
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,tous:tous},globals.FdJImporteur)})},
+var $1,$2,$3;
+tous=_st(jQuery)._parse_config_(texte,globals.HashedCollection._newFromPairs_(["delimiter",",","header",true,"dynamicTyping",false]));
+$1=_st(tous)._results();
+$ctx1.sendIdx["results"]=1;
+fields=_st($1)._fields();
+rows=_st(_st(tous)._results())._rows();
+$2=_st(fields)._includes_("Association");
+if(smalltalk.assert($2)){
+self._importeAssociations_(rows);
+};
+$3=self._importeBenevoles_(rows);
+return $3;
+}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,tous:tous,fields:fields,rows:rows},globals.FdJImporteur)})},
 args: ["texte"],
-source: "importe: texte\x0a\x09| tous |\x0a\x09tous := jQuery\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->false. 'dynamicTyping'->false }.\x0a\x09^ tous results collect: [ :res | self importeBenevole: res ]",
-messageSends: ["parse:config:", "collect:", "results", "importeBenevole:"],
+source: "importe: texte\x0a\x09| tous fields rows |\x0a\x09tous := jQuery\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.\x0a\x09fields := tous results fields.\x0a\x09rows := tous results rows.\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [ self importeAssociations: rows ].\x0a\x09^ self importeBenevoles: rows",
+messageSends: ["parse:config:", "fields", "results", "rows", "ifTrue:", "includes:", "importeAssociations:", "importeBenevoles:"],
+referencedClasses: []
+}),
+globals.FdJImporteur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "importeAssociation:",
+protocol: 'as yet unclassified',
+fn: function (row){
+var self=this;
+function $FdJAssociations(){return globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+_st(row)._at_ifPresent_("Association",(function(assoc){
+return smalltalk.withContext(function($ctx2) {
+$2=_st($FdJAssociations())._instance();
+$ctx2.sendIdx["instance"]=1;
+$1=_st($2)._at_(assoc);
+if(($receiver = $1) == null || $receiver.isNil){
+return _st(_st($FdJAssociations())._instance())._ajoute_(assoc);
+} else {
+return $1;
+};
+}, function($ctx2) {$ctx2.fillBlock({assoc:assoc},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"importeAssociation:",{row:row},globals.FdJImporteur)})},
+args: ["row"],
+source: "importeAssociation: row\x0a\x09row at: 'Association' ifPresent: [ :assoc |\x0a\x09\x09(FdJAssociations instance at: assoc) ifNil: [\x0a\x09\x09\x09FdJAssociations instance ajoute: assoc\x0a\x09\x09\x09]\x0a\x09\x09]",
+messageSends: ["at:ifPresent:", "ifNil:", "at:", "instance", "ajoute:"],
+referencedClasses: ["FdJAssociations"]
+}),
+globals.FdJImporteur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "importeAssociations:",
+protocol: 'as yet unclassified',
+fn: function (rows){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(rows)._do_((function(row){
+return smalltalk.withContext(function($ctx2) {
+return self._importeAssociation_(row);
+}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"importeAssociations:",{rows:rows},globals.FdJImporteur)})},
+args: ["rows"],
+source: "importeAssociations: rows\x0a\x09rows do: [ :row | self importeAssociation: row ]",
+messageSends: ["do:", "importeAssociation:"],
 referencedClasses: []
 }),
 globals.FdJImporteur);
@@ -1182,22 +1259,45 @@ smalltalk.addMethod(
 smalltalk.method({
 selector: "importeBenevole:",
 protocol: 'as yet unclassified',
-fn: function (table){
+fn: function (row){
 var self=this;
 function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
 function $FdJBenevole(){return globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
 return smalltalk.withContext(function($ctx1) { 
 var $3,$2,$1;
-$3=_st(table)._at_((1));
+$3=_st(row)._at_("Nom");
 $ctx1.sendIdx["at:"]=1;
-$2=globals.HashedCollection._newFromPairs_(["nom",$3,"prenom",_st(table)._at_((2))]);
+$2=globals.HashedCollection._newFromPairs_(["nom",$3,"prenom",_st(row)._at_("Prénom"),"assoc",_st(row)._at_ifAbsent_("Association",(function(){
+return "Festival";
+}))]);
 $1=_st($FdJStockage())._charge_depuis_($FdJBenevole(),$2);
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"importeBenevole:",{table:table},globals.FdJImporteur)})},
-args: ["table"],
-source: "importeBenevole: table\x0a\x09^ FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (table at: 1).\x0a\x09\x09'prenom' -> (table at: 2)\x0a\x09\x09}",
-messageSends: ["charge:depuis:", "at:"],
+}, function($ctx1) {$ctx1.fill(self,"importeBenevole:",{row:row},globals.FdJImporteur)})},
+args: ["row"],
+source: "importeBenevole: row\x0a\x09^ FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (row at: 'Nom').\x0a\x09\x09'prenom' -> (row at: 'Prénom').\x0a\x09\x09'assoc' -> (row at: 'Association' ifAbsent: [ 'Festival'])\x0a\x09\x09}",
+messageSends: ["charge:depuis:", "at:", "at:ifAbsent:"],
 referencedClasses: ["FdJStockage", "FdJBenevole"]
+}),
+globals.FdJImporteur);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "importeBenevoles:",
+protocol: 'as yet unclassified',
+fn: function (rows){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(rows)._collect_((function(row){
+return smalltalk.withContext(function($ctx2) {
+return self._importeBenevole_(row);
+}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"importeBenevoles:",{rows:rows},globals.FdJImporteur)})},
+args: ["rows"],
+source: "importeBenevoles: rows\x0a\x09^ rows collect: [ :row | self importeBenevole: row ]",
+messageSends: ["collect:", "importeBenevole:"],
+referencedClasses: []
 }),
 globals.FdJImporteur);
 

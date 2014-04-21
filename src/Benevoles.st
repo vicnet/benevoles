@@ -43,7 +43,9 @@ Object subclass: #FdJApplication
 
 charge
 	"Charge le modele (ou créé un exemple)"
-	FdJStockage charge: FdJAssociations sinon: [ FdJAssociations exemple ].
+	FdJStockage
+		charge: FdJAssociations instance
+		sinon: [ FdJAssociations exemple ].
 	benevoles := FdJStockage charge: FdJBenevoles sinon: [ FdJBenevoles exemple ]
 !
 
@@ -61,7 +63,9 @@ filtre: texte
 
 importe: texte
 	benevoles ajouteTous:
-		(FdJImporteur new importe: texte)
+		(FdJImporteur new importe: texte).
+	self sauve.
+	FdJStockage sauve: FdJAssociations instance
 !
 
 initialize
@@ -102,6 +106,11 @@ onBenevoleChangeEtat: benevole
 		distributeur ajoute: benevole ].
 	benevole estDistribue ifTrue: [
 		distributeur supprime: benevole ].
+	self sauve
+!
+
+reinit
+	benevoles reinit.
 	self sauve
 !
 
@@ -300,6 +309,10 @@ prenom: chaine
 	prenom := chaine
 !
 
+reinit
+	etat := nil
+!
+
 tshirt
 	^ tshirt
 !
@@ -355,30 +368,32 @@ benevoles: desBenevoles
 !
 
 filtre: texte max: max
-	| minus cpt |
-	texte isEmpty ifTrue: [ ^  #() ].
-	cpt := max.
+	| minus selection result |
+	texte isEmpty ifTrue: [ ^ #() ].
 	"teste le nom"
-	minus := ('^', texte sansAccent) asRegexp.
-	^ self filtre: minus max: max avec: [ :b :m |
-		b nom sansAccent match: m ]
-!
-
-filtre: texte max: max avec: block
-	| cpt |
-	(max<=0) ifTrue: [ ^ #() ].
-	cpt := max.
-	"teste le block"
-	^ liste select: [ :b |
-		b estDisponible & (cpt>0) & (block value: b value: texte)
-			ifTrue: [ cpt := cpt-1. true]
-		]
+	minus := texte sansAccent.
+	selection := liste collect: [ :b |
+		{ (b nom sansAccent indexOfSubString: minus). b }
+	].
+	selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].
+	result := #().
+	selection do: [ :s |
+		((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [
+			result add: (s at: 2).
+			(result size >= max) ifTrue: [ ^ result ]
+			]
+		].
+	^ result
 !
 
 fromJSON: variables
 	liste := (variables at: 'liste') collect: [ :v |
 			FdJBenevole new fromJSON: v
 		]
+!
+
+reinit
+	liste do: [ :b | b reinit ]
 !
 
 selectionnes
@@ -845,6 +860,10 @@ selectionne: benevoles max: max
 ! !
 
 !String methodsFor: '*Benevoles'!
+
+indexOfSubString: subString
+	<return self.indexOf(subString) + 1>
+!
 
 sansAccent
 	| s |

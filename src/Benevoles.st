@@ -423,6 +423,8 @@ importe: texte
 		config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.
 	fields := tous results fields.
 	rows := tous results rows.
+	(fields includes: 'Taille')
+		ifTrue: [ ^ self importeTShirts: rows ].
 	(fields includes: 'Association')
 		ifTrue: [ self importeAssociations: rows ].
 	^ self importeBenevoles: rows
@@ -450,6 +452,13 @@ importeBenevole: row
 
 importeBenevoles: rows
 	^ rows collect: [ :row | self importeBenevole: row ]
+!
+
+importeTShirt: row
+!
+
+importeTShirts: rows
+	rows do: [ :row | self importeTShirt: row ]
 ! !
 
 Object subclass: #FdJStock

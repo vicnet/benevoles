@@ -525,18 +525,7 @@ stockagePour: objet
 !
 
 variablesPour: json
-	| variables |
-	(json class == JSObjectProxy) ifTrue: [
-		variables := HashedCollection new.
-		json keysAndValuesDo: [ :k :v |
-			variables at: k put: (self variablesPour: v) ].
-		^ variables
-		].
-	(json isKindOf: Array) ifTrue: [
-		^ json collect: [ :o |
-			self variablesPour: o ]
-			].
-	^ json
+	^ SmalltalkImage current readJSObject: json
 !
 
 vide

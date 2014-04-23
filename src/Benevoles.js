@@ -1631,40 +1631,16 @@ selector: "variablesPour:",
 protocol: 'as yet unclassified',
 fn: function (json){
 var self=this;
-var variables;
-function $JSObjectProxy(){return globals.JSObjectProxy||(typeof JSObjectProxy=="undefined"?nil:JSObjectProxy)}
-function $HashedCollection(){return globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
-function $Array(){return globals.Array||(typeof Array=="undefined"?nil:Array)}
+function $SmalltalkImage(){return globals.SmalltalkImage||(typeof SmalltalkImage=="undefined"?nil:SmalltalkImage)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5,$6;
-$1=_st(_st(json)._class()).__eq_eq($JSObjectProxy());
-if(smalltalk.assert($1)){
-variables=_st($HashedCollection())._new();
-variables;
-_st(json)._keysAndValuesDo_((function(k,v){
-return smalltalk.withContext(function($ctx2) {
-$2=variables;
-$3=self._variablesPour_(v);
-$ctx2.sendIdx["variablesPour:"]=1;
-return _st($2)._at_put_(k,$3);
-}, function($ctx2) {$ctx2.fillBlock({k:k,v:v},$ctx1,2)})}));
-$4=variables;
-return $4;
-};
-$5=_st(json)._isKindOf_($Array());
-if(smalltalk.assert($5)){
-$6=_st(json)._collect_((function(o){
-return smalltalk.withContext(function($ctx2) {
-return self._variablesPour_(o);
-}, function($ctx2) {$ctx2.fillBlock({o:o},$ctx1,4)})}));
-return $6;
-};
-return json;
-}, function($ctx1) {$ctx1.fill(self,"variablesPour:",{json:json,variables:variables},globals.FdJStockage)})},
+var $1;
+$1=_st(_st($SmalltalkImage())._current())._readJSObject_(json);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"variablesPour:",{json:json},globals.FdJStockage)})},
 args: ["json"],
-source: "variablesPour: json\x0a\x09| variables |\x0a\x09(json class == JSObjectProxy) ifTrue: [\x0a\x09\x09variables := HashedCollection new.\x0a\x09\x09json keysAndValuesDo: [ :k :v |\x0a\x09\x09\x09variables at: k put: (self variablesPour: v) ].\x0a\x09\x09^ variables\x0a\x09\x09].\x0a\x09(json isKindOf: Array) ifTrue: [\x0a\x09\x09^ json collect: [ :o |\x0a\x09\x09\x09self variablesPour: o ]\x0a\x09\x09\x09].\x0a\x09^ json",
-messageSends: ["ifTrue:", "==", "class", "new", "keysAndValuesDo:", "at:put:", "variablesPour:", "isKindOf:", "collect:"],
-referencedClasses: ["JSObjectProxy", "HashedCollection", "Array"]
+source: "variablesPour: json\x0a\x09^ SmalltalkImage current readJSObject: json",
+messageSends: ["readJSObject:", "current"],
+referencedClasses: ["SmalltalkImage"]
 }),
 globals.FdJStockage);
 

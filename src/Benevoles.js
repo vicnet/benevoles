@@ -167,11 +167,12 @@ if(smalltalk.assert($3)){
 _st(imp)._importeAssociations_(rows);
 _st($FdJStockage())._sauve_(_st($FdJAssociations())._instance());
 };
-_st(self["@benevoles"])._ajouteTous_(_st(_st(_st(imp)._importeBenevoles_(rows))._self())._sauve());
+_st(self["@benevoles"])._ajouteTous_(_st(imp)._importeBenevoles_(rows));
+self._sauve();
 return self}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,results:results,fields:fields,rows:rows,imp:imp},globals.FdJApplication)})},
 args: ["texte"],
-source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results fields.\x0a\x09rows := results rows.\x0a\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ ^ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09benevoles ajouteTous: (imp importeBenevoles: rows)\x0a\x09self sauve.\x0a\x09",
-messageSends: ["new", "importe:", "fields", "rows", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "ajouteTous:", "sauve", "self", "importeBenevoles:"],
+source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results fields.\x0a\x09rows := results rows.\x0a\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ ^ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09benevoles ajouteTous: (imp importeBenevoles: rows).\x0a\x09self sauve.\x0a\x09",
+messageSends: ["new", "importe:", "fields", "rows", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "ajouteTous:", "importeBenevoles:", "sauve"],
 referencedClasses: ["FdJImporteur", "FdJStockage", "FdJAssociations"]
 }),
 globals.FdJApplication);

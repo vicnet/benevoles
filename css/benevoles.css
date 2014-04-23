@@ -38,6 +38,13 @@ body {
     font-weight:900;
     text-align: center;
 }
+.tshirt div {
+    background: rgba(255,255,255,0.7);
+    display: block;
+    width: 40px;
+    margin-left: auto;
+    margin-right: auto;    
+}
 .tshirt.homme {
     background: url('../img/tshirt-h.png');
     background-size:100% 100%;
@@ -129,4 +136,7 @@ body {
 }
 .importeur .actions .checkbox {
     margin-right: 15px
+}
+.benevole .auteur {
+    background: linear-gradient(to top, orange 50%, white 50%);
 }

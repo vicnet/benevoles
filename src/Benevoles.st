@@ -77,7 +77,7 @@ importe: texte
 			imp importeAssociations: rows.
 			FdJStockage sauve: FdJAssociations instance ].
 
-	benevoles ajouteTous: (imp importeBenevoles: rows)
+	benevoles ajouteTous: (imp importeBenevoles: rows).
 	self sauve.
 !
 

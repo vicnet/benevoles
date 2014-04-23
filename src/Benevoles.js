@@ -146,18 +146,83 @@ selector: "importe:",
 protocol: 'initialization',
 fn: function (texte){
 var self=this;
+var results,fields,rows,imp;
 function $FdJImporteur(){return globals.FdJImporteur||(typeof FdJImporteur=="undefined"?nil:FdJImporteur)}
 function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
 function $FdJAssociations(){return globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
 return smalltalk.withContext(function($ctx1) { 
-_st(self["@benevoles"])._ajouteTous_(_st(_st($FdJImporteur())._new())._importe_(texte));
-self._sauve();
+var $1,$2,$3;
+imp=_st($FdJImporteur())._new();
+results=_st(imp)._importe_(texte);
+fields=_st(results)._fields();
+rows=_st(results)._rows();
+$1=_st(fields)._includes_("Taille");
+$ctx1.sendIdx["includes:"]=1;
+if(smalltalk.assert($1)){
+$2=self._importeTShirts_(rows);
+return $2;
+};
+$3=_st(fields)._includes_("Association");
+if(smalltalk.assert($3)){
+_st(imp)._importeAssociations_(rows);
 _st($FdJStockage())._sauve_(_st($FdJAssociations())._instance());
-return self}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte},globals.FdJApplication)})},
+};
+_st(self["@benevoles"])._ajouteTous_(_st(_st(_st(imp)._importeBenevoles_(rows))._self())._sauve());
+return self}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,results:results,fields:fields,rows:rows,imp:imp},globals.FdJApplication)})},
 args: ["texte"],
-source: "importe: texte\x0a\x09benevoles ajouteTous:\x0a\x09\x09(FdJImporteur new importe: texte).\x0a\x09self sauve.\x0a\x09FdJStockage sauve: FdJAssociations instance",
-messageSends: ["ajouteTous:", "importe:", "new", "sauve", "sauve:", "instance"],
+source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results fields.\x0a\x09rows := results rows.\x0a\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ ^ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09benevoles ajouteTous: (imp importeBenevoles: rows)\x0a\x09self sauve.\x0a\x09",
+messageSends: ["new", "importe:", "fields", "rows", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "ajouteTous:", "sauve", "self", "importeBenevoles:"],
 referencedClasses: ["FdJImporteur", "FdJStockage", "FdJAssociations"]
+}),
+globals.FdJApplication);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "importeTShirts:",
+protocol: 'initialization',
+fn: function (rows){
+var self=this;
+var tshirts,key;
+function $FdJImporteur(){return globals.FdJImporteur||(typeof FdJImporteur=="undefined"?nil:FdJImporteur)}
+function $FdJTShirt(){return globals.FdJTShirt||(typeof FdJTShirt=="undefined"?nil:FdJTShirt)}
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3;
+tshirts=_st(_st($FdJImporteur())._new())._importeTShirts_(rows);
+_st(_st(self["@benevoles"])._benevoles())._do_((function(b){
+return smalltalk.withContext(function($ctx2) {
+$1=_st(_st(b)._nom()).__comma(" ");
+$ctx2.sendIdx[","]=2;
+key=_st($1).__comma(_st(b)._prenom());
+$ctx2.sendIdx[","]=1;
+key;
+return _st(tshirts)._at_ifPresent_(key,(function(t){
+return smalltalk.withContext(function($ctx3) {
+_st(b)._tshirt_(_st($FdJTShirt())._at_(t));
+return _st(tshirts)._remove_(key);
+}, function($ctx3) {$ctx3.fillBlock({t:t},$ctx2,2)})}));
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
+$ctx1.sendIdx["do:"]=1;
+_st(tshirts)._ifNotEmpty_((function(){
+return smalltalk.withContext(function($ctx2) {
+_st($Transcript())._show_("TShirts non importés:");
+$ctx2.sendIdx["show:"]=1;
+$2=_st($Transcript())._cr();
+$ctx2.sendIdx["cr"]=1;
+return $2;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
+_st(_st(tshirts)._keys())._do_((function(b){
+return smalltalk.withContext(function($ctx2) {
+_st($Transcript())._show_("- ".__comma(b));
+$3=_st($Transcript())._cr();
+return $3;
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,4)})}));
+self._sauve();
+return self}, function($ctx1) {$ctx1.fill(self,"importeTShirts:",{rows:rows,tshirts:tshirts,key:key},globals.FdJApplication)})},
+args: ["rows"],
+source: "importeTShirts: rows\x0a\x09| tshirts key |\x0a\x09tshirts := FdJImporteur new importeTShirts: rows.\x0a\x09benevoles benevoles do: [ :b |\x0a\x09\x09key := (b nom, ' ', b prenom).\x0a\x09\x09tshirts at: key ifPresent: [ :t |\x0a\x09\x09\x09\x09b tshirt: (FdJTShirt at: t).\x0a\x09\x09\x09\x09tshirts remove: key\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09tshirts ifNotEmpty: [ Transcript show: 'TShirts non importés:'; cr ].\x0a\x09tshirts keys do: [ :b | Transcript show: ('- ', b);cr ].\x0a\x09self sauve",
+messageSends: ["importeTShirts:", "new", "do:", "benevoles", ",", "nom", "prenom", "at:ifPresent:", "tshirt:", "at:", "remove:", "ifNotEmpty:", "show:", "cr", "keys", "sauve"],
+referencedClasses: ["FdJImporteur", "FdJTShirt", "Transcript"]
 }),
 globals.FdJApplication);
 
@@ -1277,28 +1342,14 @@ fn: function (texte){
 var self=this;
 var tous,fields,rows;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$5;
+var $1;
 tous=_st(jQuery)._parse_config_(texte,globals.HashedCollection._newFromPairs_(["delimiter",",","header",true,"dynamicTyping",false]));
 $1=_st(tous)._results();
-$ctx1.sendIdx["results"]=1;
-fields=_st($1)._fields();
-rows=_st(_st(tous)._results())._rows();
-$2=_st(fields)._includes_("Taille");
-$ctx1.sendIdx["includes:"]=1;
-if(smalltalk.assert($2)){
-$3=self._importeTShirts_(rows);
-return $3;
-};
-$4=_st(fields)._includes_("Association");
-if(smalltalk.assert($4)){
-self._importeAssociations_(rows);
-};
-$5=self._importeBenevoles_(rows);
-return $5;
+return $1;
 }, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,tous:tous,fields:fields,rows:rows},globals.FdJImporteur)})},
 args: ["texte"],
-source: "importe: texte\x0a\x09| tous fields rows |\x0a\x09tous := jQuery\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.\x0a\x09fields := tous results fields.\x0a\x09rows := tous results rows.\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ ^ self importeTShirts: rows ].\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [ self importeAssociations: rows ].\x0a\x09^ self importeBenevoles: rows",
-messageSends: ["parse:config:", "fields", "results", "rows", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "importeBenevoles:"],
+source: "importe: texte\x0a\x09| tous fields rows |\x0a\x09tous := jQuery\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.\x0a\x09^ tous results",
+messageSends: ["parse:config:", "results"],
 referencedClasses: []
 }),
 globals.FdJImporteur);
@@ -1402,10 +1453,33 @@ selector: "importeTShirt:",
 protocol: 'as yet unclassified',
 fn: function (row){
 var self=this;
-return self},
+return smalltalk.withContext(function($ctx1) { 
+var $2,$7,$6,$5,$9,$8,$4,$3,$1;
+$2=_st(row)._at_("Nom");
+$ctx1.sendIdx["at:"]=1;
+$7=_st(row)._at_("Cintré");
+$ctx1.sendIdx["at:"]=2;
+$6=_st($7)._ifEmpty_ifNotEmpty_((function(){
+return "h";
+}),(function(){
+return "f";
+}));
+$5=_st($6).__comma("-");
+$9=_st(row)._at_("Taille");
+$ctx1.sendIdx["at:"]=3;
+$8=_st($9)._asLowercase();
+$4=_st($5).__comma($8);
+$ctx1.sendIdx[","]=2;
+$3=_st($4).__comma(_st(_st(row)._at_("LSF"))._ifNotEmpty_((function(){
+return "-lsf";
+})));
+$ctx1.sendIdx[","]=1;
+$1=_st($2).__minus_gt($3);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"importeTShirt:",{row:row},globals.FdJImporteur)})},
 args: ["row"],
-source: "importeTShirt: row\x0a\x09",
-messageSends: [],
+source: "importeTShirt: row\x0a\x09^ (row at: 'Nom')\x0a\x09\x09->\x0a\x09  (((row at: 'Cintré') ifEmpty: [ 'h' ] ifNotEmpty: [ 'f' ] )\x0a\x09\x09, '-', ((row at: 'Taille') asLowercase)\x0a\x09\x09, ((row at: 'LSF') ifNotEmpty: [ '-lsf' ])\x0a\x09\x09)",
+messageSends: ["->", "at:", ",", "ifEmpty:ifNotEmpty:", "asLowercase", "ifNotEmpty:"],
 referencedClasses: []
 }),
 globals.FdJImporteur);
@@ -1416,16 +1490,19 @@ selector: "importeTShirts:",
 protocol: 'as yet unclassified',
 fn: function (rows){
 var self=this;
+function $HashedCollection(){return globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
 return smalltalk.withContext(function($ctx1) { 
-_st(rows)._do_((function(row){
+var $1;
+$1=_st($HashedCollection())._from_(_st(rows)._collect_((function(row){
 return smalltalk.withContext(function($ctx2) {
 return self._importeTShirt_(row);
-}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,1)})}));
-return self}, function($ctx1) {$ctx1.fill(self,"importeTShirts:",{rows:rows},globals.FdJImporteur)})},
+}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,1)})})));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"importeTShirts:",{rows:rows},globals.FdJImporteur)})},
 args: ["rows"],
-source: "importeTShirts: rows\x0a\x09rows do: [ :row | self importeTShirt: row ]",
-messageSends: ["do:", "importeTShirt:"],
-referencedClasses: []
+source: "importeTShirts: rows\x0a\x09^ HashedCollection from:\x0a\x09\x09(rows collect: [ :row | self importeTShirt: row ])",
+messageSends: ["from:", "collect:", "importeTShirt:"],
+referencedClasses: ["HashedCollection"]
 }),
 globals.FdJImporteur);
 

@@ -62,10 +62,38 @@ filtre: texte
 !
 
 importe: texte
-	benevoles ajouteTous:
-		(FdJImporteur new importe: texte).
+	| results fields rows imp |
+	imp := FdJImporteur new.
+	results := imp importe: texte.
+
+	fields := results fields.
+	rows := results rows.
+
+	(fields includes: 'Taille')
+		ifTrue: [ ^ self importeTShirts: rows ].
+	
+	(fields includes: 'Association')
+		ifTrue: [
+			imp importeAssociations: rows.
+			FdJStockage sauve: FdJAssociations instance ].
+
+	benevoles ajouteTous: (imp importeBenevoles: rows)
 	self sauve.
-	FdJStockage sauve: FdJAssociations instance
+!
+
+importeTShirts: rows
+	| tshirts key |
+	tshirts := FdJImporteur new importeTShirts: rows.
+	benevoles benevoles do: [ :b |
+		key := (b nom, ' ', b prenom).
+		tshirts at: key ifPresent: [ :t |
+				b tshirt: (FdJTShirt at: t).
+				tshirts remove: key
+			]
+		].
+	tshirts ifNotEmpty: [ Transcript show: 'TShirts non importés:'; cr ].
+	tshirts keys do: [ :b | Transcript show: ('- ', b);cr ].
+	self sauve
 !
 
 initialize
@@ -421,13 +449,7 @@ importe: texte
 	tous := jQuery
 		parse: texte
 		config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.
-	fields := tous results fields.
-	rows := tous results rows.
-	(fields includes: 'Taille')
-		ifTrue: [ ^ self importeTShirts: rows ].
-	(fields includes: 'Association')
-		ifTrue: [ self importeAssociations: rows ].
-	^ self importeBenevoles: rows
+	^ tous results
 !
 
 importeAssociation: row
@@ -455,10 +477,17 @@ importeBenevoles: rows
 !
 
 importeTShirt: row
+	^ (row at: 'Nom')
+		->
+	  (((row at: 'Cintré') ifEmpty: [ 'h' ] ifNotEmpty: [ 'f' ] )
+		, '-', ((row at: 'Taille') asLowercase)
+		, ((row at: 'LSF') ifNotEmpty: [ '-lsf' ])
+		)
 !
 
 importeTShirts: rows
-	rows do: [ :row | self importeTShirt: row ]
+	^ HashedCollection from:
+		(rows collect: [ :row | self importeTShirt: row ])
 ! !
 
 Object subclass: #FdJStock

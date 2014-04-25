@@ -245,8 +245,7 @@ exemple
 !
 
 instance
-	instance ifNil: [ instance := self new ].
-	^ instance
+	^ instance ifNil: [ instance := self new ]
 ! !
 
 Object subclass: #FdJBenevole
@@ -578,8 +577,7 @@ charge: entite sinon: block
 !
 
 instance
-	instance ifNil: [ instance := self new ].
-	^ instance
+	^ instance ifNil: [ instance := self new ]
 !
 
 sauve: objet

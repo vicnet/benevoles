@@ -661,19 +661,18 @@ protocol: 'exemples',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$receiver;
-$1=self["@instance"];
-if(($receiver = $1) == null || $receiver.isNil){
-self["@instance"]=self._new();
-self["@instance"];
-} else {
-$1;
-};
+var $2,$1,$receiver;
 $2=self["@instance"];
-return $2;
+if(($receiver = $2) == null || $receiver.isNil){
+self["@instance"]=self._new();
+$1=self["@instance"];
+} else {
+$1=$2;
+};
+return $1;
 }, function($ctx1) {$ctx1.fill(self,"instance",{},globals.FdJAssociations.klass)})},
 args: [],
-source: "instance\x0a\x09instance ifNil: [ instance := self new ].\x0a\x09^ instance",
+source: "instance\x0a\x09^ instance ifNil: [ instance := self new ]",
 messageSends: ["ifNil:", "new"],
 referencedClasses: []
 }),
@@ -1801,19 +1800,18 @@ protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$receiver;
-$1=self["@instance"];
-if(($receiver = $1) == null || $receiver.isNil){
-self["@instance"]=self._new();
-self["@instance"];
-} else {
-$1;
-};
+var $2,$1,$receiver;
 $2=self["@instance"];
-return $2;
+if(($receiver = $2) == null || $receiver.isNil){
+self["@instance"]=self._new();
+$1=self["@instance"];
+} else {
+$1=$2;
+};
+return $1;
 }, function($ctx1) {$ctx1.fill(self,"instance",{},globals.FdJStockage.klass)})},
 args: [],
-source: "instance\x0a\x09instance ifNil: [ instance := self new ].\x0a\x09^ instance",
+source: "instance\x0a\x09^ instance ifNil: [ instance := self new ]",
 messageSends: ["ifNil:", "new"],
 referencedClasses: []
 }),

@@ -553,7 +553,7 @@ stockagePour: objet
 !
 
 variablesPour: json
-	^ SmalltalkImage current readJSObject: json
+	^ smalltalk readJSObject: json
 !
 
 vide

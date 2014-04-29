@@ -1708,16 +1708,15 @@ selector: "variablesPour:",
 protocol: 'as yet unclassified',
 fn: function (json){
 var self=this;
-function $SmalltalkImage(){return globals.SmalltalkImage||(typeof SmalltalkImage=="undefined"?nil:SmalltalkImage)}
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(_st($SmalltalkImage())._current())._readJSObject_(json);
+$1=_st(smalltalk)._readJSObject_(json);
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"variablesPour:",{json:json},globals.FdJStockage)})},
 args: ["json"],
-source: "variablesPour: json\x0a\x09^ SmalltalkImage current readJSObject: json",
-messageSends: ["readJSObject:", "current"],
-referencedClasses: ["SmalltalkImage"]
+source: "variablesPour: json\x0a\x09^ smalltalk readJSObject: json",
+messageSends: ["readJSObject:"],
+referencedClasses: []
 }),
 globals.FdJStockage);
 

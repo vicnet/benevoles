@@ -140,3 +140,9 @@ body {
 .benevole.auteur {
     background: linear-gradient(to top, orange 0%, white 33%, white 66%,  orange 100%);
 }
+.benevole.auteur.noninscrit {
+    background: linear-gradient(to top, orange 0%, lightgray 33%, lightgray 66%,  orange 100%);
+}
+.benevole.noninscrit {
+    background: lightgrey;
+}

@@ -283,7 +283,7 @@ instance
 ! !
 
 Object subclass: #FdJBenevole
-	instanceVariableNames: 'nom prenom assoc tshirt etat'
+	instanceVariableNames: 'nom prenom assoc tshirt etat inscrit'
 	package: 'Benevoles'!
 !FdJBenevole commentStamp!
 - tshirt: un TShirt
@@ -307,6 +307,7 @@ asJSON
 	etat ifNotNil: [ variables at: 'etat' put: etat ].
 	variables at: 'assoc' put: assoc nom.
 	tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].
+	variables at: 'inscrit' put: inscrit.
 	^ variables
 !
 
@@ -345,6 +346,10 @@ estEncours
 	^ etat==#encours
 !
 
+estInscrit
+	^ inscrit
+!
+
 fromJSON: variables
 	nom := variables at: 'nom'.
 	prenom := variables at: 'prenom'.
@@ -356,12 +361,18 @@ fromJSON: variables
 		ifAbsent: [ FdJAssociations instance festival ].
 	tshirt := variables at: 'tshirt'
 		ifPresent: [ :v | FdJTShirt at: v ]
-		ifAbsent: [ nil ]
+		ifAbsent: [ nil ].
+	inscrit := variables at: 'inscrit'
+		ifAbsent: [ true ]
 !
 
 indexDe: chaine
 	"Retourne l'index de la chaine dans le nom sans accent, 0 si chaine pas trouvée, "
 	^ (self nomSansAccent) indexOfSubString: chaine
+!
+
+inscrit: estInscrit
+	inscrit := estInscrit
 !
 
 nom
@@ -412,20 +423,24 @@ exemple
 			 prenom: 'Vincent';
 			 association: (FdJAssociation exemple);
 			 tshirt: (FdJTShirt at: 'h-m');
+			 inscrit: true;
 			 yourself
 !
 
 exemples
 	| benevoles association |
 	benevoles := Array new.
+	FdJAssociations exemple.
 	association := FdJAssociation exemple.
 	benevoles add: self exemple.
 	benevoles add: (self new nom: 'DUPOND';
 			 prenom: 'Gérard';
-			 association: association).
+			 association: association;
+			 inscrit: false).
 	benevoles add: (self new nom: 'MEILLEIS';
 			 prenom: 'George';
-			 association: FdJAssociations instance festival).
+			 association: FdJAssociations instance festival;
+			 inscrit: true).
 	^ benevoles
 ! !
 
@@ -738,6 +753,10 @@ ajoute: unWidget
 	widgets add: unWidget
 !
 
+ajouteClasse: nom
+	div class: (div element className, ' ', nom)
+!
+
 initialize
 	super initialize.
 
@@ -800,7 +819,7 @@ benevole
 renderAssociationOn: html
 	html div class: 'association';
 		with: benevole association nom.
-	div class: ('benevole ', benevole association nomSansAccent)
+	self ajouteClasse: (benevole association nomSansAccent)
 !
 
 renderIdentiteOn: html
@@ -816,6 +835,8 @@ renderOn: html
 			self renderIdentiteOn: html.
 			self renderAssociationOn: html ].
 			self renderTShirtOn: html ].
+	benevole estInscrit ifFalse: [			
+		self ajouteClasse: 'noninscrit' ].
 	div onClick: [ presentateur selectionne: benevole ]
 !
 
@@ -868,6 +889,11 @@ supprime: unBenevole
 
 update
 	div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]
+! !
+
+!FdJWidgetBenevoles methodsFor: 'xxxDoIt'!
+
+xxxDoIt ^ [ div canvas ] value
 ! !
 
 FdJWidget subclass: #FdJWidgetImporteur

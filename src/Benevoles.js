@@ -747,7 +747,7 @@ referencedClasses: []
 globals.FdJAssociations.klass);
 
 
-smalltalk.addClass('FdJBenevole', globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'etat'], 'Benevoles');
+smalltalk.addClass('FdJBenevole', globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'etat', 'inscrit'], 'Benevoles');
 globals.FdJBenevole.comment="- tshirt: un TShirt\x0a- etat: pas encore venu, en cours de traitement, terminé";
 smalltalk.addMethod(
 smalltalk.method({
@@ -818,12 +818,14 @@ if(($receiver = $2) == null || $receiver.isNil){
 $2;
 } else {
 _st(variables)._at_put_("tshirt",_st(self["@tshirt"])._id());
+$ctx1.sendIdx["at:put:"]=5;
 };
+_st(variables)._at_put_("inscrit",self["@inscrit"]);
 $3=variables;
 return $3;
 }, function($ctx1) {$ctx1.fill(self,"asJSON",{variables:variables},globals.FdJBenevole)})},
 args: [],
-source: "asJSON\x0a\x09| variables |\x0a\x09variables := HashedCollection new.\x0a\x09variables at: 'nom' put: nom.\x0a\x09variables at: 'prenom' put: prenom.\x0a\x09etat ifNotNil: [ variables at: 'etat' put: etat ].\x0a\x09variables at: 'assoc' put: assoc nom.\x0a\x09tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].\x0a\x09^ variables",
+source: "asJSON\x0a\x09| variables |\x0a\x09variables := HashedCollection new.\x0a\x09variables at: 'nom' put: nom.\x0a\x09variables at: 'prenom' put: prenom.\x0a\x09etat ifNotNil: [ variables at: 'etat' put: etat ].\x0a\x09variables at: 'assoc' put: assoc nom.\x0a\x09tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].\x0a\x09variables at: 'inscrit' put: inscrit.\x0a\x09^ variables",
 messageSends: ["new", "at:put:", "ifNotNil:", "nom", "id"],
 referencedClasses: ["HashedCollection"]
 }),
@@ -969,6 +971,23 @@ globals.FdJBenevole);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "estInscrit",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@inscrit"];
+return $1;
+},
+args: [],
+source: "estInscrit\x0a\x09^ inscrit",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "fromJSON:",
 protocol: 'accessing',
 fn: function (variables){
@@ -1005,10 +1024,13 @@ return _st($FdJTShirt())._at_(v);
 }, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,5)})}),(function(){
 return nil;
 }));
+self["@inscrit"]=_st(variables)._at_ifAbsent_("inscrit",(function(){
+return true;
+}));
 return self}, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},globals.FdJBenevole)})},
 args: ["variables"],
-source: "fromJSON: variables\x0a\x09nom := variables at: 'nom'.\x0a\x09prenom := variables at: 'prenom'.\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ FdJAssociations instance festival ].\x0a\x09tshirt := variables at: 'tshirt'\x0a\x09\x09ifPresent: [ :v | FdJTShirt at: v ]\x0a\x09\x09ifAbsent: [ nil ]",
-messageSends: ["at:", "at:ifPresent:ifAbsent:", "asSymbol", "instance", "festival"],
+source: "fromJSON: variables\x0a\x09nom := variables at: 'nom'.\x0a\x09prenom := variables at: 'prenom'.\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ FdJAssociations instance festival ].\x0a\x09tshirt := variables at: 'tshirt'\x0a\x09\x09ifPresent: [ :v | FdJTShirt at: v ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09inscrit := variables at: 'inscrit'\x0a\x09\x09ifAbsent: [ true ]",
+messageSends: ["at:", "at:ifPresent:ifAbsent:", "asSymbol", "instance", "festival", "at:ifAbsent:"],
 referencedClasses: ["FdJAssociations", "FdJTShirt"]
 }),
 globals.FdJBenevole);
@@ -1027,6 +1049,21 @@ return $1;
 args: ["chaine"],
 source: "indexDe: chaine\x0a\x09\x22Retourne l'index de la chaine dans le nom sans accent, 0 si chaine pas trouvée, \x22\x0a\x09^ (self nomSansAccent) indexOfSubString: chaine",
 messageSends: ["indexOfSubString:", "nomSansAccent"],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "inscrit:",
+protocol: 'accessing',
+fn: function (estInscrit){
+var self=this;
+self["@inscrit"]=estInscrit;
+return self},
+args: ["estInscrit"],
+source: "inscrit: estInscrit\x0a\x09inscrit := estInscrit",
+messageSends: [],
 referencedClasses: []
 }),
 globals.FdJBenevole);
@@ -1201,13 +1238,14 @@ _st($2)._nom_("OSELE");
 _st($2)._prenom_("Vincent");
 _st($2)._association_(_st($FdJAssociation())._exemple());
 _st($2)._tshirt_(_st($FdJTShirt())._at_("h-m"));
+_st($2)._inscrit_(true);
 $3=_st($2)._yourself();
 $1=$3;
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"exemple",{},globals.FdJBenevole.klass)})},
 args: [],
-source: "exemple\x0a\x09^ self new nom: 'OSELE';\x0a\x09\x09\x09 prenom: 'Vincent';\x0a\x09\x09\x09 association: (FdJAssociation exemple);\x0a\x09\x09\x09 tshirt: (FdJTShirt at: 'h-m');\x0a\x09\x09\x09 yourself",
-messageSends: ["nom:", "new", "prenom:", "association:", "exemple", "tshirt:", "at:", "yourself"],
+source: "exemple\x0a\x09^ self new nom: 'OSELE';\x0a\x09\x09\x09 prenom: 'Vincent';\x0a\x09\x09\x09 association: (FdJAssociation exemple);\x0a\x09\x09\x09 tshirt: (FdJTShirt at: 'h-m');\x0a\x09\x09\x09 inscrit: true;\x0a\x09\x09\x09 yourself",
+messageSends: ["nom:", "new", "prenom:", "association:", "exemple", "tshirt:", "at:", "inscrit:", "yourself"],
 referencedClasses: ["FdJAssociation", "FdJTShirt"]
 }),
 globals.FdJBenevole.klass);
@@ -1220,14 +1258,16 @@ fn: function (){
 var self=this;
 var benevoles,association;
 function $Array(){return globals.Array||(typeof Array=="undefined"?nil:Array)}
-function $FdJAssociation(){return globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
 function $FdJAssociations(){return globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
+function $FdJAssociation(){return globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$3,$4,$2,$5,$6,$7;
 benevoles=_st($Array())._new();
 $ctx1.sendIdx["new"]=1;
-association=_st($FdJAssociation())._exemple();
+_st($FdJAssociations())._exemple();
 $ctx1.sendIdx["exemple"]=1;
+association=_st($FdJAssociation())._exemple();
+$ctx1.sendIdx["exemple"]=2;
 _st(benevoles)._add_(self._exemple());
 $ctx1.sendIdx["add:"]=1;
 $1=benevoles;
@@ -1237,23 +1277,26 @@ _st($3)._nom_("DUPOND");
 $ctx1.sendIdx["nom:"]=1;
 _st($3)._prenom_("Gérard");
 $ctx1.sendIdx["prenom:"]=1;
-$4=_st($3)._association_(association);
+_st($3)._association_(association);
 $ctx1.sendIdx["association:"]=1;
+$4=_st($3)._inscrit_(false);
+$ctx1.sendIdx["inscrit:"]=1;
 $2=$4;
 _st($1)._add_($2);
 $ctx1.sendIdx["add:"]=2;
 $5=self._new();
 _st($5)._nom_("MEILLEIS");
 _st($5)._prenom_("George");
-$6=_st($5)._association_(_st(_st($FdJAssociations())._instance())._festival());
+_st($5)._association_(_st(_st($FdJAssociations())._instance())._festival());
+$6=_st($5)._inscrit_(true);
 _st(benevoles)._add_($6);
 $7=benevoles;
 return $7;
 }, function($ctx1) {$ctx1.fill(self,"exemples",{benevoles:benevoles,association:association},globals.FdJBenevole.klass)})},
 args: [],
-source: "exemples\x0a\x09| benevoles association |\x0a\x09benevoles := Array new.\x0a\x09association := FdJAssociation exemple.\x0a\x09benevoles add: self exemple.\x0a\x09benevoles add: (self new nom: 'DUPOND';\x0a\x09\x09\x09 prenom: 'Gérard';\x0a\x09\x09\x09 association: association).\x0a\x09benevoles add: (self new nom: 'MEILLEIS';\x0a\x09\x09\x09 prenom: 'George';\x0a\x09\x09\x09 association: FdJAssociations instance festival).\x0a\x09^ benevoles",
-messageSends: ["new", "exemple", "add:", "nom:", "prenom:", "association:", "festival", "instance"],
-referencedClasses: ["Array", "FdJAssociation", "FdJAssociations"]
+source: "exemples\x0a\x09| benevoles association |\x0a\x09benevoles := Array new.\x0a\x09FdJAssociations exemple.\x0a\x09association := FdJAssociation exemple.\x0a\x09benevoles add: self exemple.\x0a\x09benevoles add: (self new nom: 'DUPOND';\x0a\x09\x09\x09 prenom: 'Gérard';\x0a\x09\x09\x09 association: association;\x0a\x09\x09\x09 inscrit: false).\x0a\x09benevoles add: (self new nom: 'MEILLEIS';\x0a\x09\x09\x09 prenom: 'George';\x0a\x09\x09\x09 association: FdJAssociations instance festival;\x0a\x09\x09\x09 inscrit: true).\x0a\x09^ benevoles",
+messageSends: ["new", "exemple", "add:", "nom:", "prenom:", "association:", "inscrit:", "festival", "instance"],
+referencedClasses: ["Array", "FdJAssociations", "FdJAssociation"]
 }),
 globals.FdJBenevole.klass);
 
@@ -2299,6 +2342,26 @@ globals.FdJWidget);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "ajouteClasse:",
+protocol: 'as yet unclassified',
+fn: function (nom){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+$1=self["@div"];
+$2=_st(_st(_st(_st(self["@div"])._element())._className()).__comma(" ")).__comma(nom);
+$ctx1.sendIdx[","]=1;
+_st($1)._class_($2);
+return self}, function($ctx1) {$ctx1.fill(self,"ajouteClasse:",{nom:nom},globals.FdJWidget)})},
+args: ["nom"],
+source: "ajouteClasse: nom\x0a\x09div class: (div element className, ' ', nom)",
+messageSends: ["class:", ",", "className", "element"],
+referencedClasses: []
+}),
+globals.FdJWidget);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "initialize",
 protocol: 'as yet unclassified',
 fn: function (){
@@ -2495,17 +2558,16 @@ return smalltalk.withContext(function($ctx1) {
 var $1,$3,$5,$4,$2;
 $1=_st(html)._div();
 _st($1)._class_("association");
-$ctx1.sendIdx["class:"]=1;
 $3=$1;
 $5=_st(self["@benevole"])._association();
 $ctx1.sendIdx["association"]=1;
 $4=_st($5)._nom();
 $2=_st($3)._with_($4);
-_st(self["@div"])._class_("benevole ".__comma(_st(_st(self["@benevole"])._association())._nomSansAccent()));
+self._ajouteClasse_(_st(_st(self["@benevole"])._association())._nomSansAccent());
 return self}, function($ctx1) {$ctx1.fill(self,"renderAssociationOn:",{html:html},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderAssociationOn: html\x0a\x09html div class: 'association';\x0a\x09\x09with: benevole association nom.\x0a\x09div class: ('benevole ', benevole association nomSansAccent)",
-messageSends: ["class:", "div", "with:", "nom", "association", ",", "nomSansAccent"],
+source: "renderAssociationOn: html\x0a\x09html div class: 'association';\x0a\x09\x09with: benevole association nom.\x0a\x09self ajouteClasse: (benevole association nomSansAccent)",
+messageSends: ["class:", "div", "with:", "nom", "association", "ajouteClasse:", "nomSansAccent"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevole);
@@ -2552,7 +2614,7 @@ protocol: 'rendering',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
+var $1,$2,$3;
 ($ctx1.supercall = true, globals.FdJWidgetBenevole.superclass.fn.prototype._renderOn_.apply(_st(self), [html]));
 $ctx1.supercall = false;
 _st(self["@div"])._with_((function(){
@@ -2568,14 +2630,18 @@ $2;
 return self._renderTShirtOn_(html);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["with:"]=1;
+$3=_st(self["@benevole"])._estInscrit();
+if(! smalltalk.assert($3)){
+self._ajouteClasse_("noninscrit");
+};
 _st(self["@div"])._onClick_((function(){
 return smalltalk.withContext(function($ctx2) {
 return _st(self["@presentateur"])._selectionne_(self["@benevole"]);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09\x09self renderTShirtOn: html ].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
-messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderTShirtOn:", "onClick:", "selectionne:"],
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09\x09self renderTShirtOn: html ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
+messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderTShirtOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne:"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevole);
@@ -2758,6 +2824,27 @@ return self}, function($ctx1) {$ctx1.fill(self,"update",{},globals.FdJWidgetBene
 args: [],
 source: "update\x0a\x09div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]",
 messageSends: ["contents:", "with:", "renderBenevolesOn:"],
+referencedClasses: []
+}),
+globals.FdJWidgetBenevoles);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "xxxDoIt",
+protocol: 'xxxDoIt',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st((function(){
+return smalltalk.withContext(function($ctx2) {
+return _st(self["@div"])._canvas();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}))._value();
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"xxxDoIt",{},globals.FdJWidgetBenevoles)})},
+args: [],
+source: "xxxDoIt ^ [ div canvas ] value",
+messageSends: ["value", "canvas"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevoles);

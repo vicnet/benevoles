@@ -77,7 +77,7 @@ importe: texte
 			imp importeAssociations: rows.
 			FdJStockage sauve: FdJAssociations instance ].
 
-	benevoles ajouteTous: (imp importeBenevoles: rows).
+	benevoles ajouteUnique: (imp importeBenevoles: rows).
 	self sauve.
 !
 
@@ -284,6 +284,11 @@ association: uneAssoc
 	assoc := uneAssoc
 !
 
+correspond: unBenevole
+	"Retourne vrai si nom sans accent correspond"
+	^ (self indexDe: unBenevole nomSansAccent) > 0
+!
+
 distribue
 	etat := #distribue.
 	self annonce
@@ -320,12 +325,28 @@ fromJSON: variables
 		ifAbsent: [ nil ]
 !
 
+indexDe: chaine
+	"Retourne l'index de la chaine dans le nom sans accent, 0 si chaine pas trouvée, "
+	^ (self nomSansAccent) indexOfSubString: chaine
+!
+
 nom
 	^ nom
 !
 
 nom: chaine
 	nom := chaine
+!
+
+nomSansAccent
+	nom ifNil: [ ^ '' ].
+	^ nom remplaceAvec: self class accents
+!
+
+normalise
+	"passe le nom en majuscule et le prénom avec la 1ere lettre en majuscule"
+	nom := nom asUppercase.
+	prenom := prenom capitalized
 !
 
 prenom
@@ -348,7 +369,27 @@ tshirt: unTShirt
 	tshirt := unTShirt
 ! !
 
+FdJBenevole class instanceVariableNames: 'accents'!
+
 !FdJBenevole class methodsFor: 'exemples'!
+
+accents
+	^ accents ifNil: [
+		accents := #{
+			'[àáâãäå]' -> 'a'.
+	    	'æ' -> 'ae'.
+	    	'ç' -> 'c'.
+	    	'[èéêë]' -> 'e'.
+	    	'[ìíîï]' -> 'i'.
+	    	'ñ' -> 'n'.
+	    	'[òóôõö]' -> 'o'.
+	    	'œ' -> 'oe'.
+	    	'[ùúûü]' -> 'u'.
+	    	'[ýÿ]' -> 'y'.
+	    	' ' -> ''
+		}
+	]
+!
 
 exemple
 	^ self new nom: 'OSELE';
@@ -386,6 +427,13 @@ ajouteTous: desBenevoles
 	liste addAll: desBenevoles
 !
 
+ajouteUnique: desBenevoles
+	liste addAll:
+		(desBenevoles
+				select: [ :b | (self contient: b) not ]
+				thenCollect: [ :b | b normalise ])
+!
+
 benevoles
 	^ liste
 !
@@ -394,13 +442,17 @@ benevoles: desBenevoles
 	liste := desBenevoles
 !
 
+contient: unBenevole
+	^ liste anySatisfy: [ :b | b correspond: unBenevole ]
+!
+
 filtre: texte max: max
 	| minus selection result |
 	texte isEmpty ifTrue: [ ^ #() ].
 	"teste le nom"
 	minus := texte sansAccent.
 	selection := liste collect: [ :b |
-		{ (b nom sansAccent indexOfSubString: minus). b }
+		{ (b indexDe: minus). b }
 	].
 	selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].
 	result := #().
@@ -888,6 +940,15 @@ selectionne: benevoles max: max
 
 indexOfSubString: subString
 	<return self.indexOf(subString) + 1>
+!
+
+remplaceAvec: dict
+	| s |
+  	s := self asLowercase.
+	dict keysAndValuesDo: [ :k :v |
+		s := s replace: k with: v
+	].
+	^ s
 !
 
 sansAccent

@@ -167,12 +167,12 @@ if(smalltalk.assert($3)){
 _st(imp)._importeAssociations_(rows);
 _st($FdJStockage())._sauve_(_st($FdJAssociations())._instance());
 };
-_st(self["@benevoles"])._ajouteTous_(_st(imp)._importeBenevoles_(rows));
+_st(self["@benevoles"])._ajouteUnique_(_st(imp)._importeBenevoles_(rows));
 self._sauve();
 return self}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,results:results,fields:fields,rows:rows,imp:imp},globals.FdJApplication)})},
 args: ["texte"],
-source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results fields.\x0a\x09rows := results rows.\x0a\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ ^ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09benevoles ajouteTous: (imp importeBenevoles: rows).\x0a\x09self sauve.\x0a\x09",
-messageSends: ["new", "importe:", "fields", "rows", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "ajouteTous:", "importeBenevoles:", "sauve"],
+source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results fields.\x0a\x09rows := results rows.\x0a\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ ^ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09benevoles ajouteUnique: (imp importeBenevoles: rows).\x0a\x09self sauve.\x0a\x09",
+messageSends: ["new", "importe:", "fields", "rows", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "ajouteUnique:", "importeBenevoles:", "sauve"],
 referencedClasses: ["FdJImporteur", "FdJStockage", "FdJAssociations"]
 }),
 globals.FdJApplication);
@@ -795,6 +795,24 @@ globals.FdJBenevole);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "correspond:",
+protocol: 'accessing',
+fn: function (unBenevole){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._indexDe_(_st(unBenevole)._nomSansAccent())).__gt((0));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"correspond:",{unBenevole:unBenevole},globals.FdJBenevole)})},
+args: ["unBenevole"],
+source: "correspond: unBenevole\x0a\x09\x22Retourne vrai si nom sans accent correspond\x22\x0a\x09^ (self indexDe: unBenevole nomSansAccent) > 0",
+messageSends: [">", "indexDe:", "nomSansAccent"],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "distribue",
 protocol: 'accessing',
 fn: function (){
@@ -929,6 +947,24 @@ globals.FdJBenevole);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "indexDe:",
+protocol: 'accessing',
+fn: function (chaine){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self._nomSansAccent())._indexOfSubString_(chaine);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"indexDe:",{chaine:chaine},globals.FdJBenevole)})},
+args: ["chaine"],
+source: "indexDe: chaine\x0a\x09\x22Retourne l'index de la chaine dans le nom sans accent, 0 si chaine pas trouvée, \x22\x0a\x09^ (self nomSansAccent) indexOfSubString: chaine",
+messageSends: ["indexOfSubString:", "nomSansAccent"],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "nom",
 protocol: 'accessing',
 fn: function (){
@@ -955,6 +991,47 @@ return self},
 args: ["chaine"],
 source: "nom: chaine\x0a\x09nom := chaine",
 messageSends: [],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "nomSansAccent",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=self["@nom"];
+if(($receiver = $1) == null || $receiver.isNil){
+return "";
+} else {
+$1;
+};
+$2=_st(self["@nom"])._remplaceAvec_(_st(self._class())._accents());
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"nomSansAccent",{},globals.FdJBenevole)})},
+args: [],
+source: "nomSansAccent\x0a\x09nom ifNil: [ ^ '' ].\x0a\x09^ nom remplaceAvec: self class accents",
+messageSends: ["ifNil:", "remplaceAvec:", "accents", "class"],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "normalise",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@nom"]=_st(self["@nom"])._asUppercase();
+self["@prenom"]=_st(self["@prenom"])._capitalized();
+return self}, function($ctx1) {$ctx1.fill(self,"normalise",{},globals.FdJBenevole)})},
+args: [],
+source: "normalise\x0a\x09\x22passe le nom en majuscule et le prénom avec la 1ere lettre en majuscule\x22\x0a\x09nom := nom asUppercase.\x0a\x09prenom := prenom capitalized",
+messageSends: ["asUppercase", "capitalized"],
 referencedClasses: []
 }),
 globals.FdJBenevole);
@@ -1038,6 +1115,31 @@ referencedClasses: []
 }),
 globals.FdJBenevole);
 
+
+globals.FdJBenevole.klass.iVarNames = ['accents'];
+smalltalk.addMethod(
+smalltalk.method({
+selector: "accents",
+protocol: 'exemples',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@accents"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@accents"]=globals.HashedCollection._newFromPairs_(["[àáâãäå]","a","æ","ae","ç","c","[èéêë]","e","[ìíîï]","i","ñ","n","[òóôõö]","o","œ","oe","[ùúûü]","u","[ýÿ]","y"," ",""]);
+$1=self["@accents"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"accents",{},globals.FdJBenevole.klass)})},
+args: [],
+source: "accents\x0a\x09^ accents ifNil: [\x0a\x09\x09accents := #{\x0a\x09\x09\x09'[àáâãäå]' -> 'a'.\x0a\x09    \x09'æ' -> 'ae'.\x0a\x09    \x09'ç' -> 'c'.\x0a\x09    \x09'[èéêë]' -> 'e'.\x0a\x09    \x09'[ìíîï]' -> 'i'.\x0a\x09    \x09'ñ' -> 'n'.\x0a\x09    \x09'[òóôõö]' -> 'o'.\x0a\x09    \x09'œ' -> 'oe'.\x0a\x09    \x09'[ùúûü]' -> 'u'.\x0a\x09    \x09'[ýÿ]' -> 'y'.\x0a\x09    \x09' ' -> ''\x0a\x09\x09}\x0a\x09]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.FdJBenevole.klass);
 
 smalltalk.addMethod(
 smalltalk.method({
@@ -1146,6 +1248,28 @@ globals.FdJBenevoles);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "ajouteUnique:",
+protocol: 'as yet unclassified',
+fn: function (desBenevoles){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+_st(self["@liste"])._addAll_(_st(desBenevoles)._select_thenCollect_((function(b){
+return smalltalk.withContext(function($ctx2) {
+return _st(self._contient_(b))._not();
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}),(function(b){
+return smalltalk.withContext(function($ctx2) {
+return _st(b)._normalise();
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,2)})})));
+return self}, function($ctx1) {$ctx1.fill(self,"ajouteUnique:",{desBenevoles:desBenevoles},globals.FdJBenevoles)})},
+args: ["desBenevoles"],
+source: "ajouteUnique: desBenevoles\x0a\x09liste addAll:\x0a\x09\x09(desBenevoles\x0a\x09\x09\x09\x09select: [ :b | (self contient: b) not ]\x0a\x09\x09\x09\x09thenCollect: [ :b | b normalise ])",
+messageSends: ["addAll:", "select:thenCollect:", "not", "contient:", "normalise"],
+referencedClasses: []
+}),
+globals.FdJBenevoles);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "benevoles",
 protocol: 'as yet unclassified',
 fn: function (){
@@ -1178,6 +1302,27 @@ globals.FdJBenevoles);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "contient:",
+protocol: 'as yet unclassified',
+fn: function (unBenevole){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self["@liste"])._anySatisfy_((function(b){
+return smalltalk.withContext(function($ctx2) {
+return _st(b)._correspond_(unBenevole);
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}));
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"contient:",{unBenevole:unBenevole},globals.FdJBenevoles)})},
+args: ["unBenevole"],
+source: "contient: unBenevole\x0a\x09^ liste anySatisfy: [ :b | b correspond: unBenevole ]\x0a\x09\x09",
+messageSends: ["anySatisfy:", "correspond:"],
+referencedClasses: []
+}),
+globals.FdJBenevoles);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "filtre:max:",
 protocol: 'as yet unclassified',
 fn: function (texte,max){
@@ -1193,10 +1338,9 @@ $2=[];
 return $2;
 };
 minus=_st(texte)._sansAccent();
-$ctx1.sendIdx["sansAccent"]=1;
 selection=_st(self["@liste"])._collect_((function(b){
 return smalltalk.withContext(function($ctx2) {
-return [_st(_st(_st(b)._nom())._sansAccent())._indexOfSubString_(minus),b];
+return [_st(b)._indexDe_(minus),b];
 }, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,2)})}));
 _st(selection)._sort_((function(a,b){
 return smalltalk.withContext(function($ctx2) {
@@ -1231,8 +1375,8 @@ return $12;
 catch(e) {if(e===$early)return e[0]; throw e}
 }, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,minus:minus,selection:selection,result:result},globals.FdJBenevoles)})},
 args: ["texte", "max"],
-source: "filtre: texte max: max\x0a\x09| minus selection result |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09minus := texte sansAccent.\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09{ (b nom sansAccent indexOfSubString: minus). b }\x0a\x09].\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
-messageSends: ["ifTrue:", "isEmpty", "sansAccent", "collect:", "indexOfSubString:", "nom", "sort:", "<=", "at:", "do:", "&", ">", "estDisponible", "add:", ">=", "size"],
+source: "filtre: texte max: max\x0a\x09| minus selection result |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09minus := texte sansAccent.\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09{ (b indexDe: minus). b }\x0a\x09].\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
+messageSends: ["ifTrue:", "isEmpty", "sansAccent", "collect:", "indexDe:", "sort:", "<=", "at:", "do:", "&", ">", "estDisponible", "add:", ">=", "size"],
 referencedClasses: []
 }),
 globals.FdJBenevoles);
@@ -2814,6 +2958,31 @@ return self}, function($ctx1) {$ctx1.fill(self,"indexOfSubString:",{subString:su
 args: ["subString"],
 source: "indexOfSubString: subString\x0a\x09<return self.indexOf(subString) + 1>",
 messageSends: [],
+referencedClasses: []
+}),
+globals.String);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "remplaceAvec:",
+protocol: '*Benevoles',
+fn: function (dict){
+var self=this;
+var s;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+s=self._asLowercase();
+_st(dict)._keysAndValuesDo_((function(k,v){
+return smalltalk.withContext(function($ctx2) {
+s=_st(s)._replace_with_(k,v);
+return s;
+}, function($ctx2) {$ctx2.fillBlock({k:k,v:v},$ctx1,1)})}));
+$1=s;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"remplaceAvec:",{dict:dict,s:s},globals.String)})},
+args: ["dict"],
+source: "remplaceAvec: dict\x0a\x09| s |\x0a  \x09s := self asLowercase.\x0a\x09dict keysAndValuesDo: [ :k :v |\x0a\x09\x09s := s replace: k with: v\x0a\x09].\x0a\x09^ s",
+messageSends: ["asLowercase", "keysAndValuesDo:", "replace:with:"],
 referencedClasses: []
 }),
 globals.String);

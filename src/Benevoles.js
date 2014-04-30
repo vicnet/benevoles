@@ -407,8 +407,50 @@ referencedClasses: ["FdJStockage"]
 globals.FdJApplication);
 
 
+globals.FdJApplication.klass.iVarNames = ['accents'];
+smalltalk.addMethod(
+smalltalk.method({
+selector: "accents",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1,$receiver;
+$2=self["@accents"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@accents"]=globals.HashedCollection._newFromPairs_(["[àáâãäå]","a","æ","ae","ç","c","[èéêë]","e","[ìíîï]","i","ñ","n","[òóôõö]","o","œ","oe","[ùúûü]","u","[ýÿ]","y"," ","","-",""]);
+$1=self["@accents"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"accents",{},globals.FdJApplication.klass)})},
+args: [],
+source: "accents\x0a\x09^ accents ifNil: [\x0a\x09\x09accents := #{\x0a\x09\x09\x09'[àáâãäå]' -> 'a'.\x0a\x09    \x09'æ' -> 'ae'.\x0a\x09    \x09'ç' -> 'c'.\x0a\x09    \x09'[èéêë]' -> 'e'.\x0a\x09    \x09'[ìíîï]' -> 'i'.\x0a\x09    \x09'ñ' -> 'n'.\x0a\x09    \x09'[òóôõö]' -> 'o'.\x0a\x09    \x09'œ' -> 'oe'.\x0a\x09    \x09'[ùúûü]' -> 'u'.\x0a\x09    \x09'[ýÿ]' -> 'y'.\x0a\x09    \x09' ' -> ''.\x0a\x09\x09\x09'-' -> ''\x0a\x09\x09}\x0a\x09]",
+messageSends: ["ifNil:"],
+referencedClasses: []
+}),
+globals.FdJApplication.klass);
+
 
 smalltalk.addClass('FdJAssociation', globals.Object, ['nom', 'logo'], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "asJSON",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=globals.HashedCollection._newFromPairs_(["nom",self["@nom"]]);
+return $1;
+},
+args: [],
+source: "asJSON\x0a\x09^ #{ 'nom'->nom }",
+messageSends: [],
+referencedClasses: []
+}),
+globals.FdJAssociation);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "fromJSON:",
@@ -489,6 +531,31 @@ referencedClasses: []
 }),
 globals.FdJAssociation);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "nomSansAccent",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $FdJApplication(){return globals.FdJApplication||(typeof FdJApplication=="undefined"?nil:FdJApplication)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=self["@nom"];
+if(($receiver = $1) == null || $receiver.isNil){
+return "";
+} else {
+$1;
+};
+$2=_st(self["@nom"])._remplaceAvec_(_st($FdJApplication())._accents());
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"nomSansAccent",{},globals.FdJAssociation)})},
+args: [],
+source: "nomSansAccent\x0a\x09nom ifNil: [ ^ '' ].\x0a\x09^ nom remplaceAvec: FdJApplication accents",
+messageSends: ["ifNil:", "remplaceAvec:", "accents"],
+referencedClasses: ["FdJApplication"]
+}),
+globals.FdJAssociation);
+
 
 smalltalk.addMethod(
 smalltalk.method({
@@ -544,11 +611,11 @@ association=_st(_st($FdJAssociation())._new())._nom_(uneAssociation);
 } else {
 association=uneAssociation;
 };
-_st(self["@liste"])._at_put_(_st(association)._nom(),association);
+_st(self["@liste"])._at_put_(_st(association)._nomSansAccent(),association);
 return self}, function($ctx1) {$ctx1.fill(self,"ajoute:",{uneAssociation:uneAssociation,association:association},globals.FdJAssociations)})},
 args: ["uneAssociation"],
-source: "ajoute: uneAssociation\x0a\x09| association |\x0a\x09association := uneAssociation isString\x0a\x09\x09ifTrue: [ FdJAssociation new nom: uneAssociation ]\x0a\x09\x09ifFalse: [ uneAssociation ].\x0a\x09liste at: association nom put: association",
-messageSends: ["ifTrue:ifFalse:", "isString", "nom:", "new", "at:put:", "nom"],
+source: "ajoute: uneAssociation\x0a\x09| association |\x0a\x09association := uneAssociation isString\x0a\x09\x09ifTrue: [ FdJAssociation new nom: uneAssociation ]\x0a\x09\x09ifFalse: [ uneAssociation ].\x0a\x09liste at: association nomSansAccent put: association",
+messageSends: ["ifTrue:ifFalse:", "isString", "nom:", "new", "at:put:", "nomSansAccent"],
 referencedClasses: ["FdJAssociation"]
 }),
 globals.FdJAssociations);
@@ -580,17 +647,18 @@ selector: "at:",
 protocol: 'as yet unclassified',
 fn: function (nom){
 var self=this;
+function $FdJApplication(){return globals.FdJApplication||(typeof FdJApplication=="undefined"?nil:FdJApplication)}
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self["@liste"])._at_ifAbsent_(nom,(function(){
+$1=_st(self["@liste"])._at_ifAbsent_(_st(nom)._remplaceAvec_(_st($FdJApplication())._accents()),(function(){
 return nil;
 }));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"at:",{nom:nom},globals.FdJAssociations)})},
 args: ["nom"],
-source: "at: nom\x0a\x09^ liste at: nom ifAbsent: [ nil ]",
-messageSends: ["at:ifAbsent:"],
-referencedClasses: []
+source: "at: nom\x0a\x09^ liste\x0a\x09\x09at: (nom remplaceAvec: FdJApplication accents)\x0a\x09\x09ifAbsent: [ nil ]",
+messageSends: ["at:ifAbsent:", "remplaceAvec:", "accents"],
+referencedClasses: ["FdJApplication"]
 }),
 globals.FdJAssociations);
 
@@ -602,11 +670,11 @@ fn: function (){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self["@liste"])._at_("Festival");
+$1=self._at_("Festival");
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"festival",{},globals.FdJAssociations)})},
 args: [],
-source: "festival\x0a\x09^ liste at: 'Festival'",
+source: "festival\x0a\x09^ self at: 'Festival'",
 messageSends: ["at:"],
 referencedClasses: []
 }),
@@ -801,12 +869,12 @@ fn: function (unBenevole){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self._indexDe_(_st(unBenevole)._nomSansAccent())).__gt((0));
+$1=_st(self._indexDe_(_st(unBenevole)._nomSansAccent())).__eq((1));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"correspond:",{unBenevole:unBenevole},globals.FdJBenevole)})},
 args: ["unBenevole"],
-source: "correspond: unBenevole\x0a\x09\x22Retourne vrai si nom sans accent correspond\x22\x0a\x09^ (self indexDe: unBenevole nomSansAccent) > 0",
-messageSends: [">", "indexDe:", "nomSansAccent"],
+source: "correspond: unBenevole\x0a\x09\x22Retourne vrai si nom sans accent correspond\x22\x0a\x09^ (self indexDe: unBenevole nomSansAccent) = 1",
+messageSends: ["=", "indexDe:", "nomSansAccent"],
 referencedClasses: []
 }),
 globals.FdJBenevole);
@@ -1001,6 +1069,7 @@ selector: "nomSansAccent",
 protocol: 'accessing',
 fn: function (){
 var self=this;
+function $FdJApplication(){return globals.FdJApplication||(typeof FdJApplication=="undefined"?nil:FdJApplication)}
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$receiver;
 $1=self["@nom"];
@@ -1009,13 +1078,13 @@ return "";
 } else {
 $1;
 };
-$2=_st(self["@nom"])._remplaceAvec_(_st(self._class())._accents());
+$2=_st(self["@nom"])._remplaceAvec_(_st($FdJApplication())._accents());
 return $2;
 }, function($ctx1) {$ctx1.fill(self,"nomSansAccent",{},globals.FdJBenevole)})},
 args: [],
-source: "nomSansAccent\x0a\x09nom ifNil: [ ^ '' ].\x0a\x09^ nom remplaceAvec: self class accents",
-messageSends: ["ifNil:", "remplaceAvec:", "accents", "class"],
-referencedClasses: []
+source: "nomSansAccent\x0a\x09nom ifNil: [ ^ '' ].\x0a\x09^ nom remplaceAvec: FdJApplication accents",
+messageSends: ["ifNil:", "remplaceAvec:", "accents"],
+referencedClasses: ["FdJApplication"]
 }),
 globals.FdJBenevole);
 
@@ -1117,30 +1186,6 @@ globals.FdJBenevole);
 
 
 globals.FdJBenevole.klass.iVarNames = ['accents'];
-smalltalk.addMethod(
-smalltalk.method({
-selector: "accents",
-protocol: 'exemples',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$receiver;
-$2=self["@accents"];
-if(($receiver = $2) == null || $receiver.isNil){
-self["@accents"]=globals.HashedCollection._newFromPairs_(["[àáâãäå]","a","æ","ae","ç","c","[èéêë]","e","[ìíîï]","i","ñ","n","[òóôõö]","o","œ","oe","[ùúûü]","u","[ýÿ]","y"," ",""]);
-$1=self["@accents"];
-} else {
-$1=$2;
-};
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"accents",{},globals.FdJBenevole.klass)})},
-args: [],
-source: "accents\x0a\x09^ accents ifNil: [\x0a\x09\x09accents := #{\x0a\x09\x09\x09'[àáâãäå]' -> 'a'.\x0a\x09    \x09'æ' -> 'ae'.\x0a\x09    \x09'ç' -> 'c'.\x0a\x09    \x09'[èéêë]' -> 'e'.\x0a\x09    \x09'[ìíîï]' -> 'i'.\x0a\x09    \x09'ñ' -> 'n'.\x0a\x09    \x09'[òóôõö]' -> 'o'.\x0a\x09    \x09'œ' -> 'oe'.\x0a\x09    \x09'[ùúûü]' -> 'u'.\x0a\x09    \x09'[ýÿ]' -> 'y'.\x0a\x09    \x09' ' -> ''\x0a\x09\x09}\x0a\x09]",
-messageSends: ["ifNil:"],
-referencedClasses: []
-}),
-globals.FdJBenevole.klass);
-
 smalltalk.addMethod(
 smalltalk.method({
 selector: "exemple",
@@ -1252,19 +1297,37 @@ selector: "ajouteUnique:",
 protocol: 'as yet unclassified',
 fn: function (desBenevoles){
 var self=this;
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
 return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$4,$3,$5;
+_st($Transcript())._show_("Benevoles déjà existants:");
+$ctx1.sendIdx["show:"]=1;
+$1=_st($Transcript())._cr();
+$ctx1.sendIdx["cr"]=1;
 _st(self["@liste"])._addAll_(_st(desBenevoles)._select_thenCollect_((function(b){
 return smalltalk.withContext(function($ctx2) {
-return _st(self._contient_(b))._not();
+$2=self._contient_(b);
+if(smalltalk.assert($2)){
+$4=_st("- ".__comma(_st(b)._nom())).__comma(" ");
+$ctx2.sendIdx[","]=2;
+$3=_st($4).__comma(_st(b)._prenom());
+$ctx2.sendIdx[","]=1;
+_st($Transcript())._show_($3);
+$5=_st($Transcript())._cr();
+$5;
+return false;
+} else {
+return true;
+};
 }, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)})}),(function(b){
 return smalltalk.withContext(function($ctx2) {
 return _st(b)._normalise();
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,2)})})));
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,4)})})));
 return self}, function($ctx1) {$ctx1.fill(self,"ajouteUnique:",{desBenevoles:desBenevoles},globals.FdJBenevoles)})},
 args: ["desBenevoles"],
-source: "ajouteUnique: desBenevoles\x0a\x09liste addAll:\x0a\x09\x09(desBenevoles\x0a\x09\x09\x09\x09select: [ :b | (self contient: b) not ]\x0a\x09\x09\x09\x09thenCollect: [ :b | b normalise ])",
-messageSends: ["addAll:", "select:thenCollect:", "not", "contient:", "normalise"],
-referencedClasses: []
+source: "ajouteUnique: desBenevoles\x0a\x09Transcript show: 'Benevoles déjà existants:'; cr.\x0a\x09liste addAll:\x0a\x09\x09(desBenevoles\x0a\x09\x09\x09\x09select: [ :b |\x0a\x09\x09\x09\x09\x09(self contient: b)\x0a\x09\x09\x09\x09\x09\x09ifTrue: [ Transcript show: '- ', b nom, ' ', b prenom; cr. false ]\x0a\x09\x09\x09\x09\x09\x09ifFalse: [ true ]\x0a\x09\x09\x09\x09\x09]\x0a\x09\x09\x09\x09thenCollect: [ :b | b normalise ])",
+messageSends: ["show:", "cr", "addAll:", "select:thenCollect:", "ifTrue:ifFalse:", "contient:", ",", "nom", "prenom", "normalise"],
+referencedClasses: ["Transcript"]
 }),
 globals.FdJBenevoles);
 
@@ -1852,15 +1915,16 @@ selector: "variablesPour:",
 protocol: 'as yet unclassified',
 fn: function (json){
 var self=this;
+function $Smalltalk(){return globals.Smalltalk||(typeof Smalltalk=="undefined"?nil:Smalltalk)}
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(smalltalk)._readJSObject_(json);
+$1=_st($Smalltalk())._readJSObject_(json);
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"variablesPour:",{json:json},globals.FdJStockage)})},
 args: ["json"],
-source: "variablesPour: json\x0a\x09^ smalltalk readJSObject: json",
+source: "variablesPour: json\x0a\x09^ Smalltalk readJSObject: json",
 messageSends: ["readJSObject:"],
-referencedClasses: []
+referencedClasses: ["Smalltalk"]
 }),
 globals.FdJStockage);
 
@@ -2428,14 +2492,20 @@ protocol: 'rendering',
 fn: function (html){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2;
+var $1,$3,$5,$4,$2;
 $1=_st(html)._div();
 _st($1)._class_("association");
-$2=_st($1)._with_(_st(_st(self["@benevole"])._association())._nom());
+$ctx1.sendIdx["class:"]=1;
+$3=$1;
+$5=_st(self["@benevole"])._association();
+$ctx1.sendIdx["association"]=1;
+$4=_st($5)._nom();
+$2=_st($3)._with_($4);
+_st(self["@div"])._class_("benevole ".__comma(_st(_st(self["@benevole"])._association())._nomSansAccent()));
 return self}, function($ctx1) {$ctx1.fill(self,"renderAssociationOn:",{html:html},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderAssociationOn: html\x0a\x09html div class: 'association';\x0a\x09\x09with: benevole association nom",
-messageSends: ["class:", "div", "with:", "nom", "association"],
+source: "renderAssociationOn: html\x0a\x09html div class: 'association';\x0a\x09\x09with: benevole association nom.\x0a\x09div class: ('benevole ', benevole association nomSansAccent)",
+messageSends: ["class:", "div", "with:", "nom", "association", ",", "nomSansAccent"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevole);

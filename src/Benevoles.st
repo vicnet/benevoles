@@ -164,11 +164,38 @@ vide
 	benevoles vide
 ! !
 
+FdJApplication class instanceVariableNames: 'accents'!
+
+!FdJApplication class methodsFor: 'as yet unclassified'!
+
+accents
+	^ accents ifNil: [
+		accents := #{
+			'[àáâãäå]' -> 'a'.
+	    	'æ' -> 'ae'.
+	    	'ç' -> 'c'.
+	    	'[èéêë]' -> 'e'.
+	    	'[ìíîï]' -> 'i'.
+	    	'ñ' -> 'n'.
+	    	'[òóôõö]' -> 'o'.
+	    	'œ' -> 'oe'.
+	    	'[ùúûü]' -> 'u'.
+	    	'[ýÿ]' -> 'y'.
+	    	' ' -> ''.
+			'-' -> ''
+		}
+	]
+! !
+
 Object subclass: #FdJAssociation
 	instanceVariableNames: 'nom logo'
 	package: 'Benevoles'!
 
 !FdJAssociation methodsFor: 'accessing'!
+
+asJSON
+	^ #{ 'nom'->nom }
+!
 
 fromJSON: variables
 	nom := variables at: 'nom'.
@@ -189,6 +216,11 @@ nom
 
 nom: anObject
 	nom := anObject
+!
+
+nomSansAccent
+	nom ifNil: [ ^ '' ].
+	^ nom remplaceAvec: FdJApplication accents
 ! !
 
 !FdJAssociation class methodsFor: 'exemples'!
@@ -213,7 +245,7 @@ ajoute: uneAssociation
 	association := uneAssociation isString
 		ifTrue: [ FdJAssociation new nom: uneAssociation ]
 		ifFalse: [ uneAssociation ].
-	liste at: association nom put: association
+	liste at: association nomSansAccent put: association
 !
 
 associations: desAssociations
@@ -222,11 +254,13 @@ associations: desAssociations
 !
 
 at: nom
-	^ liste at: nom ifAbsent: [ nil ]
+	^ liste
+		at: (nom remplaceAvec: FdJApplication accents)
+		ifAbsent: [ nil ]
 !
 
 festival
-	^ liste at: 'Festival'
+	^ self at: 'Festival'
 !
 
 fromJSON: variables
@@ -286,7 +320,7 @@ association: uneAssoc
 
 correspond: unBenevole
 	"Retourne vrai si nom sans accent correspond"
-	^ (self indexDe: unBenevole nomSansAccent) > 0
+	^ (self indexDe: unBenevole nomSansAccent) = 1
 !
 
 distribue
@@ -340,7 +374,7 @@ nom: chaine
 
 nomSansAccent
 	nom ifNil: [ ^ '' ].
-	^ nom remplaceAvec: self class accents
+	^ nom remplaceAvec: FdJApplication accents
 !
 
 normalise
@@ -372,24 +406,6 @@ tshirt: unTShirt
 FdJBenevole class instanceVariableNames: 'accents'!
 
 !FdJBenevole class methodsFor: 'exemples'!
-
-accents
-	^ accents ifNil: [
-		accents := #{
-			'[àáâãäå]' -> 'a'.
-	    	'æ' -> 'ae'.
-	    	'ç' -> 'c'.
-	    	'[èéêë]' -> 'e'.
-	    	'[ìíîï]' -> 'i'.
-	    	'ñ' -> 'n'.
-	    	'[òóôõö]' -> 'o'.
-	    	'œ' -> 'oe'.
-	    	'[ùúûü]' -> 'u'.
-	    	'[ýÿ]' -> 'y'.
-	    	' ' -> ''
-		}
-	]
-!
 
 exemple
 	^ self new nom: 'OSELE';
@@ -428,9 +444,14 @@ ajouteTous: desBenevoles
 !
 
 ajouteUnique: desBenevoles
+	Transcript show: 'Benevoles déjà existants:'; cr.
 	liste addAll:
 		(desBenevoles
-				select: [ :b | (self contient: b) not ]
+				select: [ :b |
+					(self contient: b)
+						ifTrue: [ Transcript show: '- ', b nom, ' ', b prenom; cr. false ]
+						ifFalse: [ true ]
+					]
 				thenCollect: [ :b | b normalise ])
 !
 
@@ -605,7 +626,7 @@ stockagePour: objet
 !
 
 variablesPour: json
-	^ smalltalk readJSObject: json
+	^ Smalltalk readJSObject: json
 !
 
 vide
@@ -778,7 +799,8 @@ benevole
 
 renderAssociationOn: html
 	html div class: 'association';
-		with: benevole association nom
+		with: benevole association nom.
+	div class: ('benevole ', benevole association nomSansAccent)
 !
 
 renderIdentiteOn: html

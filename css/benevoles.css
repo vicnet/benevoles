@@ -137,6 +137,6 @@ body {
 .importeur .actions .checkbox {
     margin-right: 15px
 }
-.benevole .auteur {
-    background: linear-gradient(to top, orange 50%, white 50%);
+.benevole.auteur {
+    background: linear-gradient(to top, orange 0%, white 33%, white 66%,  orange 100%);
 }

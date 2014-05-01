@@ -244,10 +244,11 @@ function $FdJWidgetBarre(){return globals.FdJWidgetBarre||(typeof FdJWidgetBarre
 function $FdJWidgetSelectionneur(){return globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
 function $FdJWidgetImporteur(){return globals.FdJWidgetImporteur||(typeof FdJWidgetImporteur=="undefined"?nil:FdJWidgetImporteur)}
 function $FdJWidgetBenevoles(){return globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
+function $FdJWidgetLegende(){return globals.FdJWidgetLegende||(typeof FdJWidgetLegende=="undefined"?nil:FdJWidgetLegende)}
 function $FdJAnnonceur(){return globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
 function $FdJBenevoleChangeEtat(){return globals.FdJBenevoleChangeEtat||(typeof FdJBenevoleChangeEtat=="undefined"?nil:FdJBenevoleChangeEtat)}
 return smalltalk.withContext(function($ctx1) { 
-var $2,$1,$3,$4,$5,$6,$7;
+var $2,$1,$3,$4,$5,$6,$8,$9,$7;
 $2="body"._asJQuery();
 $ctx1.sendIdx["asJQuery"]=1;
 $1=_st($2)._children();
@@ -272,9 +273,15 @@ $ctx1.sendIdx["asJQuery"]=2;
 _st($4)._appendToJQuery_($5);
 $ctx1.sendIdx["appendToJQuery:"]=1;
 $6=_st($FdJWidgetBenevoles())._new();
+$ctx1.sendIdx["new"]=4;
 _st($6)._presentateur_(self);
-$7=_st($6)._appendToJQuery_("body"._asJQuery());
+$8=$6;
+$9="body"._asJQuery();
+$ctx1.sendIdx["asJQuery"]=3;
+$7=_st($8)._appendToJQuery_($9);
+$ctx1.sendIdx["appendToJQuery:"]=2;
 self["@distributeur"]=$7;
+_st(_st($FdJWidgetLegende())._new())._appendToJQuery_("body"._asJQuery());
 _st(_st($FdJAnnonceur())._current())._on_do_($FdJBenevoleChangeEtat(),(function(evt){
 return smalltalk.withContext(function($ctx2) {
 return self._onBenevoleChangeEtat_(_st(evt)._benevole());
@@ -282,9 +289,9 @@ return self._onBenevoleChangeEtat_(_st(evt)._benevole());
 _st(self["@distributeur"])._associe_(_st(self["@benevoles"])._selectionnes());
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre},globals.FdJApplication)})},
 args: [],
-source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes)",
+source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes)",
 messageSends: ["remove", "children", "asJQuery", "initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes"],
-referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetBenevoles", "FdJAnnonceur", "FdJBenevoleChangeEtat"]
+referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetBenevoles", "FdJWidgetLegende", "FdJAnnonceur", "FdJBenevoleChangeEtat"]
 }),
 globals.FdJApplication);
 
@@ -2754,7 +2761,7 @@ return _st(self["@presentateur"])._selectionne_(self["@benevole"]);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09\x09self renderTShirtOn: html ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderTShirtOn: html ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
 messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderTShirtOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne:"],
 referencedClasses: []
 }),
@@ -3068,6 +3075,250 @@ messageSends: ["renderOn:", "with:", "renderDlgOn:", "class:", "button", "onClic
 referencedClasses: []
 }),
 globals.FdJWidgetImporteur);
+
+
+
+smalltalk.addClass('FdJWidgetLegende', globals.FdJWidget, [], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "enderTShirtOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4;
+$1=_st(html)._div();
+$ctx1.sendIdx["div"]=1;
+_st($1)._class_("tshirt");
+$ctx1.sendIdx["class:"]=1;
+_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$2=_st(html)._div();
+$ctx2.sendIdx["div"]=2;
+_st($2)._with_("H/F");
+$ctx2.sendIdx["with:"]=2;
+$3=_st(html)._div();
+$ctx2.sendIdx["div"]=3;
+_st($3)._with_("taille");
+$ctx2.sendIdx["with:"]=3;
+return _st(_st(html)._div())._with_("lsf");
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+$4=_st($1)._class_("tshirt homme");
+return self}, function($ctx1) {$ctx1.fill(self,"enderTShirtOn:",{html:html},globals.FdJWidgetLegende)})},
+args: ["html"],
+source: "enderTShirtOn: html\x0a\x09html div class: 'tshirt';\x0a\x09\x09with: [\x0a\x09\x09\x09html div with: 'H/F'.\x0a\x09\x09\x09html div with: 'taille'.\x0a\x09\x09\x09html div with: 'lsf' ];\x0a\x09\x09class: 'tshirt homme'",
+messageSends: ["class:", "div", "with:"],
+referencedClasses: []
+}),
+globals.FdJWidgetLegende);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderAssociationOn:texte:",
+protocol: 'as yet unclassified',
+fn: function (html,texte){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2;
+$1=_st(html)._div();
+_st($1)._class_("association");
+$2=_st($1)._with_(texte);
+return self}, function($ctx1) {$ctx1.fill(self,"renderAssociationOn:texte:",{html:html,texte:texte},globals.FdJWidgetLegende)})},
+args: ["html", "texte"],
+source: "renderAssociationOn: html texte: texte\x0a\x09html div class: 'association';\x0a\x09\x09with: texte",
+messageSends: ["class:", "div", "with:"],
+referencedClasses: []
+}),
+globals.FdJWidgetLegende);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderBenevoleOn:type:",
+protocol: 'as yet unclassified',
+fn: function (html,benevole){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$4,$3,$6,$7,$5;
+$1=_st(html)._div();
+$ctx1.sendIdx["div"]=1;
+$2=$1;
+$4=_st(benevole)._at_("type");
+$ctx1.sendIdx["at:"]=1;
+$3="benevole ".__comma($4);
+_st($2)._class_($3);
+$ctx1.sendIdx["class:"]=1;
+$5=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$6=_st(html)._div();
+_st($6)._class_("info");
+$7=_st($6)._with_((function(){
+return smalltalk.withContext(function($ctx3) {
+_st(benevole)._at_ifPresent_ifAbsent_("nom",(function(t){
+return smalltalk.withContext(function($ctx4) {
+return self._renderIdentiteOn_texte_(html,t);
+}, function($ctx4) {$ctx4.fillBlock({t:t},$ctx3,3)})}),(function(){
+return smalltalk.withContext(function($ctx4) {
+return self._renderIdentiteOn_(html);
+}, function($ctx4) {$ctx4.fillBlock({},$ctx3,4)})}));
+return self._renderAssociationOn_texte_(html,_st(benevole)._at_("assoc"));
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+$7;
+return self._renderTShirtOn_(html);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+return self}, function($ctx1) {$ctx1.fill(self,"renderBenevoleOn:type:",{html:html,benevole:benevole},globals.FdJWidgetLegende)})},
+args: ["html", "benevole"],
+source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09self renderTShirtOn: html ]",
+messageSends: ["class:", "div", ",", "at:", "with:", "at:ifPresent:ifAbsent:", "renderIdentiteOn:texte:", "renderIdentiteOn:", "renderAssociationOn:texte:", "renderTShirtOn:"],
+referencedClasses: []
+}),
+globals.FdJWidgetLegende);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderIdentiteOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$4,$5,$6,$2;
+$1=_st(html)._div();
+$ctx1.sendIdx["div"]=1;
+_st($1)._class_("identite");
+$ctx1.sendIdx["class:"]=1;
+$2=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$3=_st(html)._div();
+$ctx2.sendIdx["div"]=2;
+_st($3)._class_("nom");
+$ctx2.sendIdx["class:"]=2;
+$4=_st($3)._with_("Nom");
+$ctx2.sendIdx["with:"]=2;
+$4;
+$5=_st(html)._div();
+_st($5)._class_("prenom");
+$6=_st($5)._with_("Prenom");
+return $6;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+return self}, function($ctx1) {$ctx1.fill(self,"renderIdentiteOn:",{html:html},globals.FdJWidgetLegende)})},
+args: ["html"],
+source: "renderIdentiteOn: html\x0a\x09html div class: 'identite';\x0a\x09\x09with: [ html div class: 'nom'; with: 'Nom'.\x0a\x09\x09\x09\x09html div class: 'prenom'; with: 'Prenom' ]",
+messageSends: ["class:", "div", "with:"],
+referencedClasses: []
+}),
+globals.FdJWidgetLegende);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderIdentiteOn:texte:",
+protocol: 'as yet unclassified',
+fn: function (html,texte){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$4,$2;
+$1=_st(html)._div();
+$ctx1.sendIdx["div"]=1;
+_st($1)._class_("identite");
+$ctx1.sendIdx["class:"]=1;
+$2=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$3=_st(html)._div();
+_st($3)._class_("nom");
+$4=_st($3)._with_(texte);
+return $4;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+return self}, function($ctx1) {$ctx1.fill(self,"renderIdentiteOn:texte:",{html:html,texte:texte},globals.FdJWidgetLegende)})},
+args: ["html", "texte"],
+source: "renderIdentiteOn: html texte: texte\x0a\x09html div class: 'identite';\x0a\x09\x09with: [ html div class: 'nom'; with: texte ]",
+messageSends: ["class:", "div", "with:"],
+referencedClasses: []
+}),
+globals.FdJWidgetLegende);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$4,$5,$2;
+($ctx1.supercall = true, globals.FdJWidgetLegende.superclass.fn.prototype._renderOn_.apply(_st(self), [html]));
+$ctx1.supercall = false;
+_st(self["@div"])._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$1=_st(html)._div();
+$ctx2.sendIdx["div"]=1;
+_st($1)._class_("texte");
+$2=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx3) {
+$3=_st(html)._div();
+$ctx3.sendIdx["div"]=2;
+_st($3)._with_("1) Sélectionner un bénévole avec une partie de son nom en bas de l'écran");
+$ctx3.sendIdx["with:"]=3;
+$4=_st(html)._div();
+$ctx3.sendIdx["div"]=3;
+_st($4)._with_("2) Cliquer dessus pour commencer la distribution");
+$ctx3.sendIdx["with:"]=4;
+$5=_st(html)._div();
+$ctx3.sendIdx["div"]=4;
+_st($5)._with_("3) Cliquer sur l'étiquette pour terminer la distribution");
+$ctx3.sendIdx["with:"]=5;
+return _st(_st(html)._div())._with_("Code des couleurs:");
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+$ctx2.sendIdx["with:"]=2;
+$2;
+self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","festival","assoc","association"]));
+$ctx2.sendIdx["renderBenevoleOn:type:"]=1;
+self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","auteur","nom","Auteur","assoc","distri speciale"]));
+$ctx2.sendIdx["renderBenevoleOn:type:"]=2;
+return self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","noninscrit","nom","Non-inscrit","assoc","vérif stock"]));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetLegende)})},
+args: ["html"],
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'texte'; with: [\x0a\x09\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom en bas de l''écran'.\x0a\x09\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'festival'. #assoc->'association' }.\x0a\x09\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'auteur'. #nom->'Auteur'. #assoc->'distri speciale' }.\x0a\x09\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }\x0a\x09\x09]",
+messageSends: ["renderOn:", "with:", "class:", "div", "renderBenevoleOn:type:"],
+referencedClasses: []
+}),
+globals.FdJWidgetLegende);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "renderTShirtOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4;
+$1=_st(html)._div();
+$ctx1.sendIdx["div"]=1;
+_st($1)._class_("tshirt");
+$ctx1.sendIdx["class:"]=1;
+_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$2=_st(html)._div();
+$ctx2.sendIdx["div"]=2;
+_st($2)._with_("H/F");
+$ctx2.sendIdx["with:"]=2;
+$3=_st(html)._div();
+$ctx2.sendIdx["div"]=3;
+_st($3)._with_("taille");
+$ctx2.sendIdx["with:"]=3;
+return _st(_st(html)._div())._with_("lsf?");
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+$4=_st($1)._class_("tshirt homme");
+return self}, function($ctx1) {$ctx1.fill(self,"renderTShirtOn:",{html:html},globals.FdJWidgetLegende)})},
+args: ["html"],
+source: "renderTShirtOn: html\x0a\x09html div class: 'tshirt';\x0a\x09\x09with: [\x0a\x09\x09\x09html div with: 'H/F'.\x0a\x09\x09\x09html div with: 'taille'.\x0a\x09\x09\x09html div with: 'lsf?' ];\x0a\x09\x09class: 'tshirt homme'",
+messageSends: ["class:", "div", "with:"],
+referencedClasses: []
+}),
+globals.FdJWidgetLegende);
 
 
 

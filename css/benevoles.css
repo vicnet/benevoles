@@ -3,9 +3,14 @@ body {
 /*    background: #ffebcd;*/
     background: #ffa62f;
     background: white;
+    margin:0px;
+}
+.benevoles {
+    width: 80%;
+    float: left;
 }
 .benevole {
-    width: 30%;
+    width: 47%;
     padding: 5px;
     border: solid;
     border-radius: 10px;
@@ -68,7 +73,7 @@ body {
     width: 100%;
 }
 .selectionneur .benevoles {
-    width: 100%;
+    width: 60%;
 }
 .selectionneur .suite {
     width: 30%;
@@ -145,4 +150,31 @@ body {
 }
 .benevole.noninscrit {
     background: lightgrey;
+}
+.legende {
+    background: rgb(240,240,240);
+    width: 15%;
+    height: 300px;
+    float: right;
+    margin: 0px;
+    padding: 0px;
+}
+.legende .texte {
+    font-size: 60%;
+}
+.legende .benevole {
+    font-size: 100%;
+    width: 93%;
+    border-color: gray;
+    border-width: 1px;
+}
+.legende .benevole.festival {
+    background: white
+}
+.legende .tshirt {
+    width: 40%;
+    height: 100%
+}
+.legende .tshirt div {
+    background: rgba(255,255,255,0);
 }

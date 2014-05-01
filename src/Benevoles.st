@@ -124,6 +124,9 @@ initialize
 	distributeur := FdJWidgetBenevoles new
 		presentateur: self;
 		appendToJQuery: 'body' asJQuery.
+		
+	FdJWidgetLegende new
+		appendToJQuery: 'body' asJQuery.
 
 	FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |
 		self onBenevoleChangeEtat: evt benevole ].
@@ -878,7 +881,7 @@ renderOn: html
 		html div class: 'info'; with: [
 			self renderIdentiteOn: html.
 			self renderAssociationOn: html ].
-			self renderTShirtOn: html ].
+		self renderTShirtOn: html ].
 	benevole estInscrit ifFalse: [			
 		self ajouteClasse: 'noninscrit' ].
 	div onClick: [ presentateur selectionne: benevole ]
@@ -981,6 +984,75 @@ renderOn: html
 			with: 'I';
 			onClick: [ dlg asJQuery fadeToggle ]
 		]
+! !
+
+FdJWidget subclass: #FdJWidgetLegende
+	instanceVariableNames: ''
+	package: 'Benevoles'!
+
+!FdJWidgetLegende methodsFor: 'as yet unclassified'!
+
+enderTShirtOn: html
+	html div class: 'tshirt';
+		with: [
+			html div with: 'H/F'.
+			html div with: 'taille'.
+			html div with: 'lsf' ];
+		class: 'tshirt homme'
+!
+
+renderAssociationOn: html texte: texte
+	html div class: 'association';
+		with: texte
+!
+
+renderBenevoleOn: html type: benevole
+	html div class: 'benevole ',(benevole at: #type); with: [
+		html div class: 'info'; with: [
+			benevole at: #nom
+				ifPresent: [ :t | self renderIdentiteOn: html texte: t ]
+				ifAbsent: [ self renderIdentiteOn: html ].
+			self renderAssociationOn: html
+				texte: (benevole at: #assoc)
+			].
+		self renderTShirtOn: html ]
+!
+
+renderIdentiteOn: html
+	html div class: 'identite';
+		with: [ html div class: 'nom'; with: 'Nom'.
+				html div class: 'prenom'; with: 'Prenom' ]
+!
+
+renderIdentiteOn: html texte: texte
+	html div class: 'identite';
+		with: [ html div class: 'nom'; with: texte ]
+!
+
+renderOn: html
+	super renderOn: html.
+	div with: [
+		html div class: 'texte'; with: [
+			html div with: '1) Sélectionner un bénévole avec une partie de son nom en bas de l''écran'.
+			html div with: '2) Cliquer dessus pour commencer la distribution'.
+			html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.
+			html div with: 'Code des couleurs:' ].
+		self renderBenevoleOn: html type: #{
+			#type->'festival'. #assoc->'association' }.
+		self renderBenevoleOn: html type: #{
+			#type->'auteur'. #nom->'Auteur'. #assoc->'distri speciale' }.
+		self renderBenevoleOn: html type: #{
+			#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }
+		]
+!
+
+renderTShirtOn: html
+	html div class: 'tshirt';
+		with: [
+			html div with: 'H/F'.
+			html div with: 'taille'.
+			html div with: 'lsf?' ];
+		class: 'tshirt homme'
 ! !
 
 FdJWidget subclass: #FdJWidgetSelectionneur

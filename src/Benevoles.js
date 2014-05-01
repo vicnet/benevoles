@@ -84,7 +84,7 @@ referencedClasses: []
 globals.FdJAnnonceur.klass);
 
 
-smalltalk.addClass('FdJApplication', globals.Object, ['benevoles', 'selectionneur', 'distributeur', 'importeur'], 'Benevoles');
+smalltalk.addClass('FdJApplication', globals.Object, ['benevoles', 'selectionneur', 'distributeur', 'importeur', 'historique'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "charge",
@@ -92,24 +92,30 @@ protocol: 'initialization',
 fn: function (){
 var self=this;
 function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
+function $FdJHistorique(){return globals.FdJHistorique||(typeof FdJHistorique=="undefined"?nil:FdJHistorique)}
 function $FdJAssociations(){return globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
 function $FdJBenevoles(){return globals.FdJBenevoles||(typeof FdJBenevoles=="undefined"?nil:FdJBenevoles)}
 return smalltalk.withContext(function($ctx1) { 
+self["@historique"]=_st($FdJStockage())._charge_sinon_($FdJHistorique(),(function(){
+return smalltalk.withContext(function($ctx2) {
+return _st($FdJHistorique())._new();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["charge:sinon:"]=1;
 _st($FdJStockage())._charge_sinon_(_st($FdJAssociations())._instance(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st($FdJAssociations())._exemple();
 $ctx2.sendIdx["exemple"]=1;
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$ctx1.sendIdx["charge:sinon:"]=1;
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+$ctx1.sendIdx["charge:sinon:"]=2;
 self["@benevoles"]=_st($FdJStockage())._charge_sinon_($FdJBenevoles(),(function(){
 return smalltalk.withContext(function($ctx2) {
 return _st($FdJBenevoles())._exemple();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)})}));
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"charge",{},globals.FdJApplication)})},
 args: [],
-source: "charge\x0a\x09\x22Charge le modele (ou créé un exemple)\x22\x0a\x09FdJStockage\x0a\x09\x09charge: FdJAssociations instance\x0a\x09\x09sinon: [ FdJAssociations exemple ].\x0a\x09benevoles := FdJStockage charge: FdJBenevoles sinon: [ FdJBenevoles exemple ]",
-messageSends: ["charge:sinon:", "instance", "exemple"],
-referencedClasses: ["FdJStockage", "FdJAssociations", "FdJBenevoles"]
+source: "charge\x0a\x09\x22Charge le modele (ou créé un exemple)\x22\x0a\x09historique := FdJStockage\x0a\x09\x09charge: FdJHistorique\x0a\x09\x09sinon: [ FdJHistorique new ].\x0a\x09FdJStockage\x0a\x09\x09charge: FdJAssociations instance\x0a\x09\x09sinon: [ FdJAssociations exemple ].\x0a\x09benevoles := FdJStockage\x0a\x09\x09charge: FdJBenevoles\x0a\x09\x09sinon: [ FdJBenevoles exemple ]",
+messageSends: ["charge:sinon:", "new", "instance", "exemple"],
+referencedClasses: ["FdJStockage", "FdJHistorique", "FdJAssociations", "FdJBenevoles"]
 }),
 globals.FdJApplication);
 
@@ -1583,6 +1589,114 @@ referencedClasses: ["FdJBenevole"]
 globals.FdJBenevoles.klass);
 
 
+smalltalk.addClass('FdJHistorique', globals.Object, ['liste'], 'Benevoles');
+smalltalk.addMethod(
+smalltalk.method({
+selector: "ajoute:",
+protocol: 'as yet unclassified',
+fn: function (texte){
+var self=this;
+function $Date(){return globals.Date||(typeof Date=="undefined"?nil:Date)}
+return smalltalk.withContext(function($ctx1) { 
+_st(self["@liste"])._add_(globals.HashedCollection._newFromPairs_(["date",_st(_st($Date())._now())._asString(),"evennement",texte]));
+self._sauve();
+return self}, function($ctx1) {$ctx1.fill(self,"ajoute:",{texte:texte},globals.FdJHistorique)})},
+args: ["texte"],
+source: "ajoute: texte\x0a\x09liste add: #{\x0a\x09\x09\x09'date' -> Date now asString.\x0a\x09\x09\x09'evennement' -> texte\x0a\x09\x09}.\x0a\x09self sauve",
+messageSends: ["add:", "asString", "now", "sauve"],
+referencedClasses: ["Date"]
+}),
+globals.FdJHistorique);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "fromJSON:",
+protocol: 'as yet unclassified',
+fn: function (variables){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@liste"]=_st(variables)._at_("liste");
+return self}, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},globals.FdJHistorique)})},
+args: ["variables"],
+source: "fromJSON: variables\x0a\x09liste := variables at: 'liste'.",
+messageSends: ["at:"],
+referencedClasses: []
+}),
+globals.FdJHistorique);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "initialize",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+function $FdJAnnonceur(){return globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
+function $FdJBenevoleChangeEtat(){return globals.FdJBenevoleChangeEtat||(typeof FdJBenevoleChangeEtat=="undefined"?nil:FdJBenevoleChangeEtat)}
+return smalltalk.withContext(function($ctx1) { 
+self["@liste"]=[];
+_st(_st($FdJAnnonceur())._current())._on_do_($FdJBenevoleChangeEtat(),(function(evt){
+return smalltalk.withContext(function($ctx2) {
+return self._onBenevoleChangeEtat_(_st(evt)._benevole());
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},globals.FdJHistorique)})},
+args: [],
+source: "initialize\x0a\x09liste := #().\x0a\x09FdJAnnonceur current\x0a\x09\x09on: FdJBenevoleChangeEtat\x0a\x09\x09do: [ :evt |\x0a\x09\x09\x09self onBenevoleChangeEtat: evt benevole ]",
+messageSends: ["on:do:", "current", "onBenevoleChangeEtat:", "benevole"],
+referencedClasses: ["FdJAnnonceur", "FdJBenevoleChangeEtat"]
+}),
+globals.FdJHistorique);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "onBenevoleChangeEtat:",
+protocol: 'as yet unclassified',
+fn: function (benevole){
+var self=this;
+var nom;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$3,$4;
+$1=_st(_st(benevole)._nom()).__comma(" ");
+$ctx1.sendIdx[","]=2;
+nom=_st($1).__comma(_st(benevole)._prenom());
+$ctx1.sendIdx[","]=1;
+$2=_st(benevole)._estEncours();
+if(smalltalk.assert($2)){
+$3="Debut distribution '".__comma(nom);
+$ctx1.sendIdx[","]=3;
+self._ajoute_($3);
+$ctx1.sendIdx["ajoute:"]=1;
+};
+$4=_st(benevole)._estDistribue();
+if(smalltalk.assert($4)){
+self._ajoute_("Fin distribution '".__comma(nom));
+};
+return self}, function($ctx1) {$ctx1.fill(self,"onBenevoleChangeEtat:",{benevole:benevole,nom:nom},globals.FdJHistorique)})},
+args: ["benevole"],
+source: "onBenevoleChangeEtat: benevole\x0a\x09| nom |\x0a\x09nom := benevole nom, ' ', benevole prenom.\x0a\x09benevole estEncours ifTrue: [ \x0a\x09\x09self ajoute: 'Debut distribution ''', nom ].\x0a\x09benevole estDistribue ifTrue: [\x0a\x09\x09self ajoute: 'Fin distribution ''', nom ]",
+messageSends: [",", "nom", "prenom", "ifTrue:", "estEncours", "ajoute:", "estDistribue"],
+referencedClasses: []
+}),
+globals.FdJHistorique);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "sauve",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+function $FdJStockage(){return globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
+return smalltalk.withContext(function($ctx1) { 
+_st($FdJStockage())._sauve_(self);
+return self}, function($ctx1) {$ctx1.fill(self,"sauve",{},globals.FdJHistorique)})},
+args: [],
+source: "sauve\x0a\x09FdJStockage sauve: self",
+messageSends: ["sauve:"],
+referencedClasses: ["FdJStockage"]
+}),
+globals.FdJHistorique);
+
+
+
 smalltalk.addClass('FdJImporteur', globals.Object, [], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
@@ -2822,29 +2936,8 @@ return self._renderBenevolesOn_(html);
 }, function($ctx2) {$ctx2.fillBlock({html:html},$ctx1,1)})}));
 return self}, function($ctx1) {$ctx1.fill(self,"update",{},globals.FdJWidgetBenevoles)})},
 args: [],
-source: "update\x0a\x09div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]",
+source: "update\x0a\x09div contents: [ :html |\x0a\x09\x09div with: [ self renderBenevolesOn: html ] ]",
 messageSends: ["contents:", "with:", "renderBenevolesOn:"],
-referencedClasses: []
-}),
-globals.FdJWidgetBenevoles);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "xxxDoIt",
-protocol: 'xxxDoIt',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1;
-$1=_st((function(){
-return smalltalk.withContext(function($ctx2) {
-return _st(self["@div"])._canvas();
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}))._value();
-return $1;
-}, function($ctx1) {$ctx1.fill(self,"xxxDoIt",{},globals.FdJWidgetBenevoles)})},
-args: [],
-source: "xxxDoIt ^ [ div canvas ] value",
-messageSends: ["value", "canvas"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevoles);

@@ -76,7 +76,7 @@ body {
     border: solid;
     border-radius: 10px;
     font-size: 140%;
-    border-color: rgba(0,0,0,.1) rgba(0,0,0,.3) rgba(0,0,0,.3) rgba(0,0,0,.6);
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.3) rgba(0,0,0,.6) rgba(0,0,0,.3);
     display: none;
 }
 .selectionneur .benevole {

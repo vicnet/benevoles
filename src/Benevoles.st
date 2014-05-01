@@ -36,17 +36,22 @@ new
 ! !
 
 Object subclass: #FdJApplication
-	instanceVariableNames: 'benevoles selectionneur distributeur importeur'
+	instanceVariableNames: 'benevoles selectionneur distributeur importeur historique'
 	package: 'Benevoles'!
 
 !FdJApplication methodsFor: 'initialization'!
 
 charge
 	"Charge le modele (ou créé un exemple)"
+	historique := FdJStockage
+		charge: FdJHistorique
+		sinon: [ FdJHistorique new ].
 	FdJStockage
 		charge: FdJAssociations instance
 		sinon: [ FdJAssociations exemple ].
-	benevoles := FdJStockage charge: FdJBenevoles sinon: [ FdJBenevoles exemple ]
+	benevoles := FdJStockage
+		charge: FdJBenevoles
+		sinon: [ FdJBenevoles exemple ]
 !
 
 filtre: texte
@@ -525,6 +530,45 @@ exemple
 	^ self new benevoles: FdJBenevole exemples
 ! !
 
+Object subclass: #FdJHistorique
+	instanceVariableNames: 'liste'
+	package: 'Benevoles'!
+
+!FdJHistorique methodsFor: 'as yet unclassified'!
+
+ajoute: texte
+	liste add: #{
+			'date' -> Date now asString.
+			'evennement' -> texte
+		}.
+	self sauve
+!
+
+fromJSON: variables
+	liste := variables at: 'liste'.
+!
+
+initialize
+	liste := #().
+	FdJAnnonceur current
+		on: FdJBenevoleChangeEtat
+		do: [ :evt |
+			self onBenevoleChangeEtat: evt benevole ]
+!
+
+onBenevoleChangeEtat: benevole
+	| nom |
+	nom := benevole nom, ' ', benevole prenom.
+	benevole estEncours ifTrue: [ 
+		self ajoute: 'Debut distribution ''', nom ].
+	benevole estDistribue ifTrue: [
+		self ajoute: 'Fin distribution ''', nom ]
+!
+
+sauve
+	FdJStockage sauve: self
+! !
+
 Object subclass: #FdJImporteur
 	instanceVariableNames: ''
 	package: 'Benevoles'!
@@ -888,12 +932,8 @@ supprime: unBenevole
 !
 
 update
-	div contents: [ :html | div with: [ self renderBenevolesOn: html ] ]
-! !
-
-!FdJWidgetBenevoles methodsFor: 'xxxDoIt'!
-
-xxxDoIt ^ [ div canvas ] value
+	div contents: [ :html |
+		div with: [ self renderBenevolesOn: html ] ]
 ! !
 
 FdJWidget subclass: #FdJWidgetImporteur

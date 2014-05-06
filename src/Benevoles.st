@@ -1047,6 +1047,20 @@ renderBenevoleOn: html type: benevole
 		self renderTShirtOn: html ]
 !
 
+renderContenuOn: html
+	html div class: 'texte'; with: [
+		html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.
+		html div with: '2) Cliquer dessus pour commencer la distribution'.
+		html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.
+		html div with: 'Code des couleurs:' ].
+	self renderBenevoleOn: html type: #{
+		#type->'festival'. #assoc->'association' }.
+	self renderBenevoleOn: html type: #{
+		#type->'auteur'. #nom->'Auteur'. #assoc->'distri speciale' }.
+	self renderBenevoleOn: html type: #{
+			#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }
+!
+
 renderIdentiteOn: html
 	html div class: 'identite';
 		with: [ html div class: 'nom'; with: 'Nom'.
@@ -1059,19 +1073,16 @@ renderIdentiteOn: html texte: texte
 !
 
 renderOn: html
+	| contenu |
 	super renderOn: html.
 	div with: [
-		html div class: 'texte'; with: [
-			html div with: '1) Sélectionner un bénévole avec une partie de son nom en bas de l''écran'.
-			html div with: '2) Cliquer dessus pour commencer la distribution'.
-			html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.
-			html div with: 'Code des couleurs:' ].
-		self renderBenevoleOn: html type: #{
-			#type->'festival'. #assoc->'association' }.
-		self renderBenevoleOn: html type: #{
-			#type->'auteur'. #nom->'Auteur'. #assoc->'distri speciale' }.
-		self renderBenevoleOn: html type: #{
-			#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }
+		html div
+			class: 'bouton';
+			with: 'Aide';
+			onClick: [ contenu asJQuery fadeToggle ].
+		contenu := html div
+			class: 'contenu';
+			with: [ self renderContenuOn: html ]
 		]
 !
 

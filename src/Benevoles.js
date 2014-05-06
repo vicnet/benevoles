@@ -3283,6 +3283,47 @@ globals.FdJWidgetLegende);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "renderContenuOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$4,$5,$2;
+$1=_st(html)._div();
+$ctx1.sendIdx["div"]=1;
+_st($1)._class_("texte");
+$2=_st($1)._with_((function(){
+return smalltalk.withContext(function($ctx2) {
+$3=_st(html)._div();
+$ctx2.sendIdx["div"]=2;
+_st($3)._with_("1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l'écran");
+$ctx2.sendIdx["with:"]=2;
+$4=_st(html)._div();
+$ctx2.sendIdx["div"]=3;
+_st($4)._with_("2) Cliquer dessus pour commencer la distribution");
+$ctx2.sendIdx["with:"]=3;
+$5=_st(html)._div();
+$ctx2.sendIdx["div"]=4;
+_st($5)._with_("3) Cliquer sur l'étiquette pour terminer la distribution");
+$ctx2.sendIdx["with:"]=4;
+return _st(_st(html)._div())._with_("Code des couleurs:");
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+$ctx1.sendIdx["with:"]=1;
+self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","festival","assoc","association"]));
+$ctx1.sendIdx["renderBenevoleOn:type:"]=1;
+self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","auteur","nom","Auteur","assoc","distri speciale"]));
+$ctx1.sendIdx["renderBenevoleOn:type:"]=2;
+self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","noninscrit","nom","Non-inscrit","assoc","vérif stock"]));
+return self}, function($ctx1) {$ctx1.fill(self,"renderContenuOn:",{html:html},globals.FdJWidgetLegende)})},
+args: ["html"],
+source: "renderContenuOn: html\x0a\x09html div class: 'texte'; with: [\x0a\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.\x0a\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'festival'. #assoc->'association' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'auteur'. #nom->'Auteur'. #assoc->'distri speciale' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }",
+messageSends: ["class:", "div", "with:", "renderBenevoleOn:type:"],
+referencedClasses: []
+}),
+globals.FdJWidgetLegende);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "renderIdentiteOn:",
 protocol: 'as yet unclassified',
 fn: function (html){
@@ -3350,44 +3391,38 @@ selector: "renderOn:",
 protocol: 'as yet unclassified',
 fn: function (html){
 var self=this;
+var contenu;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$4,$5,$2;
+var $1,$2,$3,$4;
 ($ctx1.supercall = true, globals.FdJWidgetLegende.superclass.fn.prototype._renderOn_.apply(_st(self), [html]));
 $ctx1.supercall = false;
 _st(self["@div"])._with_((function(){
 return smalltalk.withContext(function($ctx2) {
 $1=_st(html)._div();
 $ctx2.sendIdx["div"]=1;
-_st($1)._class_("texte");
-$2=_st($1)._with_((function(){
-return smalltalk.withContext(function($ctx3) {
-$3=_st(html)._div();
-$ctx3.sendIdx["div"]=2;
-_st($3)._with_("1) Sélectionner un bénévole avec une partie de son nom en bas de l'écran");
-$ctx3.sendIdx["with:"]=3;
-$4=_st(html)._div();
-$ctx3.sendIdx["div"]=3;
-_st($4)._with_("2) Cliquer dessus pour commencer la distribution");
-$ctx3.sendIdx["with:"]=4;
-$5=_st(html)._div();
-$ctx3.sendIdx["div"]=4;
-_st($5)._with_("3) Cliquer sur l'étiquette pour terminer la distribution");
-$ctx3.sendIdx["with:"]=5;
-return _st(_st(html)._div())._with_("Code des couleurs:");
-}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
+_st($1)._class_("bouton");
+$ctx2.sendIdx["class:"]=1;
+_st($1)._with_("Aide");
 $ctx2.sendIdx["with:"]=2;
+$2=_st($1)._onClick_((function(){
+return smalltalk.withContext(function($ctx3) {
+return _st(_st(contenu)._asJQuery())._fadeToggle();
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
 $2;
-self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","festival","assoc","association"]));
-$ctx2.sendIdx["renderBenevoleOn:type:"]=1;
-self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","auteur","nom","Auteur","assoc","distri speciale"]));
-$ctx2.sendIdx["renderBenevoleOn:type:"]=2;
-return self._renderBenevoleOn_type_(html,globals.HashedCollection._newFromPairs_(["type","noninscrit","nom","Non-inscrit","assoc","vérif stock"]));
+$3=_st(html)._div();
+_st($3)._class_("contenu");
+$4=_st($3)._with_((function(){
+return smalltalk.withContext(function($ctx3) {
+return self._renderContenuOn_(html);
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,3)})}));
+contenu=$4;
+return contenu;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["with:"]=1;
-return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},globals.FdJWidgetLegende)})},
+return self}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html,contenu:contenu},globals.FdJWidgetLegende)})},
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'texte'; with: [\x0a\x09\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom en bas de l''écran'.\x0a\x09\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'festival'. #assoc->'association' }.\x0a\x09\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'auteur'. #nom->'Auteur'. #assoc->'distri speciale' }.\x0a\x09\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }\x0a\x09\x09]",
-messageSends: ["renderOn:", "with:", "class:", "div", "renderBenevoleOn:type:"],
+source: "renderOn: html\x0a\x09| contenu |\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div\x0a\x09\x09\x09class: 'bouton';\x0a\x09\x09\x09with: 'Aide';\x0a\x09\x09\x09onClick: [ contenu asJQuery fadeToggle ].\x0a\x09\x09contenu := html div\x0a\x09\x09\x09class: 'contenu';\x0a\x09\x09\x09with: [ self renderContenuOn: html ]\x0a\x09\x09]",
+messageSends: ["renderOn:", "with:", "class:", "div", "onClick:", "fadeToggle", "asJQuery", "renderContenuOn:"],
 referencedClasses: []
 }),
 globals.FdJWidgetLegende);

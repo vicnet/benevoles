@@ -76,7 +76,7 @@ body {
     width: 60%;
 }
 .selectionneur .suite {
-    width: 30%;
+    width: 500px;
     padding: 5px;
     border: solid;
     border-radius: 10px;
@@ -85,6 +85,7 @@ body {
     display: none;
 }
 .selectionneur .benevole {
+    width: 500px;
     font-size: 120%;
     background: white;
     display: block;
@@ -152,12 +153,29 @@ body {
     background: lightgrey;
 }
 .legende {
-    background: rgb(240,240,240);
-    width: 15%;
-    height: 300px;
+/*    width: 15%;
+    height: 300px;*/
     float: right;
     margin: 0px;
     padding: 0px;
+}
+.legende .bouton {
+    transform-origin: 80% 80%;
+    transform: rotate(270deg);
+    border-color: black;
+    border: solid;
+    border-width: 1px;
+    padding: 5px;
+    border-radius: 10px;
+    float:left;
+    margin: -7px;
+    position: relative; z-index: 8;
+}
+.legende .contenu {
+    float:right;
+    background: rgb(240,240,240);
+    width: 270px;
+    position: relative; z-index: 9;
 }
 .legende .texte {
     font-size: 60%;

@@ -90,7 +90,7 @@ importeTShirts: rows
 	| tshirts key |
 	tshirts := FdJImporteur new importeTShirts: rows.
 	benevoles benevoles do: [ :b |
-		key := (b nom, ' ', b prenom).
+		key := (b nom, ' ', b prenom) asLowercase.
 		tshirts at: key ifPresent: [ :t |
 				b tshirt: (FdJTShirt at: t).
 				tshirts remove: key
@@ -329,7 +329,7 @@ association: uneAssoc
 
 correspond: unBenevole
 	"Retourne vrai si nom sans accent correspond"
-	^ (self indexDe: unBenevole nomSansAccent) = 1
+	^ (self indexDe: unBenevole identiteSansAccent) = 1
 !
 
 distribue
@@ -374,9 +374,30 @@ fromJSON: variables
 		ifAbsent: [ true ]
 !
 
+identiteSansAccent
+	nom ifNil: [ ^ '' ].
+	^ (nom, ' ', prenom) remplaceAvec: FdJApplication accents
+!
+
 indexDe: chaine
 	"Retourne l'index de la chaine dans le nom sans accent, 0 si chaine pas trouvée, "
-	^ (self nomSansAccent) indexOfSubString: chaine
+	^ (self identiteSansAccent) indexOfSubString: chaine
+!
+
+indexDes: chaines
+	| posPrenom posNom |
+	"Retourne l'index des chaines dans le nom sans accent, 0 si chaines pas trouvée, "
+	"si chaine seule, comme indexDe"
+	(chaines size = 1)
+		ifTrue: [ ^ self indexDe: (chaines at: 1) ].
+	"sinon test du prenom d'abord"
+	posPrenom := (self prenomSansAccent) indexOfSubString: (chaines at: 2).
+	(posPrenom = 0) ifTrue: [ ^ 0 ].
+	"si prenom ok, test le nom"
+	posNom := (self nomSansAccent) indexOfSubString: (chaines at: 1).
+	(posNom = 0) ifTrue: [ ^ 0 ].
+	"et renvoie la position dans le nom augmenté de la position dans le prenom"
+	^ (20*posNom) + posPrenom
 !
 
 inscrit: estInscrit
@@ -408,6 +429,11 @@ prenom
 
 prenom: chaine
 	prenom := chaine
+!
+
+prenomSansAccent
+	prenom ifNil: [ ^ '' ].
+	^ prenom remplaceAvec: FdJApplication accents
 !
 
 reinit
@@ -491,12 +517,12 @@ contient: unBenevole
 !
 
 filtre: texte max: max
-	| minus selection result |
+	| parties selection result |
 	texte isEmpty ifTrue: [ ^ #() ].
 	"teste le nom"
-	minus := texte sansAccent.
+	parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].
 	selection := liste collect: [ :b |
-		{ (b indexDe: minus). b }
+		{ (b indexDes: parties). b }
 	].
 	selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].
 	result := #().
@@ -611,7 +637,7 @@ importeBenevoles: rows
 !
 
 importeTShirt: row
-	^ (row at: 'Nom')
+	^ ((row at: 'Nom') asLowercase)
 		->
 	  (((row at: 'Cintré') ifEmpty: [ 'h' ] ifNotEmpty: [ 'f' ] )
 		, '-', ((row at: 'Taille') asLowercase)
@@ -864,8 +890,11 @@ benevole
 !
 
 renderAssociationOn: html
+	| nom |
+	nom := benevole association nom.
+	(nom size > 30) ifTrue: [ nom := (nom first: 30), '...' ].
 	html div class: 'association';
-		with: benevole association nom.
+			 with: nom.
 	self ajouteClasse: (benevole association nomSansAccent)
 !
 

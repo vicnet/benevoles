@@ -194,14 +194,15 @@ function $FdJImporteur(){return globals.FdJImporteur||(typeof FdJImporteur=="und
 function $FdJTShirt(){return globals.FdJTShirt||(typeof FdJTShirt=="undefined"?nil:FdJTShirt)}
 function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
+var $2,$1,$3,$4;
 tshirts=_st(_st($FdJImporteur())._new())._importeTShirts_(rows);
 _st(_st(self["@benevoles"])._benevoles())._do_((function(b){
 return smalltalk.withContext(function($ctx2) {
-$1=_st(_st(b)._nom()).__comma(" ");
+$2=_st(_st(b)._nom()).__comma(" ");
 $ctx2.sendIdx[","]=2;
-key=_st($1).__comma(_st(b)._prenom());
+$1=_st($2).__comma(_st(b)._prenom());
 $ctx2.sendIdx[","]=1;
+key=_st($1)._asLowercase();
 key;
 return _st(tshirts)._at_ifPresent_(key,(function(t){
 return smalltalk.withContext(function($ctx3) {
@@ -214,21 +215,21 @@ _st(tshirts)._ifNotEmpty_((function(){
 return smalltalk.withContext(function($ctx2) {
 _st($Transcript())._show_("TShirts non importés:");
 $ctx2.sendIdx["show:"]=1;
-$2=_st($Transcript())._cr();
+$3=_st($Transcript())._cr();
 $ctx2.sendIdx["cr"]=1;
-return $2;
+return $3;
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)})}));
 _st(_st(tshirts)._keys())._do_((function(b){
 return smalltalk.withContext(function($ctx2) {
 _st($Transcript())._show_("- ".__comma(b));
-$3=_st($Transcript())._cr();
-return $3;
+$4=_st($Transcript())._cr();
+return $4;
 }, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,4)})}));
 self._sauve();
 return self}, function($ctx1) {$ctx1.fill(self,"importeTShirts:",{rows:rows,tshirts:tshirts,key:key},globals.FdJApplication)})},
 args: ["rows"],
-source: "importeTShirts: rows\x0a\x09| tshirts key |\x0a\x09tshirts := FdJImporteur new importeTShirts: rows.\x0a\x09benevoles benevoles do: [ :b |\x0a\x09\x09key := (b nom, ' ', b prenom).\x0a\x09\x09tshirts at: key ifPresent: [ :t |\x0a\x09\x09\x09\x09b tshirt: (FdJTShirt at: t).\x0a\x09\x09\x09\x09tshirts remove: key\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09tshirts ifNotEmpty: [ Transcript show: 'TShirts non importés:'; cr ].\x0a\x09tshirts keys do: [ :b | Transcript show: ('- ', b);cr ].\x0a\x09self sauve",
-messageSends: ["importeTShirts:", "new", "do:", "benevoles", ",", "nom", "prenom", "at:ifPresent:", "tshirt:", "at:", "remove:", "ifNotEmpty:", "show:", "cr", "keys", "sauve"],
+source: "importeTShirts: rows\x0a\x09| tshirts key |\x0a\x09tshirts := FdJImporteur new importeTShirts: rows.\x0a\x09benevoles benevoles do: [ :b |\x0a\x09\x09key := (b nom, ' ', b prenom) asLowercase.\x0a\x09\x09tshirts at: key ifPresent: [ :t |\x0a\x09\x09\x09\x09b tshirt: (FdJTShirt at: t).\x0a\x09\x09\x09\x09tshirts remove: key\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09tshirts ifNotEmpty: [ Transcript show: 'TShirts non importés:'; cr ].\x0a\x09tshirts keys do: [ :b | Transcript show: ('- ', b);cr ].\x0a\x09self sauve",
+messageSends: ["importeTShirts:", "new", "do:", "benevoles", "asLowercase", ",", "nom", "prenom", "at:ifPresent:", "tshirt:", "at:", "remove:", "ifNotEmpty:", "show:", "cr", "keys", "sauve"],
 referencedClasses: ["FdJImporteur", "FdJTShirt", "Transcript"]
 }),
 globals.FdJApplication);
@@ -884,12 +885,12 @@ fn: function (unBenevole){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self._indexDe_(_st(unBenevole)._nomSansAccent())).__eq((1));
+$1=_st(self._indexDe_(_st(unBenevole)._identiteSansAccent())).__eq((1));
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"correspond:",{unBenevole:unBenevole},globals.FdJBenevole)})},
 args: ["unBenevole"],
-source: "correspond: unBenevole\x0a\x09\x22Retourne vrai si nom sans accent correspond\x22\x0a\x09^ (self indexDe: unBenevole nomSansAccent) = 1",
-messageSends: ["=", "indexDe:", "nomSansAccent"],
+source: "correspond: unBenevole\x0a\x09\x22Retourne vrai si nom sans accent correspond\x22\x0a\x09^ (self indexDe: unBenevole identiteSansAccent) = 1",
+messageSends: ["=", "indexDe:", "identiteSansAccent"],
 referencedClasses: []
 }),
 globals.FdJBenevole);
@@ -1050,18 +1051,87 @@ globals.FdJBenevole);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "identiteSansAccent",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $FdJApplication(){return globals.FdJApplication||(typeof FdJApplication=="undefined"?nil:FdJApplication)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$receiver;
+$1=self["@nom"];
+if(($receiver = $1) == null || $receiver.isNil){
+return "";
+} else {
+$1;
+};
+$3=_st(_st(self["@nom"]).__comma(" ")).__comma(self["@prenom"]);
+$ctx1.sendIdx[","]=1;
+$2=_st($3)._remplaceAvec_(_st($FdJApplication())._accents());
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"identiteSansAccent",{},globals.FdJBenevole)})},
+args: [],
+source: "identiteSansAccent\x0a\x09nom ifNil: [ ^ '' ].\x0a\x09^ (nom, ' ', prenom) remplaceAvec: FdJApplication accents",
+messageSends: ["ifNil:", "remplaceAvec:", ",", "accents"],
+referencedClasses: ["FdJApplication"]
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "indexDe:",
 protocol: 'accessing',
 fn: function (chaine){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=_st(self._nomSansAccent())._indexOfSubString_(chaine);
+$1=_st(self._identiteSansAccent())._indexOfSubString_(chaine);
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"indexDe:",{chaine:chaine},globals.FdJBenevole)})},
 args: ["chaine"],
-source: "indexDe: chaine\x0a\x09\x22Retourne l'index de la chaine dans le nom sans accent, 0 si chaine pas trouvée, \x22\x0a\x09^ (self nomSansAccent) indexOfSubString: chaine",
-messageSends: ["indexOfSubString:", "nomSansAccent"],
+source: "indexDe: chaine\x0a\x09\x22Retourne l'index de la chaine dans le nom sans accent, 0 si chaine pas trouvée, \x22\x0a\x09^ (self identiteSansAccent) indexOfSubString: chaine",
+messageSends: ["indexOfSubString:", "identiteSansAccent"],
+referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "indexDes:",
+protocol: 'accessing',
+fn: function (chaines){
+var self=this;
+var posPrenom,posNom;
+return smalltalk.withContext(function($ctx1) { 
+var $1,$3,$2,$4,$5,$6,$7,$8;
+$1=_st(_st(chaines)._size()).__eq((1));
+$ctx1.sendIdx["="]=1;
+if(smalltalk.assert($1)){
+$3=_st(chaines)._at_((1));
+$ctx1.sendIdx["at:"]=1;
+$2=self._indexDe_($3);
+return $2;
+};
+$4=self._prenomSansAccent();
+$5=_st(chaines)._at_((2));
+$ctx1.sendIdx["at:"]=2;
+posPrenom=_st($4)._indexOfSubString_($5);
+$ctx1.sendIdx["indexOfSubString:"]=1;
+$6=_st(posPrenom).__eq((0));
+$ctx1.sendIdx["="]=2;
+if(smalltalk.assert($6)){
+return (0);
+};
+posNom=_st(self._nomSansAccent())._indexOfSubString_(_st(chaines)._at_((1)));
+$7=_st(posNom).__eq((0));
+if(smalltalk.assert($7)){
+return (0);
+};
+$8=_st((20).__star(posNom)).__plus(posPrenom);
+return $8;
+}, function($ctx1) {$ctx1.fill(self,"indexDes:",{chaines:chaines,posPrenom:posPrenom,posNom:posNom},globals.FdJBenevole)})},
+args: ["chaines"],
+source: "indexDes: chaines\x0a\x09| posPrenom posNom |\x0a\x09\x22Retourne l'index des chaines dans le nom sans accent, 0 si chaines pas trouvée, \x22\x0a\x09\x22si chaine seule, comme indexDe\x22\x0a\x09(chaines size = 1)\x0a\x09\x09ifTrue: [ ^ self indexDe: (chaines at: 1) ].\x0a\x09\x22sinon test du prenom d'abord\x22\x0a\x09posPrenom := (self prenomSansAccent) indexOfSubString: (chaines at: 2).\x0a\x09(posPrenom = 0) ifTrue: [ ^ 0 ].\x0a\x09\x22si prenom ok, test le nom\x22\x0a\x09posNom := (self nomSansAccent) indexOfSubString: (chaines at: 1).\x0a\x09(posNom = 0) ifTrue: [ ^ 0 ].\x0a\x09\x22et renvoie la position dans le nom augmenté de la position dans le prenom\x22\x0a\x09^ (20*posNom) + posPrenom",
+messageSends: ["ifTrue:", "=", "size", "indexDe:", "at:", "indexOfSubString:", "prenomSansAccent", "nomSansAccent", "+", "*"],
 referencedClasses: []
 }),
 globals.FdJBenevole);
@@ -1184,6 +1254,31 @@ args: ["chaine"],
 source: "prenom: chaine\x0a\x09prenom := chaine",
 messageSends: [],
 referencedClasses: []
+}),
+globals.FdJBenevole);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "prenomSansAccent",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $FdJApplication(){return globals.FdJApplication||(typeof FdJApplication=="undefined"?nil:FdJApplication)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$2,$receiver;
+$1=self["@prenom"];
+if(($receiver = $1) == null || $receiver.isNil){
+return "";
+} else {
+$1;
+};
+$2=_st(self["@prenom"])._remplaceAvec_(_st($FdJApplication())._accents());
+return $2;
+}, function($ctx1) {$ctx1.fill(self,"prenomSansAccent",{},globals.FdJBenevole)})},
+args: [],
+source: "prenomSansAccent\x0a\x09prenom ifNil: [ ^ '' ].\x0a\x09^ prenom remplaceAvec: FdJApplication accents",
+messageSends: ["ifNil:", "remplaceAvec:", "accents"],
+referencedClasses: ["FdJApplication"]
 }),
 globals.FdJBenevole);
 
@@ -1446,7 +1541,7 @@ selector: "filtre:max:",
 protocol: 'as yet unclassified',
 fn: function (texte,max){
 var self=this;
-var minus,selection,result;
+var parties,selection,result;
 return smalltalk.withContext(function($ctx1) { 
 var $1,$2,$3,$4,$7,$6,$9,$8,$5,$10,$11,$12;
 var $early={};
@@ -1456,11 +1551,15 @@ if(smalltalk.assert($1)){
 $2=[];
 return $2;
 };
-minus=_st(texte)._sansAccent();
+parties=_st(_st(texte)._tokenize_(" "))._collect_((function(p){
+return smalltalk.withContext(function($ctx2) {
+return _st(p)._sansAccent();
+}, function($ctx2) {$ctx2.fillBlock({p:p},$ctx1,2)})}));
+$ctx1.sendIdx["collect:"]=1;
 selection=_st(self["@liste"])._collect_((function(b){
 return smalltalk.withContext(function($ctx2) {
-return [_st(b)._indexDe_(minus),b];
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,2)})}));
+return [_st(b)._indexDes_(parties),b];
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,3)})}));
 _st(selection)._sort_((function(a,b){
 return smalltalk.withContext(function($ctx2) {
 $3=_st(a)._at_((1));
@@ -1468,7 +1567,7 @@ $ctx2.sendIdx["at:"]=1;
 $4=_st(b)._at_((1));
 $ctx2.sendIdx["at:"]=2;
 return _st($3).__lt_eq($4);
-}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,3)})}));
+}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,4)})}));
 result=[];
 _st(selection)._do_((function(s){
 return smalltalk.withContext(function($ctx2) {
@@ -1487,15 +1586,15 @@ $11=result;
 throw $early=[$11];
 };
 };
-}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,4)})}));
+}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,5)})}));
 $12=result;
 return $12;
 }
 catch(e) {if(e===$early)return e[0]; throw e}
-}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,minus:minus,selection:selection,result:result},globals.FdJBenevoles)})},
+}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,parties:parties,selection:selection,result:result},globals.FdJBenevoles)})},
 args: ["texte", "max"],
-source: "filtre: texte max: max\x0a\x09| minus selection result |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09minus := texte sansAccent.\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09{ (b indexDe: minus). b }\x0a\x09].\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
-messageSends: ["ifTrue:", "isEmpty", "sansAccent", "collect:", "indexDe:", "sort:", "<=", "at:", "do:", "&", ">", "estDisponible", "add:", ">=", "size"],
+source: "filtre: texte max: max\x0a\x09| parties selection result |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09{ (b indexDes: parties). b }\x0a\x09].\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
+messageSends: ["ifTrue:", "isEmpty", "collect:", "tokenize:", "sansAccent", "indexDes:", "sort:", "<=", "at:", "do:", "&", ">", "estDisponible", "add:", ">=", "size"],
 referencedClasses: []
 }),
 globals.FdJBenevoles);
@@ -1825,32 +1924,34 @@ protocol: 'as yet unclassified',
 fn: function (row){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $2,$7,$6,$5,$9,$8,$4,$3,$1;
-$2=_st(row)._at_("Nom");
+var $3,$2,$8,$7,$6,$10,$9,$5,$4,$1;
+$3=_st(row)._at_("Nom");
 $ctx1.sendIdx["at:"]=1;
-$7=_st(row)._at_("Cintré");
+$2=_st($3)._asLowercase();
+$ctx1.sendIdx["asLowercase"]=1;
+$8=_st(row)._at_("Cintré");
 $ctx1.sendIdx["at:"]=2;
-$6=_st($7)._ifEmpty_ifNotEmpty_((function(){
+$7=_st($8)._ifEmpty_ifNotEmpty_((function(){
 return "h";
 }),(function(){
 return "f";
 }));
-$5=_st($6).__comma("-");
-$9=_st(row)._at_("Taille");
+$6=_st($7).__comma("-");
+$10=_st(row)._at_("Taille");
 $ctx1.sendIdx["at:"]=3;
-$8=_st($9)._asLowercase();
-$4=_st($5).__comma($8);
+$9=_st($10)._asLowercase();
+$5=_st($6).__comma($9);
 $ctx1.sendIdx[","]=2;
-$3=_st($4).__comma(_st(_st(row)._at_("LSF"))._ifNotEmpty_((function(){
+$4=_st($5).__comma(_st(_st(row)._at_("LSF"))._ifNotEmpty_((function(){
 return "-lsf";
 })));
 $ctx1.sendIdx[","]=1;
-$1=_st($2).__minus_gt($3);
+$1=_st($2).__minus_gt($4);
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"importeTShirt:",{row:row},globals.FdJImporteur)})},
 args: ["row"],
-source: "importeTShirt: row\x0a\x09^ (row at: 'Nom')\x0a\x09\x09->\x0a\x09  (((row at: 'Cintré') ifEmpty: [ 'h' ] ifNotEmpty: [ 'f' ] )\x0a\x09\x09, '-', ((row at: 'Taille') asLowercase)\x0a\x09\x09, ((row at: 'LSF') ifNotEmpty: [ '-lsf' ])\x0a\x09\x09)",
-messageSends: ["->", "at:", ",", "ifEmpty:ifNotEmpty:", "asLowercase", "ifNotEmpty:"],
+source: "importeTShirt: row\x0a\x09^ ((row at: 'Nom') asLowercase)\x0a\x09\x09->\x0a\x09  (((row at: 'Cintré') ifEmpty: [ 'h' ] ifNotEmpty: [ 'f' ] )\x0a\x09\x09, '-', ((row at: 'Taille') asLowercase)\x0a\x09\x09, ((row at: 'LSF') ifNotEmpty: [ '-lsf' ])\x0a\x09\x09)",
+messageSends: ["->", "asLowercase", "at:", ",", "ifEmpty:ifNotEmpty:", "ifNotEmpty:"],
 referencedClasses: []
 }),
 globals.FdJImporteur);
@@ -2675,20 +2776,25 @@ selector: "renderAssociationOn:",
 protocol: 'rendering',
 fn: function (html){
 var self=this;
+var nom;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$5,$4,$2;
-$1=_st(html)._div();
-_st($1)._class_("association");
-$3=$1;
-$5=_st(self["@benevole"])._association();
+var $1,$2,$3,$4;
+$1=_st(self["@benevole"])._association();
 $ctx1.sendIdx["association"]=1;
-$4=_st($5)._nom();
-$2=_st($3)._with_($4);
+nom=_st($1)._nom();
+$2=_st(_st(nom)._size()).__gt((30));
+if(smalltalk.assert($2)){
+nom=_st(_st(nom)._first_((30))).__comma("...");
+nom;
+};
+$3=_st(html)._div();
+_st($3)._class_("association");
+$4=_st($3)._with_(nom);
 self._ajouteClasse_(_st(_st(self["@benevole"])._association())._nomSansAccent());
-return self}, function($ctx1) {$ctx1.fill(self,"renderAssociationOn:",{html:html},globals.FdJWidgetBenevole)})},
+return self}, function($ctx1) {$ctx1.fill(self,"renderAssociationOn:",{html:html,nom:nom},globals.FdJWidgetBenevole)})},
 args: ["html"],
-source: "renderAssociationOn: html\x0a\x09html div class: 'association';\x0a\x09\x09with: benevole association nom.\x0a\x09self ajouteClasse: (benevole association nomSansAccent)",
-messageSends: ["class:", "div", "with:", "nom", "association", "ajouteClasse:", "nomSansAccent"],
+source: "renderAssociationOn: html\x0a\x09| nom |\x0a\x09nom := benevole association nom.\x0a\x09(nom size > 30) ifTrue: [ nom := (nom first: 30), '...' ].\x0a\x09html div class: 'association';\x0a\x09\x09\x09 with: nom.\x0a\x09self ajouteClasse: (benevole association nomSansAccent)",
+messageSends: ["nom", "association", "ifTrue:", ">", "size", ",", "first:", "class:", "div", "with:", "ajouteClasse:", "nomSansAccent"],
 referencedClasses: []
 }),
 globals.FdJWidgetBenevole);

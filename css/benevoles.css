@@ -6,7 +6,7 @@ body {
     margin:0px;
 }
 .benevoles {
-    width: 80%;
+    width: 75%;
     float: left;
 }
 .benevole {
@@ -16,6 +16,7 @@ body {
     border-radius: 10px;
     font-size: 200%;
     display: inline-block;
+    background: white;
 }
 .benevole .prenom {
     display: inline;

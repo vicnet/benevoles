@@ -694,8 +694,8 @@ existe: objet
 !
 
 initialize
-	"stockage := localStorage"
-	stockage := sessionStorage
+	stockage := localStorage
+	"stockage := sessionStorage"
 !
 
 jsonPour: objet

@@ -2106,10 +2106,10 @@ selector: "initialize",
 protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
-self["@stockage"]=sessionStorage;
+self["@stockage"]=localStorage;
 return self},
 args: [],
-source: "initialize\x0a\x09\x22stockage := localStorage\x22\x0a\x09stockage := sessionStorage",
+source: "initialize\x0a\x09stockage := localStorage\x0a\x09\x22stockage := sessionStorage\x22",
 messageSends: [],
 referencedClasses: []
 }),

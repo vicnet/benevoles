@@ -446,6 +446,22 @@ referencedClasses: []
 }),
 globals.FdJApplication.klass);
 
+smalltalk.addMethod(
+smalltalk.method({
+selector: "open",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self._new();
+return self}, function($ctx1) {$ctx1.fill(self,"open",{},globals.FdJApplication.klass)})},
+args: [],
+source: "open\x0a\x09self new",
+messageSends: ["new"],
+referencedClasses: []
+}),
+globals.FdJApplication.klass);
+
 
 smalltalk.addClass('FdJAssociation', globals.Object, ['nom', 'logo'], 'Benevoles');
 smalltalk.addMethod(
@@ -1541,9 +1557,9 @@ selector: "filtre:max:",
 protocol: 'as yet unclassified',
 fn: function (texte,max){
 var self=this;
-var parties,selection,result;
+var parties,selection,result,valeur;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3,$4,$7,$6,$9,$8,$5,$10,$11,$12;
+var $1,$2,$3,$4,$5,$8,$7,$10,$9,$6,$11,$12,$13;
 var $early={};
 try {
 $1=_st(texte)._isEmpty();
@@ -1558,43 +1574,51 @@ return _st(p)._sansAccent();
 $ctx1.sendIdx["collect:"]=1;
 selection=_st(self["@liste"])._collect_((function(b){
 return smalltalk.withContext(function($ctx2) {
-return [_st(b)._indexDes_(parties),b];
+valeur=_st(b)._indexDes_(parties);
+valeur;
+$3=_st(_st(valeur).__tild_eq((0))).__and(_st(_st(b)._estInscrit())._not());
+$ctx2.sendIdx["&"]=1;
+if(smalltalk.assert($3)){
+valeur=_st(valeur).__plus((100));
+valeur;
+};
+return [valeur,b];
 }, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,3)})}));
 _st(selection)._sort_((function(a,b){
 return smalltalk.withContext(function($ctx2) {
-$3=_st(a)._at_((1));
+$4=_st(a)._at_((1));
 $ctx2.sendIdx["at:"]=1;
-$4=_st(b)._at_((1));
+$5=_st(b)._at_((1));
 $ctx2.sendIdx["at:"]=2;
-return _st($3).__lt_eq($4);
-}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,4)})}));
+return _st($4).__lt_eq($5);
+}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,5)})}));
 result=[];
 _st(selection)._do_((function(s){
 return smalltalk.withContext(function($ctx2) {
-$7=_st(s)._at_((1));
+$8=_st(s)._at_((1));
 $ctx2.sendIdx["at:"]=3;
-$6=_st($7).__gt((0));
-$9=_st(s)._at_((2));
+$7=_st($8).__gt((0));
+$10=_st(s)._at_((2));
 $ctx2.sendIdx["at:"]=4;
-$8=_st($9)._estDisponible();
-$5=_st($6).__and($8);
-if(smalltalk.assert($5)){
+$9=_st($10)._estDisponible();
+$6=_st($7).__and($9);
+if(smalltalk.assert($6)){
 _st(result)._add_(_st(s)._at_((2)));
-$10=_st(_st(result)._size()).__gt_eq(max);
-if(smalltalk.assert($10)){
-$11=result;
-throw $early=[$11];
-};
-};
-}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,5)})}));
+$11=_st(_st(result)._size()).__gt_eq(max);
+if(smalltalk.assert($11)){
 $12=result;
-return $12;
+throw $early=[$12];
+};
+};
+}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,6)})}));
+$13=result;
+return $13;
 }
 catch(e) {if(e===$early)return e[0]; throw e}
-}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,parties:parties,selection:selection,result:result},globals.FdJBenevoles)})},
+}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,parties:parties,selection:selection,result:result,valeur:valeur},globals.FdJBenevoles)})},
 args: ["texte", "max"],
-source: "filtre: texte max: max\x0a\x09| parties selection result |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09{ (b indexDes: parties). b }\x0a\x09].\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
-messageSends: ["ifTrue:", "isEmpty", "collect:", "tokenize:", "sansAccent", "indexDes:", "sort:", "<=", "at:", "do:", "&", ">", "estDisponible", "add:", ">=", "size"],
+source: "filtre: texte max: max\x0a\x09| parties selection result valeur |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09valeur := b indexDes: parties.\x0a\x09\x09(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].\x0a\x09\x09{ valeur. b }\x0a\x09].\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
+messageSends: ["ifTrue:", "isEmpty", "collect:", "tokenize:", "sansAccent", "indexDes:", "&", "~=", "not", "estInscrit", "+", "sort:", "<=", "at:", "do:", ">", "estDisponible", "add:", ">=", "size"],
 referencedClasses: []
 }),
 globals.FdJBenevoles);
@@ -1885,13 +1909,18 @@ $3=_st(row)._at_("Nom");
 $ctx1.sendIdx["at:"]=1;
 $2=globals.HashedCollection._newFromPairs_(["nom",$3,"prenom",_st(row)._at_("Prénom"),"assoc",_st(row)._at_ifAbsent_("Association",(function(){
 return "Festival";
+})),"inscrit",_st(row)._at_ifPresent_ifAbsent_("Inscrit",(function(r){
+return smalltalk.withContext(function($ctx2) {
+return _st(r)._isEmpty();
+}, function($ctx2) {$ctx2.fillBlock({r:r},$ctx1,2)})}),(function(){
+return true;
 }))]);
 $1=_st($FdJStockage())._charge_depuis_($FdJBenevole(),$2);
 return $1;
 }, function($ctx1) {$ctx1.fill(self,"importeBenevole:",{row:row},globals.FdJImporteur)})},
 args: ["row"],
-source: "importeBenevole: row\x0a\x09^ FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (row at: 'Nom').\x0a\x09\x09'prenom' -> (row at: 'Prénom').\x0a\x09\x09'assoc' -> (row at: 'Association' ifAbsent: [ 'Festival'])\x0a\x09\x09}",
-messageSends: ["charge:depuis:", "at:", "at:ifAbsent:"],
+source: "importeBenevole: row\x0a\x09^ FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (row at: 'Nom').\x0a\x09\x09'prenom' -> (row at: 'Prénom').\x0a\x09\x09'assoc' -> (row at: 'Association' ifAbsent: [ 'Festival']).\x0a\x09\x09'inscrit' -> (row at: 'Inscrit'\x0a\x09\x09\x09\x09\x09\x09  ifPresent: [ :r | r isEmpty ]\x0a\x09\x09\x09\x09\x09  \x09  ifAbsent: [ true ])\x0a\x09\x09}",
+messageSends: ["charge:depuis:", "at:", "at:ifAbsent:", "at:ifPresent:ifAbsent:", "isEmpty"],
 referencedClasses: ["FdJStockage", "FdJBenevole"]
 }),
 globals.FdJImporteur);
@@ -3245,7 +3274,7 @@ protocol: 'as yet unclassified',
 fn: function (html,benevole){
 var self=this;
 return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$4,$3,$6,$7,$5;
+var $1,$2,$4,$3,$6,$8,$7,$9,$5;
 $1=_st(html)._div();
 $ctx1.sendIdx["div"]=1;
 $2=$1;
@@ -3267,16 +3296,21 @@ return self._renderIdentiteOn_texte_(html,t);
 return smalltalk.withContext(function($ctx4) {
 return self._renderIdentiteOn_(html);
 }, function($ctx4) {$ctx4.fillBlock({},$ctx3,4)})}));
-return self._renderAssociationOn_texte_(html,_st(benevole)._at_("assoc"));
+$8=_st(benevole)._at_("assoc");
+$ctx3.sendIdx["at:"]=2;
+return self._renderAssociationOn_texte_(html,$8);
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
 $7;
+$9=_st(_st(benevole)._at_("type")).__eq("auteur");
+if(! smalltalk.assert($9)){
 return self._renderTShirtOn_(html);
+};
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
 $ctx1.sendIdx["with:"]=1;
 return self}, function($ctx1) {$ctx1.fill(self,"renderBenevoleOn:type:",{html:html,benevole:benevole},globals.FdJWidgetLegende)})},
 args: ["html", "benevole"],
-source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09self renderTShirtOn: html ]",
-messageSends: ["class:", "div", ",", "at:", "with:", "at:ifPresent:ifAbsent:", "renderIdentiteOn:texte:", "renderIdentiteOn:", "renderAssociationOn:texte:", "renderTShirtOn:"],
+source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09((benevole at: #type) = 'auteur') ifFalse: [\x0a\x09\x09\x09self renderTShirtOn: html ]\x0a\x09\x09]",
+messageSends: ["class:", "div", ",", "at:", "with:", "at:ifPresent:ifAbsent:", "renderIdentiteOn:texte:", "renderIdentiteOn:", "renderAssociationOn:texte:", "ifFalse:", "=", "renderTShirtOn:"],
 referencedClasses: []
 }),
 globals.FdJWidgetLegende);

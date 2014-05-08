@@ -193,6 +193,10 @@ accents
 			'-' -> ''
 		}
 	]
+!
+
+open
+	self new
 ! !
 
 Object subclass: #FdJAssociation
@@ -517,12 +521,14 @@ contient: unBenevole
 !
 
 filtre: texte max: max
-	| parties selection result |
+	| parties selection result valeur |
 	texte isEmpty ifTrue: [ ^ #() ].
 	"teste le nom"
 	parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].
 	selection := liste collect: [ :b |
-		{ (b indexDes: parties). b }
+		valeur := b indexDes: parties.
+		(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].
+		{ valeur. b }
 	].
 	selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].
 	result := #().
@@ -628,7 +634,10 @@ importeBenevole: row
 	^ FdJStockage charge: FdJBenevole depuis: #{
 		'nom' -> (row at: 'Nom').
 		'prenom' -> (row at: 'Prénom').
-		'assoc' -> (row at: 'Association' ifAbsent: [ 'Festival'])
+		'assoc' -> (row at: 'Association' ifAbsent: [ 'Festival']).
+		'inscrit' -> (row at: 'Inscrit'
+						  ifPresent: [ :r | r isEmpty ]
+					  	  ifAbsent: [ true ])
 		}
 !
 
@@ -1044,7 +1053,9 @@ renderBenevoleOn: html type: benevole
 			self renderAssociationOn: html
 				texte: (benevole at: #assoc)
 			].
-		self renderTShirtOn: html ]
+		((benevole at: #type) = 'auteur') ifFalse: [
+			self renderTShirtOn: html ]
+		]
 !
 
 renderContenuOn: html

@@ -1722,6 +1722,71 @@ globals.FdJBenevoles.klass);
 smalltalk.addClass('FdJHistorique', globals.Object, ['liste'], 'Benevoles');
 smalltalk.addMethod(
 smalltalk.method({
+selector: "affiche",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+var date,sdate;
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+function $Date(){return globals.Date||(typeof Date=="undefined"?nil:Date)}
+return smalltalk.withContext(function($ctx1) { 
+var $1,$11,$10,$12,$9,$8,$13,$7,$6,$14,$5,$4,$15,$3,$2,$17,$16,$18;
+_st($Transcript())._clear();
+_st(self["@liste"])._do_((function(e){
+return smalltalk.withContext(function($ctx2) {
+$1=_st(e)._at_("date");
+$ctx2.sendIdx["at:"]=1;
+date=_st($Date())._new_($1);
+date;
+$11=_st(_st(date)._dayOfMonth())._asString();
+$ctx2.sendIdx["asString"]=1;
+$10=_st($11).__comma("/");
+$ctx2.sendIdx[","]=10;
+$12=_st(_st(date)._month())._asString();
+$ctx2.sendIdx["asString"]=2;
+$9=_st($10).__comma($12);
+$ctx2.sendIdx[","]=9;
+$8=_st($9).__comma("/");
+$ctx2.sendIdx[","]=8;
+$13=_st(_st(date)._year())._asString();
+$ctx2.sendIdx["asString"]=3;
+$7=_st($8).__comma($13);
+$ctx2.sendIdx[","]=7;
+$6=_st($7).__comma(" ");
+$ctx2.sendIdx[","]=6;
+$14=_st(_st(date)._hours())._asString();
+$ctx2.sendIdx["asString"]=4;
+$5=_st($6).__comma($14);
+$ctx2.sendIdx[","]=5;
+$4=_st($5).__comma(":");
+$ctx2.sendIdx[","]=4;
+$15=_st(_st(date)._minutes())._asString();
+$ctx2.sendIdx["asString"]=5;
+$3=_st($4).__comma($15);
+$ctx2.sendIdx[","]=3;
+$2=_st($3).__comma(":");
+$ctx2.sendIdx[","]=2;
+sdate=_st($2).__comma(_st(_st(date)._seconds())._asString());
+$ctx2.sendIdx[","]=1;
+sdate;
+$17=_st(_st(sdate).__comma(",")).__comma(_st(e)._at_("evennement"));
+$ctx2.sendIdx[","]=12;
+$16=_st($17).__comma("'");
+$ctx2.sendIdx[","]=11;
+_st($Transcript())._show_($16);
+$18=_st($Transcript())._cr();
+return $18;
+}, function($ctx2) {$ctx2.fillBlock({e:e},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"affiche",{date:date,sdate:sdate},globals.FdJHistorique)})},
+args: [],
+source: "affiche\x0a\x09| date sdate |\x0a\x09Transcript clear.\x0a\x09liste do: [ :e |\x0a\x09\x09date := Date new: (e at: 'date').\x0a\x09\x09sdate :=\x0a\x09\x09\x09  date dayOfMonth asString, '/', date month asString, '/', date year asString\x0a\x09\x09\x09, ' '\x0a\x09\x09\x09, date hours asString, ':', date minutes asString, ':', date seconds asString.\x0a\x09\x09Transcript show: sdate, ',', (e at: 'evennement'), '''';cr ]",
+messageSends: ["clear", "do:", "new:", "at:", ",", "asString", "dayOfMonth", "month", "year", "hours", "minutes", "seconds", "show:", "cr"],
+referencedClasses: ["Transcript", "Date"]
+}),
+globals.FdJHistorique);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "ajoute:",
 protocol: 'as yet unclassified',
 fn: function (texte){

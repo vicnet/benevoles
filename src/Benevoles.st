@@ -571,6 +571,18 @@ Object subclass: #FdJHistorique
 
 !FdJHistorique methodsFor: 'as yet unclassified'!
 
+affiche
+	| date sdate |
+	Transcript clear.
+	liste do: [ :e |
+		date := Date new: (e at: 'date').
+		sdate :=
+			  date dayOfMonth asString, '/', date month asString, '/', date year asString
+			, ' '
+			, date hours asString, ':', date minutes asString, ':', date seconds asString.
+		Transcript show: sdate, ',', (e at: 'evennement'), '''';cr ]
+!
+
 ajoute: texte
 	liste add: #{
 			'date' -> Date now asString.

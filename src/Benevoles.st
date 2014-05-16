@@ -303,6 +303,16 @@ Object subclass: #FdJBenevole
 
 !FdJBenevole methodsFor: 'accessing'!
 
+affiche
+	Transcript show:
+		        nom, ',', prenom
+		, ',',  assoc nom
+		, ',', (tshirt ifNil: [ '' ] ifNotNil: [ :t | t id ])
+		, ',', (etat ifNil: [ '' ])
+		, ',', inscrit
+		; cr
+!
+
 annonce
 	self annonceur announce: (FdJBenevoleChangeEtat new benevole: self; yourself)
 !

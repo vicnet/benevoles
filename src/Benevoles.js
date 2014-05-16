@@ -1,4 +1,5 @@
-define("benevoles/Benevoles", ["amber_vm/smalltalk", "amber_vm/nil", "amber_vm/_st", "amber_vm/globals", "amber_core/Kernel-Objects", "amber_core/Kernel-Announcements", "amber_core/Web", "amber_core/Kernel-Collections"], function(smalltalk,nil,_st, globals){
+define("benevoles/Benevoles", ["amber/boot", "amber_core/Kernel-Objects", "amber_core/Kernel-Announcements", "amber_core/Web", "amber_core/Kernel-Collections"], function($boot){
+var smalltalk=$boot.vm,nil=$boot.nil,_st=$boot.asReceiver,globals=$boot.globals;
 smalltalk.addPackage('Benevoles');
 smalltalk.packages["Benevoles"].transport = {"type":"amd","amdNamespace":"benevoles"};
 
@@ -779,6 +780,57 @@ globals.FdJAssociations.klass);
 
 smalltalk.addClass('FdJBenevole', globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'etat', 'inscrit'], 'Benevoles');
 globals.FdJBenevole.comment="- tshirt: un TShirt\x0a- etat: pas encore venu, en cours de traitement, terminé";
+smalltalk.addMethod(
+smalltalk.method({
+selector: "affiche",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+function $Transcript(){return globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+return smalltalk.withContext(function($ctx1) { 
+var $9,$8,$7,$6,$11,$10,$5,$4,$13,$12,$3,$2,$1,$14,$receiver;
+$9=_st(_st(self["@nom"]).__comma(",")).__comma(self["@prenom"]);
+$ctx1.sendIdx[","]=9;
+$8=_st($9).__comma(",");
+$ctx1.sendIdx[","]=8;
+$7=_st($8).__comma(_st(self["@assoc"])._nom());
+$ctx1.sendIdx[","]=7;
+$6=_st($7).__comma(",");
+$ctx1.sendIdx[","]=6;
+$11=self["@tshirt"];
+if(($receiver = $11) == null || $receiver.isNil){
+$10="";
+} else {
+var t;
+t=$receiver;
+$10=_st(t)._id();
+};
+$5=_st($6).__comma($10);
+$ctx1.sendIdx[","]=5;
+$4=_st($5).__comma(",");
+$ctx1.sendIdx[","]=4;
+$13=self["@etat"];
+if(($receiver = $13) == null || $receiver.isNil){
+$12="";
+} else {
+$12=$13;
+};
+$3=_st($4).__comma($12);
+$ctx1.sendIdx[","]=3;
+$2=_st($3).__comma(",");
+$ctx1.sendIdx[","]=2;
+$1=_st($2).__comma(self["@inscrit"]);
+$ctx1.sendIdx[","]=1;
+_st($Transcript())._show_($1);
+$14=_st($Transcript())._cr();
+return self}, function($ctx1) {$ctx1.fill(self,"affiche",{},globals.FdJBenevole)})},
+args: [],
+source: "affiche\x0a\x09Transcript show:\x0a\x09\x09        nom, ',', prenom\x0a\x09\x09, ',',  assoc nom\x0a\x09\x09, ',', (tshirt ifNil: [ '' ] ifNotNil: [ :t | t id ])\x0a\x09\x09, ',', (etat ifNil: [ '' ])\x0a\x09\x09, ',', inscrit\x0a\x09\x09; cr",
+messageSends: ["show:", ",", "nom", "ifNil:ifNotNil:", "id", "ifNil:", "cr"],
+referencedClasses: ["Transcript"]
+}),
+globals.FdJBenevole);
+
 smalltalk.addMethod(
 smalltalk.method({
 selector: "annonce",

@@ -1,1 +1,15 @@
-bower_components
+# Ignoring test runner
+test_runner.js
+
+# Ignoring local NPM modules
+node_modules/
+
+# Ignoring local bower modules
+bower_components/
+
+# Ignoring place dedicated to hand-cloned user modules
+/my/
+
+# Other generated or transient files
+config.js
+the.js

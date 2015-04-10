@@ -1,0 +1,37 @@
+{
+    "name": "benevoles",
+    "description": "Amber Smalltalk Application to manage volunteers at the Toulouse boardgame festival",
+    "version": "0.2.0",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "/*.js",
+        "/*.html",
+        "test",
+        "tests"
+    ],
+    "authors": [
+        {
+            "name": "Vicnet",
+            "email": "vo.publique@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/vicnet/benevoles",
+    "keywords": [
+        "Amber",
+        "Smalltalk"
+    ],
+    "license": [
+        "MIT"
+    ],
+    "private": false,
+    "dependencies": {
+        "amber": "^0.14.13"
+    },
+    "devDependencies": {
+        "amber-ide-starter-dialog": "^0.1.0",
+        "amber-contrib-legacy": "^0.2.0",
+        "helios": "^0.4.0"
+    }
+}

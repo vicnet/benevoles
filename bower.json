@@ -28,8 +28,7 @@
   "private": false,
   "dependencies": {
     "amber": "^0.14.13",
-    "papaparse": "~4.1.0",
-    "silk": "git://github.com/herby/silk#~0.1.2"
+    "papaparse": "~4.1.0"
   },
   "devDependencies": {
     "amber-ide-starter-dialog": "^0.1.0",

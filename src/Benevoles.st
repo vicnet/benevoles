@@ -72,8 +72,8 @@ importe: texte
 	imp := FdJImporteur new.
 	results := imp importe: texte.
 
-	fields := results fields.
-	rows := results rows.
+	fields := results meta fields.
+	rows := results data.
 
 	(fields includes: 'Taille')
 		ifTrue: [ ^ self importeTShirts: rows ].
@@ -635,10 +635,10 @@ Object subclass: #FdJImporteur
 
 importe: texte
 	| tous fields rows |
-	tous := jQuery
+	tous := Papa
 		parse: texte
 		config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.
-	^ tous results
+	^ tous
 !
 
 importeAssociation: row

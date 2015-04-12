@@ -241,8 +241,8 @@ return $core.withContext(function($ctx1) {
 var $1,$2,$3;
 imp=$recv($FdJImporteur())._new();
 results=$recv(imp)._importe_(texte);
-fields=$recv(results)._fields();
-rows=$recv(results)._rows();
+fields=$recv($recv(results)._meta())._fields();
+rows=$recv(results)._data();
 $1=$recv(fields)._includes_("Taille");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["includes:"]=1;
@@ -265,10 +265,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results fields.\x0a\x09rows := results rows.\x0a\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ ^ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09benevoles ajouteUnique: (imp importeBenevoles: rows).\x0a\x09self sauve.",
+source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results meta fields.\x0a\x09rows := results data.\x0a\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ ^ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09benevoles ajouteUnique: (imp importeBenevoles: rows).\x0a\x09self sauve.",
 referencedClasses: ["FdJImporteur", "FdJStockage", "FdJAssociations"],
 //>>excludeEnd("ide");
-messageSends: ["new", "importe:", "fields", "rows", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "ajouteUnique:", "importeBenevoles:", "sauve"]
+messageSends: ["new", "importe:", "fields", "meta", "data", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "ajouteUnique:", "importeBenevoles:", "sauve"]
 }),
 $globals.FdJApplication);
 
@@ -2821,12 +2821,13 @@ protocol: 'as yet unclassified',
 fn: function (texte){
 var self=this;
 var tous,fields,rows;
+function $Papa(){return $globals.Papa||(typeof Papa=="undefined"?nil:Papa)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1;
-tous=$recv(jQuery)._parse_config_(texte,$globals.HashedCollection._newFromPairs_(["delimiter",",","header",true,"dynamicTyping",false]));
-$1=$recv(tous)._results();
+tous=$recv($Papa())._parse_config_(texte,$globals.HashedCollection._newFromPairs_(["delimiter",",","header",true,"dynamicTyping",false]));
+$1=tous;
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,tous:tous,fields:fields,rows:rows},$globals.FdJImporteur)});
@@ -2834,10 +2835,10 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "importe: texte\x0a\x09| tous fields rows |\x0a\x09tous := jQuery\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.\x0a\x09^ tous results",
-referencedClasses: [],
+source: "importe: texte\x0a\x09| tous fields rows |\x0a\x09tous := Papa\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.\x0a\x09^ tous",
+referencedClasses: ["Papa"],
 //>>excludeEnd("ide");
-messageSends: ["parse:config:", "results"]
+messageSends: ["parse:config:"]
 }),
 $globals.FdJImporteur);
 

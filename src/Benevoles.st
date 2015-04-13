@@ -665,7 +665,9 @@ importeBenevole: row
 !
 
 importeBenevoles: rows
-	^ rows collect: [ :row | self importeBenevole: row ]
+	^ rows
+		select: [ :row | (row at: 'Nom') isEmpty not ]
+		thenCollect: [ :row | self importeBenevole: row ]
 !
 
 importeTShirt: row

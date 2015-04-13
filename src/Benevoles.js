@@ -2973,13 +2973,21 @@ var self=this;
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1;
-$1=$recv(rows)._collect_((function(row){
+$1=$recv(rows)._select_thenCollect_((function(row){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($recv($recv(row)._at_("Nom"))._isEmpty())._not();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,1)});
+//>>excludeEnd("ctx");
+}),(function(row){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 return self._importeBenevole_(row);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,1)});
+}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,2)});
 //>>excludeEnd("ctx");
 }));
 return $1;
@@ -2989,10 +2997,10 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["rows"],
-source: "importeBenevoles: rows\x0a\x09^ rows collect: [ :row | self importeBenevole: row ]",
+source: "importeBenevoles: rows\x0a\x09^ rows\x0a\x09\x09select: [ :row | (row at: 'Nom') isEmpty not ]\x0a\x09\x09thenCollect: [ :row | self importeBenevole: row ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["collect:", "importeBenevole:"]
+messageSends: ["select:thenCollect:", "not", "isEmpty", "at:", "importeBenevole:"]
 }),
 $globals.FdJImporteur);
 

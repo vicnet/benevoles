@@ -1121,7 +1121,7 @@ messageSends: ["ifNil:", "new"]
 $globals.FdJAssociations.klass);
 
 
-$core.addClass('FdJBenevole', $globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'etat', 'inscrit'], 'Benevoles');
+$core.addClass('FdJBenevole', $globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'etat', 'inscrit', 'nomSansAccent', 'prenomSansAccent'], 'Benevoles');
 //>>excludeStart("ide", pragmas.excludeIdeData);
 $globals.FdJBenevole.comment="- tshirt: un TShirt\x0a- etat: pas encore venu, en cours de traitement, terminé";
 //>>excludeEnd("ide");
@@ -1536,15 +1536,17 @@ function $FdJTShirt(){return $globals.FdJTShirt||(typeof FdJTShirt=="undefined"?
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1;
-self["@nom"]=$recv(variables)._at_("nom");
+var $1,$2,$3;
+$1=$recv(variables)._at_("nom");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:"]=1;
 //>>excludeEnd("ctx");
-self["@prenom"]=$recv(variables)._at_("prenom");
+self._nom_($1);
+$2=$recv(variables)._at_("prenom");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:"]=2;
 //>>excludeEnd("ctx");
+self._prenom_($2);
 self["@etat"]=$recv(variables)._at_ifPresent_ifAbsent_("etat",(function(v){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
@@ -1564,11 +1566,11 @@ self["@assoc"]=$recv(variables)._at_ifPresent_ifAbsent_("assoc",(function(v){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-$1=$recv($FdJAssociations())._instance();
+$3=$recv($FdJAssociations())._instance();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx2.sendIdx["instance"]=1;
 //>>excludeEnd("ctx");
-return $recv($1)._at_(v);
+return $recv($3)._at_(v);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx2.sendIdx["at:"]=3;
 //>>excludeEnd("ctx");
@@ -1603,6 +1605,8 @@ self["@inscrit"]=$recv(variables)._at_ifAbsent_("inscrit",(function(){
 return true;
 
 }));
+self._nomSansAccent();
+self._prenomSansAccent();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},$globals.FdJBenevole)});
@@ -1610,10 +1614,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["variables"],
-source: "fromJSON: variables\x0a\x09nom := variables at: 'nom'.\x0a\x09prenom := variables at: 'prenom'.\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ FdJAssociations instance festival ].\x0a\x09tshirt := variables at: 'tshirt'\x0a\x09\x09ifPresent: [ :v | FdJTShirt at: v ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09inscrit := variables at: 'inscrit'\x0a\x09\x09ifAbsent: [ true ]",
+source: "fromJSON: variables\x0a\x09self nom: (variables at: 'nom').\x0a\x09self prenom: (variables at: 'prenom').\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ FdJAssociations instance festival ].\x0a\x09tshirt := variables at: 'tshirt'\x0a\x09\x09ifPresent: [ :v | FdJTShirt at: v ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09inscrit := variables at: 'inscrit'\x0a\x09\x09ifAbsent: [ true ].\x0a\x09\x22force le recalcule de nom sans accent\x22\x0a\x09self nomSansAccent.\x0a\x09self prenomSansAccent",
 referencedClasses: ["FdJAssociations", "FdJTShirt"],
 //>>excludeEnd("ide");
-messageSends: ["at:", "at:ifPresent:ifAbsent:", "asSymbol", "instance", "festival", "at:ifAbsent:"]
+messageSends: ["nom:", "at:", "prenom:", "at:ifPresent:ifAbsent:", "asSymbol", "instance", "festival", "at:ifAbsent:", "nomSansAccent", "prenomSansAccent"]
 }),
 $globals.FdJBenevole);
 
@@ -1623,33 +1627,25 @@ selector: "identiteSansAccent",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-function $FdJApplication(){return $globals.FdJApplication||(typeof FdJApplication=="undefined"?nil:FdJApplication)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$3,$2,$receiver;
-$1=self["@nom"];
-if(($receiver = $1) == null || $receiver.isNil){
-return "";
-} else {
-$1;
-};
-$3=$recv($recv(self["@nom"]).__comma(" ")).__comma(self["@prenom"]);
+var $1;
+$1=$recv($recv(self._nomSansAccent()).__comma(" ")).__comma(self._prenomSansAccent());
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx[","]=1;
 //>>excludeEnd("ctx");
-$2=$recv($3)._remplaceAvec_($recv($FdJApplication())._accents());
-return $2;
+return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"identiteSansAccent",{},$globals.FdJBenevole)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "identiteSansAccent\x0a\x09nom ifNil: [ ^ '' ].\x0a\x09^ (nom, ' ', prenom) remplaceAvec: FdJApplication accents",
-referencedClasses: ["FdJApplication"],
+source: "identiteSansAccent\x0a\x09\x22retourne une chaine avec le nom et le prenom sans accent\x22\x0a\x09^ (self nomSansAccent, ' ', self prenomSansAccent)",
+referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["ifNil:", "remplaceAvec:", ",", "accents"]
+messageSends: [",", "nomSansAccent", "prenomSansAccent"]
 }),
 $globals.FdJBenevole);
 
@@ -1783,12 +1779,13 @@ protocol: 'accessing',
 fn: function (chaine){
 var self=this;
 self["@nom"]=chaine;
+self["@nomSansAccent"]=nil;
 return self;
 
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["chaine"],
-source: "nom: chaine\x0a\x09nom := chaine",
+source: "nom: chaine\x0a\x09nom := chaine.\x0a\x09nomSansAccent := nil",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []
@@ -1805,22 +1802,29 @@ function $FdJApplication(){return $globals.FdJApplication||(typeof FdJApplicatio
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$receiver;
-$1=self["@nom"];
+var $1,$2,$3,$receiver;
+$1=self["@nomSansAccent"];
 if(($receiver = $1) == null || $receiver.isNil){
+$2=self["@nom"];
+if(($receiver = $2) == null || $receiver.isNil){
 return "";
+} else {
+$2;
+};
+self["@nomSansAccent"]=$recv(self["@nom"])._remplaceAvec_($recv($FdJApplication())._accents());
+self["@nomSansAccent"];
 } else {
 $1;
 };
-$2=$recv(self["@nom"])._remplaceAvec_($recv($FdJApplication())._accents());
-return $2;
+$3=self["@nomSansAccent"];
+return $3;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"nomSansAccent",{},$globals.FdJBenevole)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "nomSansAccent\x0a\x09nom ifNil: [ ^ '' ].\x0a\x09^ nom remplaceAvec: FdJApplication accents",
+source: "nomSansAccent\x0a\x09nomSansAccent ifNil: [\x0a\x09\x09nom ifNil: [ ^ '' ].\x0a\x09\x09nomSansAccent := nom remplaceAvec: FdJApplication accents ].\x0a\x09^ nomSansAccent",
 referencedClasses: ["FdJApplication"],
 //>>excludeEnd("ide");
 messageSends: ["ifNil:", "remplaceAvec:", "accents"]
@@ -1836,8 +1840,8 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-self["@nom"]=$recv(self["@nom"])._asUppercase();
-self["@prenom"]=$recv(self["@prenom"])._capitalized();
+self._nom_($recv(self["@nom"])._asUppercase());
+self._prenom_($recv(self["@prenom"])._capitalized());
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"normalise",{},$globals.FdJBenevole)});
@@ -1845,10 +1849,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "normalise\x0a\x09\x22passe le nom en majuscule et le prénom avec la 1ere lettre en majuscule\x22\x0a\x09nom := nom asUppercase.\x0a\x09prenom := prenom capitalized",
+source: "normalise\x0a\x09\x22passe le nom en majuscule et le prénom avec la 1ere lettre en majuscule\x22\x0a\x09self nom: nom asUppercase.\x0a\x09self prenom: prenom capitalized",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["asUppercase", "capitalized"]
+messageSends: ["nom:", "asUppercase", "prenom:", "capitalized"]
 }),
 $globals.FdJBenevole);
 
@@ -1879,12 +1883,13 @@ protocol: 'accessing',
 fn: function (chaine){
 var self=this;
 self["@prenom"]=chaine;
+self["@prenomSansAccent"]=nil;
 return self;
 
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["chaine"],
-source: "prenom: chaine\x0a\x09prenom := chaine",
+source: "prenom: chaine\x0a\x09prenom := chaine.\x0a\x09prenomSansAccent := nil",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []
@@ -1901,22 +1906,29 @@ function $FdJApplication(){return $globals.FdJApplication||(typeof FdJApplicatio
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$receiver;
-$1=self["@prenom"];
+var $1,$2,$3,$receiver;
+$1=self["@prenomSansAccent"];
 if(($receiver = $1) == null || $receiver.isNil){
+$2=self["@prenom"];
+if(($receiver = $2) == null || $receiver.isNil){
 return "";
+} else {
+$2;
+};
+self["@prenomSansAccent"]=$recv(self["@prenom"])._remplaceAvec_($recv($FdJApplication())._accents());
+self["@prenomSansAccent"];
 } else {
 $1;
 };
-$2=$recv(self["@prenom"])._remplaceAvec_($recv($FdJApplication())._accents());
-return $2;
+$3=self["@prenomSansAccent"];
+return $3;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"prenomSansAccent",{},$globals.FdJBenevole)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "prenomSansAccent\x0a\x09prenom ifNil: [ ^ '' ].\x0a\x09^ prenom remplaceAvec: FdJApplication accents",
+source: "prenomSansAccent\x0a\x09prenomSansAccent ifNil: [\x0a\x09\x09prenom ifNil: [ ^ '' ].\x0a\x09\x09prenomSansAccent := prenom remplaceAvec: FdJApplication accents ].\x0a\x09^ prenomSansAccent",
 referencedClasses: ["FdJApplication"],
 //>>excludeEnd("ide");
 messageSends: ["ifNil:", "remplaceAvec:", "accents"]
@@ -2386,7 +2398,7 @@ catch(e) {if(e===$early)return e[0]; throw e}
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte", "max"],
-source: "filtre: texte max: max\x0a\x09| parties selection result valeur |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09valeur := b indexDes: parties.\x0a\x09\x09(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].\x0a\x09\x09{ valeur. b }\x0a\x09].\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
+source: "filtre: texte max: max\x0a\x09\x22renvoie un tableau de taille maximum a max des benevoles correspondant a texte\x22\x0a\x09| parties selection result valeur |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09\x22Selection est une liste de paire valeur-benevole (tableau de 2 valeurs)\x22\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09valeur := b indexDes: parties.\x0a\x09\x09(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].\x0a\x09\x09{ valeur. b }\x0a\x09].\x0a\x09\x22la liste est triee par valeur\x22\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["ifTrue:", "isEmpty", "collect:", "tokenize:", "sansAccent", "indexDes:", "&", "~=", "not", "estInscrit", "+", "sort:", "<=", "at:", "do:", ">", "estDisponible", "add:", ">=", "size"]

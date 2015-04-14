@@ -1,10 +1,11 @@
 # Benevoles
 
 Amber Smalltalk Application to manage volunteers at the Toulouse boardgame festival
+
 Application Amber Smalltalk pour gérer les bénévoles lors du festival du jeux de Toulouse
 
-- runs in a single browser (load index.html or doit 'FdJApplication open' in workspace
-- Imports CSV file (with jQuery Papa Parser), converted to JSON
+- runs in a single browser (load index.html or doit 'FdJApplication open' in workspace)
+- Imports CSV file (with Papa Parser, no more jQuery), converted to JSON
 - Uses localStorage, annoucer/event, html widget, jQuery
 - Class names, comments in French
 

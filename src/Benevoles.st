@@ -296,7 +296,7 @@ instance
 ! !
 
 Object subclass: #FdJBenevole
-	instanceVariableNames: 'nom prenom assoc tshirt etat inscrit'
+	instanceVariableNames: 'nom prenom assoc tshirt etat inscrit nomSansAccent prenomSansAccent'
 	package: 'Benevoles'!
 !FdJBenevole commentStamp!
 - tshirt: un TShirt
@@ -374,8 +374,8 @@ estInscrit
 !
 
 fromJSON: variables
-	nom := variables at: 'nom'.
-	prenom := variables at: 'prenom'.
+	self nom: (variables at: 'nom').
+	self prenom: (variables at: 'prenom').
 	etat := variables at: 'etat'
 		ifPresent: [ :v | v asSymbol ]
 		ifAbsent: [ nil ].
@@ -386,12 +386,15 @@ fromJSON: variables
 		ifPresent: [ :v | FdJTShirt at: v ]
 		ifAbsent: [ nil ].
 	inscrit := variables at: 'inscrit'
-		ifAbsent: [ true ]
+		ifAbsent: [ true ].
+	"force le recalcule de nom sans accent"
+	self nomSansAccent.
+	self prenomSansAccent
 !
 
 identiteSansAccent
-	nom ifNil: [ ^ '' ].
-	^ (nom, ' ', prenom) remplaceAvec: FdJApplication accents
+	"retourne une chaine avec le nom et le prenom sans accent"
+	^ (self nomSansAccent, ' ', self prenomSansAccent)
 !
 
 indexDe: chaine
@@ -424,18 +427,21 @@ nom
 !
 
 nom: chaine
-	nom := chaine
+	nom := chaine.
+	nomSansAccent := nil
 !
 
 nomSansAccent
-	nom ifNil: [ ^ '' ].
-	^ nom remplaceAvec: FdJApplication accents
+	nomSansAccent ifNil: [
+		nom ifNil: [ ^ '' ].
+		nomSansAccent := nom remplaceAvec: FdJApplication accents ].
+	^ nomSansAccent
 !
 
 normalise
 	"passe le nom en majuscule et le prénom avec la 1ere lettre en majuscule"
-	nom := nom asUppercase.
-	prenom := prenom capitalized
+	self nom: nom asUppercase.
+	self prenom: prenom capitalized
 !
 
 prenom
@@ -443,12 +449,15 @@ prenom
 !
 
 prenom: chaine
-	prenom := chaine
+	prenom := chaine.
+	prenomSansAccent := nil
 !
 
 prenomSansAccent
-	prenom ifNil: [ ^ '' ].
-	^ prenom remplaceAvec: FdJApplication accents
+	prenomSansAccent ifNil: [
+		prenom ifNil: [ ^ '' ].
+		prenomSansAccent := prenom remplaceAvec: FdJApplication accents ].
+	^ prenomSansAccent
 !
 
 reinit
@@ -532,15 +541,18 @@ contient: unBenevole
 !
 
 filtre: texte max: max
+	"renvoie un tableau de taille maximum a max des benevoles correspondant a texte"
 	| parties selection result valeur |
 	texte isEmpty ifTrue: [ ^ #() ].
 	"teste le nom"
 	parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].
+	"Selection est une liste de paire valeur-benevole (tableau de 2 valeurs)"
 	selection := liste collect: [ :b |
 		valeur := b indexDes: parties.
 		(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].
 		{ valeur. b }
 	].
+	"la liste est triee par valeur"
 	selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].
 	result := #().
 	selection do: [ :s |

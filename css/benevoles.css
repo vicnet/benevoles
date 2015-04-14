@@ -36,13 +36,25 @@ body {
     font-size: 80%;
     font-style:italic;
 }
-.benevole .tshirt {
+.benevole .tshirt,.repas {
     float: right;
     width: 100px;
     height: 75px;
     font-size: 70%;
     font-weight:900;
     text-align: center;
+}
+.repas .img {
+    background: url('../img/repas.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 1;
+    width: 80px;
+    height: 80px;
+    margin-left: 10px;
+    opacity: 0.3;
+    position: absolute;
 }
 .tshirt div {
     background: rgba(255,255,255,0.7);
@@ -58,6 +70,18 @@ body {
 .tshirt.femme {
     background: url('../img/tshirt-f.png');
     background-size:100% 100%;
+}
+.repas .aucun,.pris {
+    float: right;
+    width: 50%;
+    position: relative;
+}
+.repas .pris {
+    background: url('../img/repas-vegetarien.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: transparent;
 }
 .selectionneur {
     width: 30%;
@@ -101,6 +125,9 @@ body {
     float: right
 }
 .selectionneur .benevole .tshirt {
+    display: none;
+}
+.selectionneur .benevole .repas {
     display: none;
 }
 .barre {

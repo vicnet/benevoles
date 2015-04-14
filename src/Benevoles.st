@@ -83,8 +83,26 @@ importe: texte
 			imp importeAssociations: rows.
 			FdJStockage sauve: FdJAssociations instance ].
 
+	(fields includes: 'Vendredi midi')
+		ifTrue: [ ^ self importeRepas: rows ].
+
 	benevoles ajouteUnique: (imp importeBenevoles: rows).
 	self sauve.
+!
+
+importeRepas: rows
+	| repas key |
+	repas := FdJImporteur new importeRepass: rows.
+	benevoles benevoles do: [ :b |
+		key := (b nom, ' ', b prenom) asLowercase.
+		repas at: key ifPresent: [ :t |
+				b repas: t.
+				repas remove: key
+			]
+		].
+	repas ifNotEmpty: [ Transcript show: 'Repas non importés:'; cr ].
+	repas keys do: [ :b | Transcript show: ('- ', b);cr ].
+	self sauve
 !
 
 importeTShirts: rows
@@ -296,7 +314,7 @@ instance
 ! !
 
 Object subclass: #FdJBenevole
-	instanceVariableNames: 'nom prenom assoc tshirt etat inscrit nomSansAccent prenomSansAccent'
+	instanceVariableNames: 'nom prenom assoc tshirt repas etat inscrit nomSansAccent prenomSansAccent'
 	package: 'Benevoles'!
 !FdJBenevole commentStamp!
 - tshirt: un TShirt
@@ -331,6 +349,7 @@ asJSON
 	variables at: 'assoc' put: assoc nom.
 	tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].
 	variables at: 'inscrit' put: inscrit.
+	repas ifNotNil: [ variables at: 'repas' put: repas asJSON ].
 	^ variables
 !
 
@@ -387,6 +406,9 @@ fromJSON: variables
 		ifAbsent: [ nil ].
 	inscrit := variables at: 'inscrit'
 		ifAbsent: [ true ].
+	repas := variables at: 'repas'
+		ifPresent: [ :v | FdJRepas new fromJSON: v ]
+		ifAbsent: [ nil ].
 	"force le recalcule de nom sans accent"
 	self nomSansAccent.
 	self prenomSansAccent
@@ -462,6 +484,14 @@ prenomSansAccent
 
 reinit
 	etat := nil
+!
+
+repas
+	^ repas
+!
+
+repas: jours
+	repas := jours
 !
 
 tshirt
@@ -615,7 +645,7 @@ ajoute: texte
 !
 
 fromJSON: variables
-	liste := variables at: 'liste'.
+	liste := variables at: 'liste'
 !
 
 initialize
@@ -682,6 +712,23 @@ importeBenevoles: rows
 		thenCollect: [ :row | self importeBenevole: row ]
 !
 
+importeRepas: row
+	| repas |
+	repas := FdJRepas new.
+	#('Vendredi midi' 'Vendredi soir' 'Samedi midi' 'Samedi soir' 'Dimanche midi' 'Dimanche soir')
+		do: [ :jour |
+			repas ajouteJour:
+				((row at: jour) ifNil: [ false ]
+						 	   ifNotNil: [ :v | v isEmpty not ])
+			].
+	^ ((row at: 'Nom') asLowercase) -> repas
+!
+
+importeRepass: rows
+	^ HashedCollection from:
+		(rows collect: [ :row | self importeRepas: row ])
+!
+
 importeTShirt: row
 	^ ((row at: 'Nom') asLowercase)
 		->
@@ -694,6 +741,33 @@ importeTShirt: row
 importeTShirts: rows
 	^ HashedCollection from:
 		(rows collect: [ :row | self importeTShirt: row ])
+! !
+
+Object subclass: #FdJRepas
+	instanceVariableNames: 'jours'
+	package: 'Benevoles'!
+
+!FdJRepas methodsFor: 'as yet unclassified'!
+
+ajouteJour: repasPris
+	"Ajoute un jour avec si le repas est pris ou non"
+	jours add: repasPris
+!
+
+asJSON
+	^ #{ 'jours'->jours }
+!
+
+fromJSON: variables
+	jours := variables at: 'jours'
+!
+
+initialize
+	jours := #()
+!
+
+jours
+	^ jours
 ! !
 
 Object subclass: #FdJStock
@@ -788,7 +862,7 @@ instance
 !
 
 sauve: objet
-	^ self instance sauve: objet
+	self instance sauve: objet
 !
 
 vide
@@ -956,10 +1030,26 @@ renderOn: html
 		html div class: 'info'; with: [
 			self renderIdentiteOn: html.
 			self renderAssociationOn: html ].
-		self renderTShirtOn: html ].
+		self renderTShirtOn: html.
+		self renderRepasOn: html ].
 	benevole estInscrit ifFalse: [			
 		self ajouteClasse: 'noninscrit' ].
 	div onClick: [ presentateur selectionne: benevole ]
+!
+
+renderRepasOn: html
+	| d |
+	d := html div class: 'repas'.
+	benevole repas ifNotNil: [ :repas |
+		d with: [
+			html div class: 'img'.
+			repas jours do: [ :r |
+				html div
+					with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);
+					class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ])
+				]
+			]
+		]
 !
 
 renderTShirtOn: html

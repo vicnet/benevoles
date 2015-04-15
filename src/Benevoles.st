@@ -76,7 +76,7 @@ importe: texte
 	rows := results data.
 
 	(fields includes: 'Taille')
-		ifTrue: [ ^ self importeTShirts: rows ].
+		ifTrue: [ self importeTShirts: rows ].
 	
 	(fields includes: 'Association')
 		ifTrue: [
@@ -84,10 +84,13 @@ importe: texte
 			FdJStockage sauve: FdJAssociations instance ].
 
 	(fields includes: 'Vendredi midi')
-		ifTrue: [ ^ self importeRepas: rows ].
+		ifTrue: [ self importeRepas: rows ].
 
-	benevoles ajouteUnique: (imp importeBenevoles: rows).
-	self sauve.
+	(fields includes: 'Nom')
+		ifTrue: [
+			benevoles ajouteUnique: (imp importeBenevoles: rows) ].
+
+	self sauve
 !
 
 importeRepas: rows
@@ -765,6 +768,7 @@ asJSON
 fromJSON: variables
 	jours := variables at: 'jours'.
 	vegetarien := variables at: 'vegetarien'
+							ifAbsent: [ false ]
 !
 
 initialize
@@ -1054,11 +1058,11 @@ renderOn: html
 renderRepasOn: html
 	| d jours t tooltip |
 	jours := { 'Dimanche soir'. 'Dimanche midi'. 'Samedi soir'. 'Samedi midi'. 'Vendredi soir'. 'Vendredi midi' }.
-	d := html div class: 'repas'.
+	d := html div class: 'repas';
+			      with: [ html div class: 'img' ].
 	benevole repas ifNotNil: [ :repas |
 		repas vegetarien ifTrue: [ d class: 'repas vegetarien' ].
 		d with: [
-			html div class: 'img'.
 			repas jours do: [ :r |
 				t := html div
 					with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);

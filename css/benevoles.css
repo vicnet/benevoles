@@ -62,13 +62,20 @@ body {
     margin-left: auto;
     margin-right: auto;    
 }
+.tshirt {
+    background: url('../img/tshirt-h.png');
+    background-size:100% 100%;
+    opacity: 0.1;
+}
 .tshirt.homme {
     background: url('../img/tshirt-h.png');
     background-size:100% 100%;
+    opacity: 1;
 }
 .tshirt.femme {
     background: url('../img/tshirt-f.png');
     background-size:100% 100%;
+    opacity: 1;
 }
 .repas .aucun,.pris {
     float: left;

@@ -22,3 +22,17 @@ grunt devel
 Developing the project (after brought alive):
  
 Start server with `amber serve` and go to `http://localhost:4000/` in your browser and follow the instructions
+
+### Restart application
+
+In Workspace, do 'FdJApplication new'
+
+### Clean application
+
+Remove current database and set an example.
+In Workspace, do 'FdJApplication new vide'
+
+### Reinit application
+
+Reset state of benevoles.
+In Workspace, do 'FdJApplication new reinit'

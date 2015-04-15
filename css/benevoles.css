@@ -50,9 +50,8 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     opacity: 1;
-    width: 80px;
+    width: 100px;
     height: 80px;
-    margin-left: 10px;
     opacity: 0.3;
     position: absolute;
 }
@@ -72,16 +71,29 @@ body {
     background-size:100% 100%;
 }
 .repas .aucun,.pris {
-    float: right;
+    float: left;
     width: 50%;
     position: relative;
+    color: transparent;
 }
 .repas .pris {
+    background: url('../img/repas-normal.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.repas .aucun {
+    background: url('../img/repas-aucun.png');
+    background-size: 70% 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+	opacity: 0.5;
+}
+.repas.vegetarien .pris {
     background: url('../img/repas-vegetarien.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
-    color: transparent;
 }
 .selectionneur {
     width: 30%;
@@ -223,4 +235,36 @@ body {
 }
 .legende .tshirt div {
     background: rgba(255,255,255,0);
+}
+div.tooltip {
+	outline:none; 
+}
+div.tooltip:hover {
+	text-decoration:none;
+}
+div.tooltip span {
+	z-index:10;
+	display:none;
+	padding: 4px 4px;
+	margin-left:14px;
+	line-height:16px;
+	font-size: 50%;
+	width: 200%
+}
+div.tooltip:hover span {
+	display:inline;
+	position:absolute; color:#111;
+    border:1px solid #DCA;
+	background:#fffAF0;
+}
+div.tooltip span
+{
+    border-radius:4px;
+    box-shadow: 5px 5px 8px #CCC;
+}
+.callout {
+	z-index:20;
+	position:absolute;
+	border:0;
+	left:-12px;
 }

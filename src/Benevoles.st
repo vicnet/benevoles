@@ -712,15 +712,19 @@ importeBenevoles: rows
 		thenCollect: [ :row | self importeBenevole: row ]
 !
 
+importeBooleen: value
+	value ifNil: [ ^ false].
+	value ifEmpty: [ ^ false].
+	^ (#( 'false' 'n' 'non') includes: value asLowercase) not
+!
+
 importeRepas: row
 	| repas |
 	repas := FdJRepas new.
 	#('Vendredi midi' 'Vendredi soir' 'Samedi midi' 'Samedi soir' 'Dimanche midi' 'Dimanche soir')
 		do: [ :jour |
-			repas ajouteJour:
-				((row at: jour) ifNil: [ false ]
-						 	   ifNotNil: [ :v | v isEmpty not ])
-			].
+			repas ajouteJour: (self importeBooleen: (row at: jour)) ].
+	repas vegetarien: (self importeBooleen: (row at: 'Vegetarien')).
 	^ ((row at: 'Nom') asLowercase) -> repas
 !
 
@@ -744,7 +748,7 @@ importeTShirts: rows
 ! !
 
 Object subclass: #FdJRepas
-	instanceVariableNames: 'jours'
+	instanceVariableNames: 'jours vegetarien'
 	package: 'Benevoles'!
 
 !FdJRepas methodsFor: 'as yet unclassified'!
@@ -755,19 +759,29 @@ ajouteJour: repasPris
 !
 
 asJSON
-	^ #{ 'jours'->jours }
+	^ #{ 'jours'->jours. 'vegetarien'->vegetarien }
 !
 
 fromJSON: variables
-	jours := variables at: 'jours'
+	jours := variables at: 'jours'.
+	vegetarien := variables at: 'vegetarien'
 !
 
 initialize
-	jours := #()
+	jours := #().
+	vegetarien := false
 !
 
 jours
 	^ jours
+!
+
+vegetarien
+	^ vegetarien
+!
+
+vegetarien: estVeg
+	vegetarien := estVeg
 ! !
 
 Object subclass: #FdJStock
@@ -1038,15 +1052,22 @@ renderOn: html
 !
 
 renderRepasOn: html
-	| d |
+	| d jours t tooltip |
+	jours := { 'Dimanche soir'. 'Dimanche midi'. 'Samedi soir'. 'Samedi midi'. 'Vendredi soir'. 'Vendredi midi' }.
 	d := html div class: 'repas'.
 	benevole repas ifNotNil: [ :repas |
+		repas vegetarien ifTrue: [ d class: 'repas vegetarien' ].
 		d with: [
 			html div class: 'img'.
 			repas jours do: [ :r |
-				html div
+				t := html div
 					with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);
-					class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ])
+					class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ]).
+				tooltip := self renderToolipOn: html
+					with: (jours removeLast)
+					on: t.
+				tooltip with: [html br]; with: (r ifTrue: [ 'Repas pris' ] ifFalse: [ 'Repas non pris' ]);
+						with: [html br]; with: (repas vegetarien ifTrue: [ 'Végétarien' ] ifFalse: [ '' ])
 				]
 			]
 		]
@@ -1065,6 +1086,17 @@ renderTShirtOn: html
 			ifTrue: [d class: 'tshirt homme']
 			ifFalse: [d class: 'tshirt femme']
 		]
+!
+
+renderToolipOn: html with: tooltip on: adiv
+	| span |
+	adiv with: [
+		span := html span
+			with: [ html img class: 'callout'; src: 'img/callout.gif'];
+			with: tooltip
+		];
+		class: (adiv element className),' tooltip'.
+		^ span
 ! !
 
 FdJWidget subclass: #FdJWidgetBenevoles

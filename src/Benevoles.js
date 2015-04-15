@@ -3178,6 +3178,44 @@ $globals.FdJImporteur);
 
 $core.addMethod(
 $core.method({
+selector: "importeBooleen:",
+protocol: 'as yet unclassified',
+fn: function (value){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$receiver;
+var $early={};
+try {
+if(($receiver = value) == null || $receiver.isNil){
+return false;
+} else {
+value;
+};
+$recv(value)._ifEmpty_((function(){
+throw $early=[false];
+
+}));
+$1=$recv(["false", "n", "non"]._includes_($recv(value)._asLowercase()))._not();
+return $1;
+}
+catch(e) {if(e===$early)return e[0]; throw e}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"importeBooleen:",{value:value},$globals.FdJImporteur)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["value"],
+source: "importeBooleen: value\x0a\x09value ifNil: [ ^ false].\x0a\x09value ifEmpty: [ ^ false].\x0a\x09^ (#( 'false' 'n' 'non') includes: value asLowercase) not",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["ifNil:", "ifEmpty:", "not", "includes:", "asLowercase"]
+}),
+$globals.FdJImporteur);
+
+$core.addMethod(
+$core.method({
 selector: "importeRepas:",
 protocol: 'as yet unclassified',
 fn: function (row){
@@ -3187,7 +3225,7 @@ function $FdJRepas(){return $globals.FdJRepas||(typeof FdJRepas=="undefined"?nil
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$3,$2,$4,$receiver;
+var $1,$3,$2,$4,$6,$5,$7;
 repas=$recv($FdJRepas())._new();
 ["Vendredi midi", "Vendredi soir", "Samedi midi", "Samedi soir", "Dimanche midi", "Dimanche soir"]._do_((function(jour){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -3198,30 +3236,34 @@ $3=$recv(row)._at_(jour);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx2.sendIdx["at:"]=1;
 //>>excludeEnd("ctx");
-if(($receiver = $3) == null || $receiver.isNil){
-$2=false;
-} else {
-var v;
-v=$receiver;
-$2=$recv($recv(v)._isEmpty())._not();
-};
+$2=self._importeBooleen_($3);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["importeBooleen:"]=1;
+//>>excludeEnd("ctx");
 return $recv($1)._ajouteJour_($2);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({jour:jour},$ctx1,1)});
 //>>excludeEnd("ctx");
 }));
-$4=$recv($recv($recv(row)._at_("Nom"))._asLowercase()).__minus_gt(repas);
-return $4;
+$4=repas;
+$6=$recv(row)._at_("Vegetarien");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=2;
+//>>excludeEnd("ctx");
+$5=self._importeBooleen_($6);
+$recv($4)._vegetarien_($5);
+$7=$recv($recv($recv(row)._at_("Nom"))._asLowercase()).__minus_gt(repas);
+return $7;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"importeRepas:",{row:row,repas:repas},$globals.FdJImporteur)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["row"],
-source: "importeRepas: row\x0a\x09| repas |\x0a\x09repas := FdJRepas new.\x0a\x09#('Vendredi midi' 'Vendredi soir' 'Samedi midi' 'Samedi soir' 'Dimanche midi' 'Dimanche soir')\x0a\x09\x09do: [ :jour |\x0a\x09\x09\x09repas ajouteJour:\x0a\x09\x09\x09\x09((row at: jour) ifNil: [ false ]\x0a\x09\x09\x09\x09\x09\x09 \x09   ifNotNil: [ :v | v isEmpty not ])\x0a\x09\x09\x09].\x0a\x09^ ((row at: 'Nom') asLowercase) -> repas",
+source: "importeRepas: row\x0a\x09| repas |\x0a\x09repas := FdJRepas new.\x0a\x09#('Vendredi midi' 'Vendredi soir' 'Samedi midi' 'Samedi soir' 'Dimanche midi' 'Dimanche soir')\x0a\x09\x09do: [ :jour |\x0a\x09\x09\x09repas ajouteJour: (self importeBooleen: (row at: jour)) ].\x0a\x09repas vegetarien: (self importeBooleen: (row at: 'Vegetarien')).\x0a\x09^ ((row at: 'Nom') asLowercase) -> repas",
 referencedClasses: ["FdJRepas"],
 //>>excludeEnd("ide");
-messageSends: ["new", "do:", "ajouteJour:", "ifNil:ifNotNil:", "at:", "not", "isEmpty", "->", "asLowercase"]
+messageSends: ["new", "do:", "ajouteJour:", "importeBooleen:", "at:", "vegetarien:", "->", "asLowercase"]
 }),
 $globals.FdJImporteur);
 
@@ -3356,7 +3398,7 @@ $globals.FdJImporteur);
 
 
 
-$core.addClass('FdJRepas', $globals.Object, ['jours'], 'Benevoles');
+$core.addClass('FdJRepas', $globals.Object, ['jours', 'vegetarien'], 'Benevoles');
 $core.addMethod(
 $core.method({
 selector: "ajouteJour:",
@@ -3388,13 +3430,13 @@ protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
 var $1;
-$1=$globals.HashedCollection._newFromPairs_(["jours",self["@jours"]]);
+$1=$globals.HashedCollection._newFromPairs_(["jours",self["@jours"],"vegetarien",self["@vegetarien"]]);
 return $1;
 
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "asJSON\x0a\x09^ #{ 'jours'->jours }",
+source: "asJSON\x0a\x09^ #{ 'jours'->jours. 'vegetarien'->vegetarien }",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []
@@ -3411,6 +3453,10 @@ var self=this;
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 self["@jours"]=$recv(variables)._at_("jours");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=1;
+//>>excludeEnd("ctx");
+self["@vegetarien"]=$recv(variables)._at_("vegetarien");
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"fromJSON:",{variables:variables},$globals.FdJRepas)});
@@ -3418,7 +3464,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["variables"],
-source: "fromJSON: variables\x0a\x09jours := variables at: 'jours'",
+source: "fromJSON: variables\x0a\x09jours := variables at: 'jours'.\x0a\x09vegetarien := variables at: 'vegetarien'",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["at:"]
@@ -3432,12 +3478,13 @@ protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
 self["@jours"]=[];
+self["@vegetarien"]=false;
 return self;
 
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initialize\x0a\x09jours := #()",
+source: "initialize\x0a\x09jours := #().\x0a\x09vegetarien := false",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []
@@ -3458,6 +3505,45 @@ return $1;
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
 source: "jours\x0a\x09^ jours",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.FdJRepas);
+
+$core.addMethod(
+$core.method({
+selector: "vegetarien",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@vegetarien"];
+return $1;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "vegetarien\x0a\x09^ vegetarien",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.FdJRepas);
+
+$core.addMethod(
+$core.method({
+selector: "vegetarien:",
+protocol: 'as yet unclassified',
+fn: function (estVeg){
+var self=this;
+self["@vegetarien"]=estVeg;
+return self;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["estVeg"],
+source: "vegetarien: estVeg\x0a\x09vegetarien := estVeg",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []
@@ -4736,11 +4822,12 @@ selector: "renderRepasOn:",
 protocol: 'rendering',
 fn: function (html){
 var self=this;
-var d;
+var d,jours,t,tooltip;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3,$4,$5,$6,$8,$9,$7,$receiver;
+var $1,$2,$3,$4,$5,$6,$7,$9,$10,$8,$11,$12,$13,$15,$17,$16,$14,$receiver;
+jours=["Dimanche soir","Dimanche midi","Samedi soir","Samedi midi","Vendredi soir","Vendredi midi"];
 $1=$recv(html)._div();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["div"]=1;
@@ -4755,44 +4842,107 @@ $2;
 } else {
 var repas;
 repas=$receiver;
+$3=$recv(repas)._vegetarien();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["vegetarien"]=1;
+//>>excludeEnd("ctx");
+if($core.assert($3)){
+$recv(d)._class_("repas vegetarien");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["class:"]=2;
+//>>excludeEnd("ctx");
+};
 $recv(d)._with_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-$3=$recv(html)._div();
+$4=$recv(html)._div();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx2.sendIdx["div"]=2;
 //>>excludeEnd("ctx");
-$recv($3)._class_("img");
+$recv($4)._class_("img");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["class:"]=2;
+$ctx2.sendIdx["class:"]=3;
 //>>excludeEnd("ctx");
 return $recv($recv(repas)._jours())._do_((function(r){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx3) {
 //>>excludeEnd("ctx");
-$4=$recv(html)._div();
-$5=$4;
+$5=$recv(html)._div();
+$6=$5;
 if($core.assert(r)){
-$6="O";
+$7="O";
 } else {
-$6="N";
+$7="N";
 };
-$recv($5)._with_($6);
-$8=$4;
-if($core.assert(r)){
-$9="pris";
-} else {
-$9="aucun";
-};
-$7=$recv($8)._class_($9);
-return $7;
+$recv($6)._with_($7);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx3) {$ctx3.fillBlock({r:r},$ctx2,3)});
+$ctx3.sendIdx["with:"]=2;
+//>>excludeEnd("ctx");
+$9=$5;
+if($core.assert(r)){
+$10="pris";
+} else {
+$10="aucun";
+};
+$8=$recv($9)._class_($10);
+t=$8;
+t;
+tooltip=self._renderToolipOn_with_on_(html,$recv(jours)._removeLast(),t);
+tooltip;
+$11=tooltip;
+$recv($11)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx4) {
+//>>excludeEnd("ctx");
+return $recv(html)._br();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx4.sendIdx["br"]=1;
+//>>excludeEnd("ctx");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx4) {$ctx4.fillBlock({},$ctx3,9)});
 //>>excludeEnd("ctx");
 }));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)});
+$ctx3.sendIdx["with:"]=3;
+//>>excludeEnd("ctx");
+$12=$11;
+if($core.assert(r)){
+$13="Repas pris";
+} else {
+$13="Repas non pris";
+};
+$recv($12)._with_($13);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["with:"]=4;
+//>>excludeEnd("ctx");
+$recv($11)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx4) {
+//>>excludeEnd("ctx");
+return $recv(html)._br();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx4) {$ctx4.fillBlock({},$ctx3,12)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["with:"]=5;
+//>>excludeEnd("ctx");
+$15=$11;
+$17=$recv(repas)._vegetarien();
+if($core.assert($17)){
+$16="Végétarien";
+} else {
+$16="";
+};
+$14=$recv($15)._with_($16);
+return $14;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx3) {$ctx3.fillBlock({r:r},$ctx2,4)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)});
 //>>excludeEnd("ctx");
 }));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -4801,15 +4951,15 @@ $ctx1.sendIdx["with:"]=1;
 };
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"renderRepasOn:",{html:html,d:d},$globals.FdJWidgetBenevole)});
+}, function($ctx1) {$ctx1.fill(self,"renderRepasOn:",{html:html,d:d,jours:jours,t:t,tooltip:tooltip},$globals.FdJWidgetBenevole)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderRepasOn: html\x0a\x09| d |\x0a\x09d := html div class: 'repas'.\x0a\x09benevole repas ifNotNil: [ :repas |\x0a\x09\x09d with: [\x0a\x09\x09\x09html div class: 'img'.\x0a\x09\x09\x09repas jours do: [ :r |\x0a\x09\x09\x09\x09html div\x0a\x09\x09\x09\x09\x09with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);\x0a\x09\x09\x09\x09\x09class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ])\x0a\x09\x09\x09\x09]\x0a\x09\x09\x09]\x0a\x09\x09]",
+source: "renderRepasOn: html\x0a\x09| d jours t tooltip |\x0a\x09jours := { 'Dimanche soir'. 'Dimanche midi'. 'Samedi soir'. 'Samedi midi'. 'Vendredi soir'. 'Vendredi midi' }.\x0a\x09d := html div class: 'repas'.\x0a\x09benevole repas ifNotNil: [ :repas |\x0a\x09\x09repas vegetarien ifTrue: [ d class: 'repas vegetarien' ].\x0a\x09\x09d with: [\x0a\x09\x09\x09html div class: 'img'.\x0a\x09\x09\x09repas jours do: [ :r |\x0a\x09\x09\x09\x09t := html div\x0a\x09\x09\x09\x09\x09with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);\x0a\x09\x09\x09\x09\x09class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ]).\x0a\x09\x09\x09\x09tooltip := self renderToolipOn: html\x0a\x09\x09\x09\x09\x09with: (jours removeLast)\x0a\x09\x09\x09\x09\x09on: t.\x0a\x09\x09\x09\x09tooltip with: [html br]; with: (r ifTrue: [ 'Repas pris' ] ifFalse: [ 'Repas non pris' ]);\x0a\x09\x09\x09\x09\x09\x09with: [html br]; with: (repas vegetarien ifTrue: [ 'Végétarien' ] ifFalse: [ '' ])\x0a\x09\x09\x09\x09]\x0a\x09\x09\x09]\x0a\x09\x09]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["class:", "div", "ifNotNil:", "repas", "with:", "do:", "jours", "ifTrue:ifFalse:"]
+messageSends: ["class:", "div", "ifNotNil:", "repas", "ifTrue:", "vegetarien", "with:", "do:", "jours", "ifTrue:ifFalse:", "renderToolipOn:with:on:", "removeLast", "br"]
 }),
 $globals.FdJWidgetBenevole);
 
@@ -4902,6 +5052,66 @@ source: "renderTShirtOn: html\x0a\x09| d |\x0a\x09d := html div class: 'tshirt'.
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["class:", "div", "ifNotNil:", "tshirt", "with:", "asUppercase", "type", "taille", "ifNil:", "spec", "ifTrue:ifFalse:", "="]
+}),
+$globals.FdJWidgetBenevole);
+
+$core.addMethod(
+$core.method({
+selector: "renderToolipOn:with:on:",
+protocol: 'rendering',
+fn: function (html,tooltip,adiv){
+var self=this;
+var span;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$3,$4,$5,$6;
+$recv(adiv)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$1=$recv(html)._span();
+$recv($1)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx3) {
+//>>excludeEnd("ctx");
+$2=$recv(html)._img();
+$recv($2)._class_("callout");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["class:"]=1;
+//>>excludeEnd("ctx");
+$3=$recv($2)._src_("img/callout.gif");
+return $3;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["with:"]=2;
+//>>excludeEnd("ctx");
+$4=$recv($1)._with_(tooltip);
+span=$4;
+return span;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["with:"]=1;
+//>>excludeEnd("ctx");
+$5=$recv(adiv)._class_($recv($recv($recv(adiv)._element())._className()).__comma(" tooltip"));
+$6=span;
+return $6;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderToolipOn:with:on:",{html:html,tooltip:tooltip,adiv:adiv,span:span},$globals.FdJWidgetBenevole)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html", "tooltip", "adiv"],
+source: "renderToolipOn: html with: tooltip on: adiv\x0a\x09| span |\x0a\x09adiv with: [\x0a\x09\x09span := html span\x0a\x09\x09\x09with: [ html img class: 'callout'; src: 'img/callout.gif'];\x0a\x09\x09\x09with: tooltip\x0a\x09\x09];\x0a\x09\x09class: (adiv element className),' tooltip'.\x0a\x09\x09^ span",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["with:", "span", "class:", "img", "src:", ",", "className", "element"]
 }),
 $globals.FdJWidgetBenevole);
 

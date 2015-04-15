@@ -74,11 +74,11 @@ importe: texte
 
 	fields := results meta fields.
 	rows := results data.
-
+"Differents fichiers 2014"
 	(fields includes: 'Taille')
 		ifTrue: [ self importeTShirts: rows ].
 	
-	(fields includes: 'Association')
+	(fields includes: 'asso')
 		ifTrue: [
 			imp importeAssociations: rows.
 			FdJStockage sauve: FdJAssociations instance ].
@@ -89,6 +89,10 @@ importe: texte
 	(fields includes: 'Nom')
 		ifTrue: [
 			benevoles ajouteUnique: (imp importeBenevoles: rows) ].
+"Fichiers unique 2015"
+	(fields includes: 'nom')
+		ifTrue: [
+			benevoles ajouteTous: (imp importeComplets: rows) ].
 
 	self sauve
 !
@@ -682,12 +686,12 @@ importe: texte
 	| tous fields rows |
 	tous := Papa
 		parse: texte
-		config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.
+		config: #{ 'header'->true. 'dynamicTyping'->false }.
 	^ tous
 !
 
 importeAssociation: row
-	row at: 'Association' ifPresent: [ :assoc |
+	row at: 'asso' ifPresent: [ :assoc |
 		(FdJAssociations instance at: assoc) ifNil: [
 			FdJAssociations instance ajoute: assoc
 			]
@@ -719,6 +723,21 @@ importeBooleen: value
 	value ifNil: [ ^ false].
 	value ifEmpty: [ ^ false].
 	^ (#( 'false' 'n' 'non') includes: value asLowercase) not
+!
+
+importeComplet: row
+	^ FdJStockage charge: FdJBenevole depuis: #{
+		'nom' -> (row at: 'nom').
+		'prenom' -> (row at: 'prenom').
+		'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).
+		'inscrit' -> (self importeBooleen: (row at: 'participe'))
+		}
+!
+
+importeComplets: rows
+	^ rows
+		select: [ :row | (row at: 'nom') isEmpty not ]
+		thenCollect: [ :row | self importeComplet: row ]
 !
 
 importeRepas: row

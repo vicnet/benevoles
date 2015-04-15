@@ -238,7 +238,7 @@ function $FdJAssociations(){return $globals.FdJAssociations||(typeof FdJAssociat
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3,$4;
+var $1,$2,$3,$4,$5;
 imp=$recv($FdJImporteur())._new();
 results=$recv(imp)._importe_(texte);
 fields=$recv($recv(results)._meta())._fields();
@@ -250,7 +250,7 @@ $ctx1.sendIdx["includes:"]=1;
 if($core.assert($1)){
 self._importeTShirts_(rows);
 };
-$2=$recv(fields)._includes_("Association");
+$2=$recv(fields)._includes_("asso");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["includes:"]=2;
 //>>excludeEnd("ctx");
@@ -266,8 +266,15 @@ if($core.assert($3)){
 self._importeRepas_(rows);
 };
 $4=$recv(fields)._includes_("Nom");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["includes:"]=4;
+//>>excludeEnd("ctx");
 if($core.assert($4)){
 $recv(self["@benevoles"])._ajouteUnique_($recv(imp)._importeBenevoles_(rows));
+};
+$5=$recv(fields)._includes_("nom");
+if($core.assert($5)){
+$recv(self["@benevoles"])._ajouteTous_($recv(imp)._importeComplets_(rows));
 };
 self._sauve();
 return self;
@@ -277,10 +284,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results meta fields.\x0a\x09rows := results data.\x0a\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'Association')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'Vendredi midi')\x0a\x09\x09ifTrue: [ self importeRepas: rows ].\x0a\x0a\x09(fields includes: 'Nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteUnique: (imp importeBenevoles: rows) ].\x0a\x0a\x09self sauve",
+source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results meta fields.\x0a\x09rows := results data.\x0a\x22Differents fichiers 2014\x22\x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'Vendredi midi')\x0a\x09\x09ifTrue: [ self importeRepas: rows ].\x0a\x0a\x09(fields includes: 'Nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteUnique: (imp importeBenevoles: rows) ].\x0a\x22Fichiers unique 2015\x22\x0a\x09(fields includes: 'nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteTous: (imp importeComplets: rows) ].\x0a\x0a\x09self sauve",
 referencedClasses: ["FdJImporteur", "FdJStockage", "FdJAssociations"],
 //>>excludeEnd("ide");
-messageSends: ["new", "importe:", "fields", "meta", "data", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "importeRepas:", "ajouteUnique:", "importeBenevoles:", "sauve"]
+messageSends: ["new", "importe:", "fields", "meta", "data", "ifTrue:", "includes:", "importeTShirts:", "importeAssociations:", "sauve:", "instance", "importeRepas:", "ajouteUnique:", "importeBenevoles:", "ajouteTous:", "importeComplets:", "sauve"]
 }),
 $globals.FdJApplication);
 
@@ -3002,7 +3009,7 @@ function $Papa(){return $globals.Papa||(typeof Papa=="undefined"?nil:Papa)}
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1;
-tous=$recv($Papa())._parse_config_(texte,$globals.HashedCollection._newFromPairs_(["delimiter",",","header",true,"dynamicTyping",false]));
+tous=$recv($Papa())._parse_config_(texte,$globals.HashedCollection._newFromPairs_(["header",true,"dynamicTyping",false]));
 $1=tous;
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -3011,7 +3018,7 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "importe: texte\x0a\x09| tous fields rows |\x0a\x09tous := Papa\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'delimiter'->','. 'header'->true. 'dynamicTyping'->false }.\x0a\x09^ tous",
+source: "importe: texte\x0a\x09| tous fields rows |\x0a\x09tous := Papa\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'header'->true. 'dynamicTyping'->false }.\x0a\x09^ tous",
 referencedClasses: ["Papa"],
 //>>excludeEnd("ide");
 messageSends: ["parse:config:"]
@@ -3029,7 +3036,7 @@ function $FdJAssociations(){return $globals.FdJAssociations||(typeof FdJAssociat
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $2,$1,$receiver;
-$recv(row)._at_ifPresent_("Association",(function(assoc){
+$recv(row)._at_ifPresent_("asso",(function(assoc){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -3054,7 +3061,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["row"],
-source: "importeAssociation: row\x0a\x09row at: 'Association' ifPresent: [ :assoc |\x0a\x09\x09(FdJAssociations instance at: assoc) ifNil: [\x0a\x09\x09\x09FdJAssociations instance ajoute: assoc\x0a\x09\x09\x09]\x0a\x09\x09]",
+source: "importeAssociation: row\x0a\x09row at: 'asso' ifPresent: [ :assoc |\x0a\x09\x09(FdJAssociations instance at: assoc) ifNil: [\x0a\x09\x09\x09FdJAssociations instance ajoute: assoc\x0a\x09\x09\x09]\x0a\x09\x09]",
 referencedClasses: ["FdJAssociations"],
 //>>excludeEnd("ide");
 messageSends: ["at:ifPresent:", "ifNil:", "at:", "instance", "ajoute:"]
@@ -3215,6 +3222,86 @@ source: "importeBooleen: value\x0a\x09value ifNil: [ ^ false].\x0a\x09value ifEm
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["ifNil:", "ifEmpty:", "not", "includes:", "asLowercase"]
+}),
+$globals.FdJImporteur);
+
+$core.addMethod(
+$core.method({
+selector: "importeComplet:",
+protocol: 'as yet unclassified',
+fn: function (row){
+var self=this;
+function $FdJStockage(){return $globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
+function $FdJBenevole(){return $globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $3,$4,$2,$1;
+$3=$recv(row)._at_("nom");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=1;
+//>>excludeEnd("ctx");
+$4=$recv(row)._at_("prenom");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=2;
+//>>excludeEnd("ctx");
+$2=$globals.HashedCollection._newFromPairs_(["nom",$3,"prenom",$4,"assoc",$recv(row)._at_ifAbsent_("asso",(function(){
+return "Festival";
+
+})),"inscrit",self._importeBooleen_($recv(row)._at_("participe"))]);
+$1=$recv($FdJStockage())._charge_depuis_($FdJBenevole(),$2);
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"importeComplet:",{row:row},$globals.FdJImporteur)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["row"],
+source: "importeComplet: row\x0a\x09^ FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (row at: 'nom').\x0a\x09\x09'prenom' -> (row at: 'prenom').\x0a\x09\x09'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).\x0a\x09\x09'inscrit' -> (self importeBooleen: (row at: 'participe'))\x0a\x09\x09}",
+referencedClasses: ["FdJStockage", "FdJBenevole"],
+//>>excludeEnd("ide");
+messageSends: ["charge:depuis:", "at:", "at:ifAbsent:", "importeBooleen:"]
+}),
+$globals.FdJImporteur);
+
+$core.addMethod(
+$core.method({
+selector: "importeComplets:",
+protocol: 'as yet unclassified',
+fn: function (rows){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv(rows)._select_thenCollect_((function(row){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($recv($recv(row)._at_("nom"))._isEmpty())._not();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,1)});
+//>>excludeEnd("ctx");
+}),(function(row){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._importeComplet_(row);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"importeComplets:",{rows:rows},$globals.FdJImporteur)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["rows"],
+source: "importeComplets: rows\x0a\x09^ rows\x0a\x09\x09select: [ :row | (row at: 'nom') isEmpty not ]\x0a\x09\x09thenCollect: [ :row | self importeComplet: row ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["select:thenCollect:", "not", "isEmpty", "at:", "importeComplet:"]
 }),
 $globals.FdJImporteur);
 

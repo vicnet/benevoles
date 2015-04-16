@@ -23,6 +23,14 @@ Developing the project (after brought alive):
  
 Start server with `amber serve` and go to `http://localhost:4000/` in your browser and follow the instructions
 
+### Import benevoles
+
+Input file should be like this:
+`nom;prenom;asso;participe;taille;t_shirt_cintre;lsf;repas
+XXXX;yyyy;Joc-Ere;O;L;N;N;Ven 8 Mai SOIR,Sam 9 Mai MIDI,Sam 9 Mai SOIR,Dim 10 Mai MIDI`
+
+## Dev tips
+
 ### Restart application
 
 In Workspace, do 'FdJApplication new'

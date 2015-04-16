@@ -74,7 +74,7 @@ importe: texte
 
 	fields := results meta fields.
 	rows := results data.
-"Differents fichiers 2014"
+"Differents fichiers 2014
 	(fields includes: 'Taille')
 		ifTrue: [ self importeTShirts: rows ].
 	
@@ -89,41 +89,17 @@ importe: texte
 	(fields includes: 'Nom')
 		ifTrue: [
 			benevoles ajouteUnique: (imp importeBenevoles: rows) ].
+"
 "Fichiers unique 2015"
+	(fields includes: 'asso')
+		ifTrue: [
+			imp importeAssociations: rows.
+			FdJStockage sauve: FdJAssociations instance ].
+
 	(fields includes: 'nom')
 		ifTrue: [
 			benevoles ajouteTous: (imp importeComplets: rows) ].
 
-	self sauve
-!
-
-importeRepas: rows
-	| repas key |
-	repas := FdJImporteur new importeRepass: rows.
-	benevoles benevoles do: [ :b |
-		key := (b nom, ' ', b prenom) asLowercase.
-		repas at: key ifPresent: [ :t |
-				b repas: t.
-				repas remove: key
-			]
-		].
-	repas ifNotEmpty: [ Transcript show: 'Repas non importés:'; cr ].
-	repas keys do: [ :b | Transcript show: ('- ', b);cr ].
-	self sauve
-!
-
-importeTShirts: rows
-	| tshirts key |
-	tshirts := FdJImporteur new importeTShirts: rows.
-	benevoles benevoles do: [ :b |
-		key := (b nom, ' ', b prenom) asLowercase.
-		tshirts at: key ifPresent: [ :t |
-				b tshirt: (FdJTShirt at: t).
-				tshirts remove: key
-			]
-		].
-	tshirts ifNotEmpty: [ Transcript show: 'TShirts non importés:'; cr ].
-	tshirts keys do: [ :b | Transcript show: ('- ', b);cr ].
 	self sauve
 !
 
@@ -196,6 +172,38 @@ termine
 vide
 	FdJStockage vide.
 	benevoles vide
+! !
+
+!FdJApplication methodsFor: 'obsolete'!
+
+importeRepas: rows
+	| repas key |
+	repas := FdJImporteur new importeRepass: rows.
+	benevoles benevoles do: [ :b |
+		key := (b nom, ' ', b prenom) asLowercase.
+		repas at: key ifPresent: [ :t |
+				b repas: t.
+				repas remove: key
+			]
+		].
+	repas ifNotEmpty: [ Transcript show: 'Repas non importés:'; cr ].
+	repas keys do: [ :b | Transcript show: ('- ', b);cr ].
+	self sauve
+!
+
+importeTShirts: rows
+	| tshirts key |
+	tshirts := FdJImporteur new importeTShirts: rows.
+	benevoles benevoles do: [ :b |
+		key := (b nom, ' ', b prenom) asLowercase.
+		tshirts at: key ifPresent: [ :t |
+				b tshirt: (FdJTShirt at: t).
+				tshirts remove: key
+			]
+		].
+	tshirts ifNotEmpty: [ Transcript show: 'TShirts non importés:'; cr ].
+	tshirts keys do: [ :b | Transcript show: ('- ', b);cr ].
+	self sauve
 ! !
 
 FdJApplication class instanceVariableNames: 'accents'!
@@ -421,9 +429,14 @@ fromJSON: variables
 	self prenomSansAccent
 !
 
+identite
+	"retourne une chaine avec le nom et le prenom"
+	^ self nom, ' ', self prenom
+!
+
 identiteSansAccent
 	"retourne une chaine avec le nom et le prenom sans accent"
-	^ (self nomSansAccent, ' ', self prenomSansAccent)
+	^ self nomSansAccent, ' ', self prenomSansAccent
 !
 
 indexDe: chaine
@@ -702,6 +715,52 @@ importeAssociations: rows
 	rows do: [ :row | self importeAssociation: row ]
 !
 
+importeBooleen: value
+	value ifNil: [ ^ false].
+	value ifEmpty: [ ^ false].
+	^ (#( 'false' 'n' 'non') includes: value asLowercase) not
+!
+
+importeComplet: row
+	| benevole |
+	benevole := FdJStockage charge: FdJBenevole depuis: #{
+		'nom' -> (row at: 'nom').
+		'prenom' -> (row at: 'prenom').
+		'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).
+		'inscrit' -> (self importeBooleen: (row at: 'participe'))
+		}.
+	benevole repas: (self importeRepas: row).
+	benevole tshirt: (self importeTShirt: row).
+	^ benevole
+!
+
+importeComplets: rows
+	^ rows
+		select: [ :row | (row at: 'nom') isEmpty not ]
+		thenCollect: [ :row | self importeComplet: row ]
+!
+
+importeRepas: row
+	| repas |
+	repas := FdJRepas new.
+	#('Ven 8 Mai MIDI' 'Ven 8 Mai SOIR' 'Sam 9 Mai MIDI' 'Sam 9 Mai SOIR' 'Dim 10 Mai MIDI' 'Dim 10 Mai SOIR')
+		do: [ :jour |
+			repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].
+	repas vegetarien: (self importeBooleen: (row at: 'Vegetarien')).
+	^ repas
+!
+
+importeTShirt: row
+	| ts |
+	(row at: 'taille') = 'Aucune' ifTrue: [ ^ nil ].
+	ts := (self importeBooleen: (row at: 't_shirt_cintre')) ifTrue: [ 'f' ] ifFalse: [ 'h' ].
+	ts := ts, '-', ((row at: 'taille') asLowercase).
+	(self importeBooleen: (row at: 'lsf')) ifTrue: [ ts := ts,'-lsf' ].
+	^ FdJTShirt at: ts
+! !
+
+!FdJImporteur methodsFor: 'obsolete'!
+
 importeBenevole: row
 	^ FdJStockage charge: FdJBenevole depuis: #{
 		'nom' -> (row at: 'Nom').
@@ -719,43 +778,7 @@ importeBenevoles: rows
 		thenCollect: [ :row | self importeBenevole: row ]
 !
 
-importeBooleen: value
-	value ifNil: [ ^ false].
-	value ifEmpty: [ ^ false].
-	^ (#( 'false' 'n' 'non') includes: value asLowercase) not
-!
-
-importeComplet: row
-	^ FdJStockage charge: FdJBenevole depuis: #{
-		'nom' -> (row at: 'nom').
-		'prenom' -> (row at: 'prenom').
-		'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).
-		'inscrit' -> (self importeBooleen: (row at: 'participe'))
-		}
-!
-
-importeComplets: rows
-	^ rows
-		select: [ :row | (row at: 'nom') isEmpty not ]
-		thenCollect: [ :row | self importeComplet: row ]
-!
-
-importeRepas: row
-	| repas |
-	repas := FdJRepas new.
-	#('Vendredi midi' 'Vendredi soir' 'Samedi midi' 'Samedi soir' 'Dimanche midi' 'Dimanche soir')
-		do: [ :jour |
-			repas ajouteJour: (self importeBooleen: (row at: jour)) ].
-	repas vegetarien: (self importeBooleen: (row at: 'Vegetarien')).
-	^ ((row at: 'Nom') asLowercase) -> repas
-!
-
-importeRepass: rows
-	^ HashedCollection from:
-		(rows collect: [ :row | self importeRepas: row ])
-!
-
-importeTShirt: row
+importeNomTShirt: row
 	^ ((row at: 'Nom') asLowercase)
 		->
 	  (((row at: 'Cintré') ifEmpty: [ 'h' ] ifNotEmpty: [ 'f' ] )
@@ -764,9 +787,14 @@ importeTShirt: row
 		)
 !
 
+importeRepass: rows
+	^ HashedCollection from:
+		(rows collect: [ :row | self importeRepas: row ])
+!
+
 importeTShirts: rows
 	^ HashedCollection from:
-		(rows collect: [ :row | self importeTShirt: row ])
+		(rows collect: [ :row | self importeNomTShirt: row ])
 ! !
 
 Object subclass: #FdJRepas
@@ -1049,16 +1077,22 @@ benevole
 renderAssociationOn: html
 	| nom |
 	nom := benevole association nom.
-	(nom size > 30) ifTrue: [ nom := (nom first: 30), '...' ].
+	(nom size > 25) ifTrue: [ nom := (nom first: 25), '...' ].
 	html div class: 'association';
 			 with: nom.
 	self ajouteClasse: (benevole association nomSansAccent)
 !
 
 renderIdentiteOn: html
+	| prenom size |
+	prenom :=  benevole prenom.
+	size := ((benevole nom size) * 1.31) + 1 + prenom size.
+	size := (25 - size + benevole prenom size) floor.
+	(size<0) ifTrue: [ prenom := '...' ].
+	(size > 0) & (size < prenom size) ifTrue: [ prenom := (prenom first: size),'...' ].
 	html div class: 'identite';
 		with: [ html div class: 'nom'; with: benevole nom.
-				html div class: 'prenom'; with: benevole prenom ]
+				html div class: 'prenom'; with: prenom ]
 !
 
 renderOn: html
@@ -1080,7 +1114,7 @@ renderRepasOn: html
 	d := html div class: 'repas';
 			      with: [ html div class: 'img' ].
 	benevole repas ifNotNil: [ :repas |
-		repas vegetarien ifTrue: [ d class: 'repas vegetarien' ].
+		repas vegetarien ifTrue: [ d ajouteClasse: 'vegetarien' ].
 		d with: [
 			repas jours do: [ :r |
 				t := html div
@@ -1106,19 +1140,20 @@ renderTShirtOn: html
 			html div with: (t spec ifNil: [ '' ])
 			].
 		t type = #h
-			ifTrue: [d class: 'tshirt homme']
-			ifFalse: [d class: 'tshirt femme']
+			ifTrue: [d ajouteClasse: 'homme']
+			ifFalse: [d ajouteClasse: 'femme']
 		]
 !
 
 renderToolipOn: html with: tooltip on: adiv
 	| span |
-	adiv with: [
-		span := html span
+	adiv
+		ajouteClasse: 'tooltip';
+		with: [
+			span := html span
 			with: [ html img class: 'callout'; src: 'img/callout.gif'];
 			with: tooltip
-		];
-		class: (adiv element className),' tooltip'.
+		].
 		^ span
 ! !
 
@@ -1362,5 +1397,11 @@ sansAccent
 		s := s replace: k with: v
 	].
 	^ s
+! !
+
+!TagBrush methodsFor: '*Benevoles'!
+
+ajouteClasse: nom
+	self class: element className,' ', nom
 ! !
 

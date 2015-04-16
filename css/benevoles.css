@@ -34,7 +34,7 @@ body {
 .benevole .association {
     margin: 5px;
     font-size: 80%;
-    font-style:italic;
+    font-style: italic;
 }
 .benevole .tshirt,.repas {
     float: right;
@@ -76,6 +76,9 @@ body {
     background: url('../img/tshirt-f.png');
     background-size:100% 100%;
     opacity: 1;
+}
+.noninscrit .tshirt {
+    opacity: 0.4;
 }
 .repas .aucun,.pris {
     float: left;

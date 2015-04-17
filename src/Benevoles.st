@@ -553,7 +553,7 @@ exemples
 ! !
 
 Object subclass: #FdJBenevoles
-	instanceVariableNames: 'liste'
+	instanceVariableNames: 'liste cache'
 	package: 'Benevoles'!
 
 !FdJBenevoles methodsFor: 'as yet unclassified'!
@@ -596,28 +596,58 @@ filtre: texte max: max
 	texte isEmpty ifTrue: [ ^ #() ].
 	"teste le nom"
 	parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].
-	"Selection est une liste de paire valeur-benevole (tableau de 2 valeurs)"
-	selection := liste collect: [ :b |
-		valeur := b indexDes: parties.
-		(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].
-		{ valeur. b }
-	].
-	"la liste est triee par valeur"
-	selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].
+	
+	"recherche benevoles repondant au critere"
+	cache ifNotNil: [
+		selection := cache at: texte first.
+		Transcript show: 'Cache active:',selection size; cr.
+		(texte size = 1) ifFalse: [
+				selection := self filtreBrut: selection avec: parties
+			]
+		].
+	selection := selection ifNil:
+		[ self filtreBrut: liste avec: parties ].
+
+	"Restriction a max item"
 	result := #().
 	selection do: [ :s |
-		((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [
-			result add: (s at: 2).
+		(s estDisponible) ifTrue: [
+			result add: s.
 			(result size >= max) ifTrue: [ ^ result ]
 			]
 		].
 	^ result
 !
 
+filtreBrut: benevoles avec: parties
+	"renvoie un tableau de taille maximum a max des benevoles correspondant a texte"
+	| selection valeur |
+	"Selection est une liste de paire valeur-benevole (tableau de 2 valeurs)"
+	selection := benevoles collect: [ :b |
+		valeur := b indexDes: parties.
+		(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].
+		{ valeur. b }
+	].
+	"la liste est triee par valeur"
+	selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].
+	^ selection
+		select: [ :s | (s at: 1) > 0 ]
+		thenCollect: [ :s | s at: 2]
+!
+
 fromJSON: variables
 	liste := (variables at: 'liste') collect: [ :v |
 			FdJBenevole new fromJSON: v
 		]
+!
+
+majCache
+	cache := HashedCollection new.
+	((97 to: 122) collect: [ :c | String fromCharCode: c ])
+		do: [ :c |
+			cache at: c
+				put: (self filtreBrut: liste avec: c) ].
+	^ cache
 !
 
 reinit
@@ -629,7 +659,12 @@ selectionnes
 !
 
 vide
-	liste := #()
+	liste := #().
+	self videCache
+!
+
+videCache
+	cache := nil
 ! !
 
 !FdJBenevoles class methodsFor: 'exemples'!

@@ -2285,7 +2285,7 @@ messageSends: ["new", "exemple", "add:", "nom:", "prenom:", "association:", "ins
 $globals.FdJBenevole.klass);
 
 
-$core.addClass('FdJBenevoles', $globals.Object, ['liste'], 'Benevoles');
+$core.addClass('FdJBenevoles', $globals.Object, ['liste', 'cache'], 'Benevoles');
 $core.addMethod(
 $core.method({
 selector: "ajoute:",
@@ -2479,10 +2479,11 @@ protocol: 'as yet unclassified',
 fn: function (texte,max){
 var self=this;
 var parties,selection,result,valeur;
+function $Transcript(){return $globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3,$4,$5,$8,$7,$10,$9,$6,$11,$12,$13;
+var $1,$2,$3,$5,$4,$6,$8,$7,$9,$10,$11,$12,$13,$receiver;
 var $early={};
 try {
 $1=$recv(texte)._isEmpty();
@@ -2499,63 +2500,47 @@ return $recv(p)._sansAccent();
 }, function($ctx2) {$ctx2.fillBlock({p:p},$ctx1,2)});
 //>>excludeEnd("ctx");
 }));
+$3=self["@cache"];
+if(($receiver = $3) == null || $receiver.isNil){
+$3;
+} else {
+selection=$recv(self["@cache"])._at_($recv(texte)._first());
+selection;
+$5=$recv(selection)._size();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["collect:"]=1;
+$ctx1.sendIdx["size"]=1;
 //>>excludeEnd("ctx");
-selection=$recv(self["@liste"])._collect_((function(b){
+$4="Cache active:".__comma($5);
+$recv($Transcript())._show_($4);
+$6=$recv($Transcript())._cr();
+$6;
+$8=$recv(texte)._size();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
+$ctx1.sendIdx["size"]=2;
 //>>excludeEnd("ctx");
-valeur=$recv(b)._indexDes_(parties);
-valeur;
-$3=$recv($recv(valeur).__tild_eq((0))).__and($recv($recv(b)._estInscrit())._not());
+$7=$recv($8).__eq((1));
+if(!$core.assert($7)){
+selection=self._filtreBrut_avec_(selection,parties);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["&"]=1;
+$ctx1.sendIdx["filtreBrut:avec:"]=1;
 //>>excludeEnd("ctx");
-if($core.assert($3)){
-valeur=$recv(valeur).__plus((100));
-valeur;
+selection;
 };
-return [valeur,b];
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,3)});
-//>>excludeEnd("ctx");
-}));
-$recv(selection)._sort_((function(a,b){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-$4=$recv(a)._at_((1));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["at:"]=1;
-//>>excludeEnd("ctx");
-$5=$recv(b)._at_((1));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["at:"]=2;
-//>>excludeEnd("ctx");
-return $recv($4).__lt_eq($5);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,5)});
-//>>excludeEnd("ctx");
-}));
+};
+$9=selection;
+if(($receiver = $9) == null || $receiver.isNil){
+selection=self._filtreBrut_avec_(self["@liste"],parties);
+} else {
+selection=$9;
+};
 result=[];
 $recv(selection)._do_((function(s){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-$8=$recv(s)._at_((1));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["at:"]=3;
-//>>excludeEnd("ctx");
-$7=$recv($8).__gt((0));
-$10=$recv(s)._at_((2));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["at:"]=4;
-//>>excludeEnd("ctx");
-$9=$recv($10)._estDisponible();
-$6=$recv($7).__and($9);
-if($core.assert($6)){
-$recv(result)._add_($recv(s)._at_((2)));
+$10=$recv(s)._estDisponible();
+if($core.assert($10)){
+$recv(result)._add_(s);
 $11=$recv($recv(result)._size()).__gt_eq(max);
 if($core.assert($11)){
 $12=result;
@@ -2576,10 +2561,89 @@ catch(e) {if(e===$early)return e[0]; throw e}
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte", "max"],
-source: "filtre: texte max: max\x0a\x09\x22renvoie un tableau de taille maximum a max des benevoles correspondant a texte\x22\x0a\x09| parties selection result valeur |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09\x22Selection est une liste de paire valeur-benevole (tableau de 2 valeurs)\x22\x0a\x09selection := liste collect: [ :b |\x0a\x09\x09valeur := b indexDes: parties.\x0a\x09\x09(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].\x0a\x09\x09{ valeur. b }\x0a\x09].\x0a\x09\x22la liste est triee par valeur\x22\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09((s at: 1) > 0) & ((s at: 2) estDisponible) ifTrue: [\x0a\x09\x09\x09result add: (s at: 2).\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
+source: "filtre: texte max: max\x0a\x09\x22renvoie un tableau de taille maximum a max des benevoles correspondant a texte\x22\x0a\x09| parties selection result valeur |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09\x0a\x09\x22recherche benevoles repondant au critere\x22\x0a\x09cache ifNotNil: [\x0a\x09\x09selection := cache at: texte first.\x0a\x09\x09Transcript show: 'Cache active:',selection size; cr.\x0a\x09\x09(texte size = 1) ifFalse: [\x0a\x09\x09\x09\x09selection := self filtreBrut: selection avec: parties\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09selection := selection ifNil:\x0a\x09\x09[ self filtreBrut: liste avec: parties ].\x0a\x0a\x09\x22Restriction a max item\x22\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09(s estDisponible) ifTrue: [\x0a\x09\x09\x09result add: s.\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
+referencedClasses: ["Transcript"],
+//>>excludeEnd("ide");
+messageSends: ["ifTrue:", "isEmpty", "collect:", "tokenize:", "sansAccent", "ifNotNil:", "at:", "first", "show:", ",", "size", "cr", "ifFalse:", "=", "filtreBrut:avec:", "ifNil:", "do:", "estDisponible", "add:", ">="]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
+selector: "filtreBrut:avec:",
+protocol: 'as yet unclassified',
+fn: function (benevoles,parties){
+var self=this;
+var selection,valeur;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$3,$5,$4;
+selection=$recv(benevoles)._collect_((function(b){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+valeur=$recv(b)._indexDes_(parties);
+valeur;
+$1=$recv($recv(valeur).__tild_eq((0))).__and($recv($recv(b)._estInscrit())._not());
+if($core.assert($1)){
+valeur=$recv(valeur).__plus((100));
+valeur;
+};
+return [valeur,b];
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+$recv(selection)._sort_((function(a,b){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$2=$recv(a)._at_((1));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["at:"]=1;
+//>>excludeEnd("ctx");
+$3=$recv(b)._at_((1));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["at:"]=2;
+//>>excludeEnd("ctx");
+return $recv($2).__lt_eq($3);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({a:a,b:b},$ctx1,3)});
+//>>excludeEnd("ctx");
+}));
+$4=$recv(selection)._select_thenCollect_((function(s){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$5=$recv(s)._at_((1));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["at:"]=3;
+//>>excludeEnd("ctx");
+return $recv($5).__gt((0));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,4)});
+//>>excludeEnd("ctx");
+}),(function(s){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(s)._at_((2));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,5)});
+//>>excludeEnd("ctx");
+}));
+return $4;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"filtreBrut:avec:",{benevoles:benevoles,parties:parties,selection:selection,valeur:valeur},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["benevoles", "parties"],
+source: "filtreBrut: benevoles avec: parties\x0a\x09\x22renvoie un tableau de taille maximum a max des benevoles correspondant a texte\x22\x0a\x09| selection valeur |\x0a\x09\x22Selection est une liste de paire valeur-benevole (tableau de 2 valeurs)\x22\x0a\x09selection := benevoles collect: [ :b |\x0a\x09\x09valeur := b indexDes: parties.\x0a\x09\x09(valeur ~= 0) & (b estInscrit not) ifTrue: [ valeur := valeur + 100 ].\x0a\x09\x09{ valeur. b }\x0a\x09].\x0a\x09\x22la liste est triee par valeur\x22\x0a\x09selection sort: [ :a :b | (a at: 1) <= (b at: 1) ].\x0a\x09^ selection\x0a\x09\x09select: [ :s | (s at: 1) > 0 ]\x0a\x09\x09thenCollect: [ :s | s at: 2]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["ifTrue:", "isEmpty", "collect:", "tokenize:", "sansAccent", "indexDes:", "&", "~=", "not", "estInscrit", "+", "sort:", "<=", "at:", "do:", ">", "estDisponible", "add:", ">=", "size"]
+messageSends: ["collect:", "indexDes:", "ifTrue:", "&", "~=", "not", "estInscrit", "+", "sort:", "<=", "at:", "select:thenCollect:", ">"]
 }),
 $globals.FdJBenevoles);
 
@@ -2613,6 +2677,51 @@ source: "fromJSON: variables\x0a\x09liste := (variables at: 'liste') collect: [ 
 referencedClasses: ["FdJBenevole"],
 //>>excludeEnd("ide");
 messageSends: ["collect:", "at:", "fromJSON:", "new"]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
+selector: "majCache",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+function $HashedCollection(){return $globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
+function $String(){return $globals.String||(typeof String=="undefined"?nil:String)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+self["@cache"]=$recv($HashedCollection())._new();
+$recv($recv((97)._to_((122)))._collect_((function(c){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($String())._fromCharCode_(c);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({c:c},$ctx1,1)});
+//>>excludeEnd("ctx");
+})))._do_((function(c){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(self["@cache"])._at_put_(c,self._filtreBrut_avec_(self["@liste"],c));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({c:c},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+$1=self["@cache"];
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"majCache",{},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "majCache\x0a\x09cache := HashedCollection new.\x0a\x09((97 to: 122) collect: [ :c | String fromCharCode: c ])\x0a\x09\x09do: [ :c |\x0a\x09\x09\x09cache at: c\x0a\x09\x09\x09\x09put: (self filtreBrut: liste avec: c) ].\x0a\x09^ cache",
+referencedClasses: ["HashedCollection", "String"],
+//>>excludeEnd("ide");
+messageSends: ["new", "do:", "collect:", "to:", "fromCharCode:", "at:put:", "filtreBrut:avec:"]
 }),
 $globals.FdJBenevoles);
 
@@ -2687,13 +2796,38 @@ selector: "vide",
 protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
 self["@liste"]=[];
+self._videCache();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"vide",{},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "vide\x0a\x09liste := #().\x0a\x09self videCache",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["videCache"]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
+selector: "videCache",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+self["@cache"]=nil;
 return self;
 
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "vide\x0a\x09liste := #()",
+source: "videCache\x0a\x09cache := nil",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []

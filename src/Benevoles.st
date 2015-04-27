@@ -4,6 +4,20 @@ Object subclass: #FdJAnnonce
 	instanceVariableNames: ''
 	package: 'Benevoles'!
 
+FdJAnnonce subclass: #FdJApplicationChangeEtat
+	instanceVariableNames: 'etat'
+	package: 'Benevoles'!
+
+!FdJApplicationChangeEtat methodsFor: 'as yet unclassified'!
+
+etat
+	^ etat
+!
+
+etat: nouveau
+	etat := nouveau
+! !
+
 FdJAnnonce subclass: #FdJBenevoleChangeEtat
 	instanceVariableNames: 'benevole'
 	package: 'Benevoles'!
@@ -41,6 +55,10 @@ Object subclass: #FdJApplication
 	package: 'Benevoles'!
 
 !FdJApplication methodsFor: 'initialization'!
+
+annonce: etat
+	FdJAnnonceur current announce: (FdJApplicationChangeEtat new etat: etat; yourself)
+!
 
 charge
 	"Charge le modele (ou créé un exemple)"
@@ -134,7 +152,10 @@ initialize
 		self onBenevoleChangeEtat: evt benevole ].
 
 	"init"
-	distributeur associe: (benevoles selectionnes)
+	distributeur associe: (benevoles selectionnes).
+	
+	"notifie le début de l'application"
+	self annonce: true
 !
 
 onBenevoleChangeEtat: benevole
@@ -164,9 +185,11 @@ selectionne: benevole
 !
 
 termine
+	self annonce: false.
 	selectionneur supprime.
 	distributeur supprime
 	"'body' asJQuery children remove"
+	"notifie le début de l'application"
 !
 
 vide
@@ -578,6 +601,11 @@ ajouteUnique: desBenevoles
 				thenCollect: [ :b | b normalise ])
 !
 
+asJSON
+	"Ne sauve pas le cache"
+	^ #{ 'liste'->liste }
+!
+
 benevoles
 	^ liste
 !
@@ -708,7 +736,17 @@ initialize
 	FdJAnnonceur current
 		on: FdJBenevoleChangeEtat
 		do: [ :evt |
-			self onBenevoleChangeEtat: evt benevole ]
+			self onBenevoleChangeEtat: evt benevole ].
+	FdJAnnonceur current
+		on: FdJApplicationChangeEtat
+		do: [ :evt |
+			self onApplicationChangeEtat: evt etat ]
+!
+
+onApplicationChangeEtat: etat
+	self ajoute:
+		(etat ifTrue: ['Debut'] ifFalse: ['Fin'])
+		, ' de l''application'
 !
 
 onBenevoleChangeEtat: benevole

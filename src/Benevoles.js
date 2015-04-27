@@ -16,6 +16,48 @@ $core.packages["Benevoles"].transport = {"type":"amd","amdNamespace":"amber-bene
 $core.addClass('FdJAnnonce', $globals.Object, [], 'Benevoles');
 
 
+$core.addClass('FdJApplicationChangeEtat', $globals.FdJAnnonce, ['etat'], 'Benevoles');
+$core.addMethod(
+$core.method({
+selector: "etat",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@etat"];
+return $1;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "etat\x0a\x09^ etat",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.FdJApplicationChangeEtat);
+
+$core.addMethod(
+$core.method({
+selector: "etat:",
+protocol: 'as yet unclassified',
+fn: function (nouveau){
+var self=this;
+self["@etat"]=nouveau;
+return self;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["nouveau"],
+source: "etat: nouveau\x0a\x09etat := nouveau",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.FdJApplicationChangeEtat);
+
+
+
 $core.addClass('FdJBenevoleChangeEtat', $globals.FdJAnnonce, ['benevole'], 'Benevoles');
 $core.addMethod(
 $core.method({
@@ -125,6 +167,36 @@ $globals.FdJAnnonceur.klass);
 
 
 $core.addClass('FdJApplication', $globals.Object, ['benevoles', 'selectionneur', 'distributeur', 'importeur', 'historique'], 'Benevoles');
+$core.addMethod(
+$core.method({
+selector: "annonce:",
+protocol: 'initialization',
+fn: function (etat){
+var self=this;
+function $FdJAnnonceur(){return $globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
+function $FdJApplicationChangeEtat(){return $globals.FdJApplicationChangeEtat||(typeof FdJApplicationChangeEtat=="undefined"?nil:FdJApplicationChangeEtat)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2;
+$1=$recv($FdJApplicationChangeEtat())._new();
+$recv($1)._etat_(etat);
+$2=$recv($1)._yourself();
+$recv($recv($FdJAnnonceur())._current())._announce_($2);
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"annonce:",{etat:etat},$globals.FdJApplication)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["etat"],
+source: "annonce: etat\x0a\x09FdJAnnonceur current announce: (FdJApplicationChangeEtat new etat: etat; yourself)",
+referencedClasses: ["FdJAnnonceur", "FdJApplicationChangeEtat"],
+//>>excludeEnd("ide");
+messageSends: ["announce:", "current", "etat:", "new", "yourself"]
+}),
+$globals.FdJApplication);
+
 $core.addMethod(
 $core.method({
 selector: "charge",
@@ -536,6 +608,7 @@ return self._onBenevoleChangeEtat_($recv(evt)._benevole());
 //>>excludeEnd("ctx");
 }));
 $recv(self["@distributeur"])._associe_($recv(self["@benevoles"])._selectionnes());
+self._annonce_(true);
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre},$globals.FdJApplication)});
@@ -543,10 +616,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes)",
+source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).\x0a\x09\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
 referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetBenevoles", "FdJWidgetLegende", "FdJAnnonceur", "FdJBenevoleChangeEtat"],
 //>>excludeEnd("ide");
-messageSends: ["remove", "children", "asJQuery", "initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes"]
+messageSends: ["remove", "children", "asJQuery", "initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes", "annonce:"]
 }),
 $globals.FdJApplication);
 
@@ -678,6 +751,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
+self._annonce_(false);
 $recv(self["@selectionneur"])._supprime();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["supprime"]=1;
@@ -690,10 +764,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "termine\x0a\x09selectionneur supprime.\x0a\x09distributeur supprime\x0a\x09\x22'body' asJQuery children remove\x22",
+source: "termine\x0a\x09self annonce: false.\x0a\x09selectionneur supprime.\x0a\x09distributeur supprime\x0a\x09\x22'body' asJQuery children remove\x22\x0a\x09\x22notifie le début de l'application\x22",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["supprime"]
+messageSends: ["annonce:", "supprime"]
 }),
 $globals.FdJApplication);
 
@@ -2402,6 +2476,26 @@ $globals.FdJBenevoles);
 
 $core.addMethod(
 $core.method({
+selector: "asJSON",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+var $1;
+$1=$globals.HashedCollection._newFromPairs_(["liste",self["@liste"]]);
+return $1;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "asJSON\x0a\x09\x22Ne sauve pas le cache\x22\x0a\x09^ #{ 'liste'->liste }",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
 selector: "benevoles",
 protocol: 'as yet unclassified',
 fn: function (){
@@ -3035,17 +3129,35 @@ fn: function (){
 var self=this;
 function $FdJAnnonceur(){return $globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
 function $FdJBenevoleChangeEtat(){return $globals.FdJBenevoleChangeEtat||(typeof FdJBenevoleChangeEtat=="undefined"?nil:FdJBenevoleChangeEtat)}
+function $FdJApplicationChangeEtat(){return $globals.FdJApplicationChangeEtat||(typeof FdJApplicationChangeEtat=="undefined"?nil:FdJApplicationChangeEtat)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
+var $1;
 self["@liste"]=[];
-$recv($recv($FdJAnnonceur())._current())._on_do_($FdJBenevoleChangeEtat(),(function(evt){
+$1=$recv($FdJAnnonceur())._current();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["current"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._on_do_($FdJBenevoleChangeEtat(),(function(evt){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 return self._onBenevoleChangeEtat_($recv(evt)._benevole());
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["on:do:"]=1;
+//>>excludeEnd("ctx");
+$recv($recv($FdJAnnonceur())._current())._on_do_($FdJApplicationChangeEtat(),(function(evt){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._onApplicationChangeEtat_($recv(evt)._etat());
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,2)});
 //>>excludeEnd("ctx");
 }));
 return self;
@@ -3055,10 +3167,41 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initialize\x0a\x09liste := #().\x0a\x09FdJAnnonceur current\x0a\x09\x09on: FdJBenevoleChangeEtat\x0a\x09\x09do: [ :evt |\x0a\x09\x09\x09self onBenevoleChangeEtat: evt benevole ]",
-referencedClasses: ["FdJAnnonceur", "FdJBenevoleChangeEtat"],
+source: "initialize\x0a\x09liste := #().\x0a\x09FdJAnnonceur current\x0a\x09\x09on: FdJBenevoleChangeEtat\x0a\x09\x09do: [ :evt |\x0a\x09\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x09FdJAnnonceur current\x0a\x09\x09on: FdJApplicationChangeEtat\x0a\x09\x09do: [ :evt |\x0a\x09\x09\x09self onApplicationChangeEtat: evt etat ]",
+referencedClasses: ["FdJAnnonceur", "FdJBenevoleChangeEtat", "FdJApplicationChangeEtat"],
 //>>excludeEnd("ide");
-messageSends: ["on:do:", "current", "onBenevoleChangeEtat:", "benevole"]
+messageSends: ["on:do:", "current", "onBenevoleChangeEtat:", "benevole", "onApplicationChangeEtat:", "etat"]
+}),
+$globals.FdJHistorique);
+
+$core.addMethod(
+$core.method({
+selector: "onApplicationChangeEtat:",
+protocol: 'as yet unclassified',
+fn: function (etat){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $2,$1;
+if($core.assert(etat)){
+$2="Debut";
+} else {
+$2="Fin";
+};
+$1=$recv($2).__comma(" de l'application");
+self._ajoute_($1);
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"onApplicationChangeEtat:",{etat:etat},$globals.FdJHistorique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["etat"],
+source: "onApplicationChangeEtat: etat\x0a\x09self ajoute:\x0a\x09\x09(etat ifTrue: ['Debut'] ifFalse: ['Fin'])\x0a\x09\x09, ' de l''application'",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["ajoute:", ",", "ifTrue:ifFalse:"]
 }),
 $globals.FdJHistorique);
 

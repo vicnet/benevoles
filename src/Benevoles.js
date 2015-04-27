@@ -2255,18 +2255,31 @@ fn: function (){
 var self=this;
 function $FdJAssociation(){return $globals.FdJAssociation||(typeof FdJAssociation=="undefined"?nil:FdJAssociation)}
 function $FdJTShirt(){return $globals.FdJTShirt||(typeof FdJTShirt=="undefined"?nil:FdJTShirt)}
+function $FdJRepas(){return $globals.FdJRepas||(typeof FdJRepas=="undefined"?nil:FdJRepas)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $2,$3,$1;
+var $2,$3,$5,$6,$4,$7,$1;
 $2=self._new();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["new"]=1;
+//>>excludeEnd("ctx");
 $recv($2)._nom_("OSELE");
 $recv($2)._prenom_("Vincent");
 $recv($2)._association_($recv($FdJAssociation())._exemple());
 $recv($2)._tshirt_($recv($FdJTShirt())._at_("h-m"));
 $recv($2)._inscrit_(true);
-$3=$recv($2)._yourself();
-$1=$3;
+$3=$2;
+$5=$recv($FdJRepas())._new();
+$recv($5)._ajouteJour_(true);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["ajouteJour:"]=1;
+//>>excludeEnd("ctx");
+$6=$recv($5)._ajouteJour_(false);
+$4=$6;
+$recv($3)._repas_($4);
+$7=$recv($2)._yourself();
+$1=$7;
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"exemple",{},$globals.FdJBenevole.klass)});
@@ -2274,10 +2287,10 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "exemple\x0a\x09^ self new nom: 'OSELE';\x0a\x09\x09\x09 prenom: 'Vincent';\x0a\x09\x09\x09 association: (FdJAssociation exemple);\x0a\x09\x09\x09 tshirt: (FdJTShirt at: 'h-m');\x0a\x09\x09\x09 inscrit: true;\x0a\x09\x09\x09 yourself",
-referencedClasses: ["FdJAssociation", "FdJTShirt"],
+source: "exemple\x0a\x09^ self new nom: 'OSELE';\x0a\x09\x09\x09 prenom: 'Vincent';\x0a\x09\x09\x09 association: (FdJAssociation exemple);\x0a\x09\x09\x09 tshirt: (FdJTShirt at: 'h-m');\x0a\x09\x09\x09 inscrit: true;\x0a\x09\x09\x09 repas: (FdJRepas new ajouteJour: true;  ajouteJour: false );\x0a\x09\x09\x09 yourself",
+referencedClasses: ["FdJAssociation", "FdJTShirt", "FdJRepas"],
 //>>excludeEnd("ide");
-messageSends: ["nom:", "new", "prenom:", "association:", "exemple", "tshirt:", "at:", "inscrit:", "yourself"]
+messageSends: ["nom:", "new", "prenom:", "association:", "exemple", "tshirt:", "at:", "inscrit:", "repas:", "ajouteJour:", "yourself"]
 }),
 $globals.FdJBenevole.klass);
 
@@ -5245,7 +5258,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3;
+var $1,$2,$3,$4,$5;
 (
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.supercall = true, 
@@ -5259,7 +5272,13 @@ $recv(self["@div"])._with_((function(){
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 $1=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["div"]=1;
+//>>excludeEnd("ctx");
 $recv($1)._class_("info");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["class:"]=1;
+//>>excludeEnd("ctx");
 $2=$recv($1)._with_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx3) {
@@ -5270,9 +5289,16 @@ return self._renderAssociationOn_(html);
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)});
 //>>excludeEnd("ctx");
 }));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["with:"]=2;
+//>>excludeEnd("ctx");
 $2;
 self._renderTShirtOn_(html);
-return self._renderRepasOn_(html);
+self._renderRepasOn_(html);
+$3=$recv(html)._div();
+$recv($3)._class_("annul");
+$4=$recv($3)._with_("X");
+return $4;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
 //>>excludeEnd("ctx");
@@ -5280,8 +5306,8 @@ return self._renderRepasOn_(html);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
-$3=$recv(self["@benevole"])._estInscrit();
-if(!$core.assert($3)){
+$5=$recv(self["@benevole"])._estInscrit();
+if(!$core.assert($5)){
 self._ajouteClasse_("noninscrit");
 };
 $recv(self["@div"])._onClick_((function(){
@@ -5300,7 +5326,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderTShirtOn: html.\x0a\x09\x09self renderRepasOn: html ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderTShirtOn: html.\x0a\x09\x09self renderRepasOn: html.\x0a\x09\x09html div class: 'annul'; with: 'X' ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderTShirtOn:", "renderRepasOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne:"]

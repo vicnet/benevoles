@@ -278,3 +278,22 @@ div.tooltip span
 	border:0;
 	left:-12px;
 }
+.annul {
+    position: absolute;
+    margin-top: -85px;
+    margin-left: 580px;
+
+    display:none;
+
+    padding: 0px 8px 0px 8px;
+    text-align: center;
+    color: red;
+    background-color: lightgray;
+    border-color: red;
+    border-radius: 8px;
+    border: 2px solid;
+    box-shadow: 5px 5px 8px #CCC;
+}
+.benevole:hover .annul {
+    display:block;
+}

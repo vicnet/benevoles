@@ -555,6 +555,7 @@ exemple
 			 association: (FdJAssociation exemple);
 			 tshirt: (FdJTShirt at: 'h-m');
 			 inscrit: true;
+			 repas: (FdJRepas new ajouteJour: true;  ajouteJour: false );
 			 yourself
 !
 
@@ -1176,7 +1177,8 @@ renderOn: html
 			self renderIdentiteOn: html.
 			self renderAssociationOn: html ].
 		self renderTShirtOn: html.
-		self renderRepasOn: html ].
+		self renderRepasOn: html.
+		html div class: 'annul'; with: 'X' ].
 	benevole estInscrit ifFalse: [			
 		self ajouteClasse: 'noninscrit' ].
 	div onClick: [ presentateur selectionne: benevole ]

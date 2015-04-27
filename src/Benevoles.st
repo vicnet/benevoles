@@ -603,7 +603,7 @@ ajouteUnique: desBenevoles
 
 asJSON
 	"Ne sauve pas le cache"
-	^ #{ 'liste'->liste }
+	^ #{ 'liste' -> liste asJSON }
 !
 
 benevoles
@@ -1404,7 +1404,8 @@ FdJWidget subclass: #FdJWidgetSelectionneur
 !FdJWidgetSelectionneur methodsFor: 'as yet unclassified'!
 
 defiltre
-	input asJQuery val: ''
+	input asJQuery val: ''.
+	liste associe: #{}
 !
 
 filtre

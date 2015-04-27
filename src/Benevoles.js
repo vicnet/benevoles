@@ -2480,17 +2480,22 @@ selector: "asJSON",
 protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
 var $1;
-$1=$globals.HashedCollection._newFromPairs_(["liste",self["@liste"]]);
+$1=$globals.HashedCollection._newFromPairs_(["liste",$recv(self["@liste"])._asJSON()]);
 return $1;
-
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"asJSON",{},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "asJSON\x0a\x09\x22Ne sauve pas le cache\x22\x0a\x09^ #{ 'liste'->liste }",
+source: "asJSON\x0a\x09\x22Ne sauve pas le cache\x22\x0a\x09^ #{ 'liste' -> liste asJSON }",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: []
+messageSends: ["asJSON"]
 }),
 $globals.FdJBenevoles);
 
@@ -6529,6 +6534,7 @@ var self=this;
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 $recv($recv(self["@input"])._asJQuery())._val_("");
+$recv(self["@liste"])._associe_($globals.HashedCollection._newFromPairs_([]));
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"defiltre",{},$globals.FdJWidgetSelectionneur)});
@@ -6536,10 +6542,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "defiltre\x0a\x09input asJQuery val: ''",
+source: "defiltre\x0a\x09input asJQuery val: ''.\x0a\x09liste associe: #{}",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["val:", "asJQuery"]
+messageSends: ["val:", "asJQuery", "associe:"]
 }),
 $globals.FdJWidgetSelectionneur);
 

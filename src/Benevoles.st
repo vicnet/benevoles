@@ -778,10 +778,11 @@ importeComplets: rows
 importeRepas: row
 	| repas |
 	repas := FdJRepas new.
-	#('Ven 8 Mai MIDI' 'Ven 8 Mai SOIR' 'Sam 9 Mai MIDI' 'Sam 9 Mai SOIR' 'Dim 10 Mai MIDI' 'Dim 10 Mai SOIR')
+	"Les repas du vendredi midi et dimanche soir ne sont pas pris en compte d'ou le signe - devant le texte"
+	#('-Ven 8 Mai MIDI' 'Ven 8 Mai SOIR' 'Sam 9 Mai MIDI' 'Sam 9 Mai SOIR' 'Dim 10 Mai MIDI' '-Dim 10 Mai SOIR')
 		do: [ :jour |
 			repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].
-	repas vegetarien: (self importeBooleen: (row at: 'Vegetarien')).
+	repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).
 	^ repas
 !
 

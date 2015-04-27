@@ -3524,7 +3524,7 @@ return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1,$3,$2,$4;
 repas=$recv($FdJRepas())._new();
-["Ven 8 Mai MIDI", "Ven 8 Mai SOIR", "Sam 9 Mai MIDI", "Sam 9 Mai SOIR", "Dim 10 Mai MIDI", "Dim 10 Mai SOIR"]._do_((function(jour){
+["-Ven 8 Mai MIDI", "Ven 8 Mai SOIR", "Sam 9 Mai MIDI", "Sam 9 Mai SOIR", "Dim 10 Mai MIDI", "-Dim 10 Mai SOIR"]._do_((function(jour){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -3539,7 +3539,7 @@ return $recv($1)._ajouteJour_($2);
 }, function($ctx2) {$ctx2.fillBlock({jour:jour},$ctx1,1)});
 //>>excludeEnd("ctx");
 }));
-$recv(repas)._vegetarien_(self._importeBooleen_($recv(row)._at_("Vegetarien")));
+$recv(repas)._vegetarien_(self._importeBooleen_($recv(row)._at_("repas_vegetarien")));
 $4=repas;
 return $4;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -3548,7 +3548,7 @@ return $4;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["row"],
-source: "importeRepas: row\x0a\x09| repas |\x0a\x09repas := FdJRepas new.\x0a\x09#('Ven 8 Mai MIDI' 'Ven 8 Mai SOIR' 'Sam 9 Mai MIDI' 'Sam 9 Mai SOIR' 'Dim 10 Mai MIDI' 'Dim 10 Mai SOIR')\x0a\x09\x09do: [ :jour |\x0a\x09\x09\x09repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].\x0a\x09repas vegetarien: (self importeBooleen: (row at: 'Vegetarien')).\x0a\x09^ repas",
+source: "importeRepas: row\x0a\x09| repas |\x0a\x09repas := FdJRepas new.\x0a\x09\x22Les repas du vendredi midi et dimanche soir ne sont pas pris en compte d'ou le signe - devant le texte\x22\x0a\x09#('-Ven 8 Mai MIDI' 'Ven 8 Mai SOIR' 'Sam 9 Mai MIDI' 'Sam 9 Mai SOIR' 'Dim 10 Mai MIDI' '-Dim 10 Mai SOIR')\x0a\x09\x09do: [ :jour |\x0a\x09\x09\x09repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].\x0a\x09repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).\x0a\x09^ repas",
 referencedClasses: ["FdJRepas"],
 //>>excludeEnd("ide");
 messageSends: ["new", "do:", "ajouteJour:", "includesSubString:", "at:", "vegetarien:", "importeBooleen:"]

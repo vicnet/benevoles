@@ -297,3 +297,9 @@ div.tooltip span
 .benevole:hover .annul {
     display:block;
 }
+.selectionneur .benevoles:hover .annul{
+    display:none;
+}
+.selectionneur .benevoles .annul {
+    display:none;
+}

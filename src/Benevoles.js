@@ -199,6 +199,30 @@ $globals.FdJApplication);
 
 $core.addMethod(
 $core.method({
+selector: "annule:",
+protocol: 'initialization',
+fn: function (benevole){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+$recv(benevole)._reinit();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"annule:",{benevole:benevole},$globals.FdJApplication)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["benevole"],
+source: "annule: benevole\x0a\x09benevole reinit",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["reinit"]
+}),
+$globals.FdJApplication);
+
+$core.addMethod(
+$core.method({
 selector: "charge",
 protocol: 'initialization',
 fn: function (){
@@ -632,15 +656,13 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2;
+var $1;
 self._filtre_($recv(self["@selectionneur"])._filtre());
 $1=$recv(benevole)._estEncours();
 if($core.assert($1)){
 $recv(self["@selectionneur"])._defiltre();
 $recv(self["@distributeur"])._ajoute_(benevole);
-};
-$2=$recv(benevole)._estDistribue();
-if($core.assert($2)){
+} else {
 $recv(self["@distributeur"])._supprime_(benevole);
 };
 self._sauve();
@@ -651,10 +673,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["benevole"],
-source: "onBenevoleChangeEtat: benevole\x0a\x09self filtre: (selectionneur filtre).\x0a\x09benevole estEncours ifTrue: [\x0a\x09\x09selectionneur defiltre.\x0a\x09\x09distributeur ajoute: benevole ].\x0a\x09benevole estDistribue ifTrue: [\x0a\x09\x09distributeur supprime: benevole ].\x0a\x09self sauve",
+source: "onBenevoleChangeEtat: benevole\x0a\x09self filtre: (selectionneur filtre).\x0a\x09benevole estEncours\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09selectionneur defiltre.\x0a\x09\x09\x09distributeur ajoute: benevole ]\x0a\x09 \x09ifFalse: [\x0a\x09\x09\x09distributeur supprime: benevole ].\x0a\x09self sauve",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["filtre:", "filtre", "ifTrue:", "estEncours", "defiltre", "ajoute:", "estDistribue", "supprime:", "sauve"]
+messageSends: ["filtre:", "filtre", "ifTrue:ifFalse:", "estEncours", "defiltre", "ajoute:", "supprime:", "sauve"]
 }),
 $globals.FdJApplication);
 
@@ -668,7 +690,6 @@ var self=this;
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 $recv(self["@benevoles"])._reinit();
-self._sauve();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"reinit",{},$globals.FdJApplication)});
@@ -676,10 +697,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "reinit\x0a\x09benevoles reinit.\x0a\x09self sauve",
+source: "reinit\x0a\x09benevoles reinit\x22.\x0a\x09self sauve\x22",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["reinit", "sauve"]
+messageSends: ["reinit"]
 }),
 $globals.FdJApplication);
 
@@ -1283,7 +1304,7 @@ $globals.FdJAssociations.klass);
 
 $core.addClass('FdJBenevole', $globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'repas', 'etat', 'inscrit', 'nomSansAccent', 'prenomSansAccent'], 'Benevoles');
 //>>excludeStart("ide", pragmas.excludeIdeData);
-$globals.FdJBenevole.comment="- tshirt: un TShirt\x0a- etat: pas encore venu, en cours de traitement, terminé";
+$globals.FdJBenevole.comment="- tshirt: un TShirt\x0a- etat: pas encore venu (nil), en cours de traitement (en cours), terminé (distribue)";
 //>>excludeEnd("ide");
 $core.addMethod(
 $core.method({
@@ -2154,16 +2175,22 @@ selector: "reinit",
 protocol: 'accessing',
 fn: function (){
 var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
 self["@etat"]=nil;
+self._annonce();
 return self;
-
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"reinit",{},$globals.FdJBenevole)});
+//>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "reinit\x0a\x09etat := nil",
+source: "reinit\x0a\x09etat := nil.\x0a\x09self annonce",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: []
+messageSends: ["annonce"]
 }),
 $globals.FdJBenevole);
 
@@ -5064,7 +5091,7 @@ $globals.FdJWidget);
 $core.addClass('FdJWidgetBarre', $globals.FdJWidget, [], 'Benevoles');
 
 
-$core.addClass('FdJWidgetBenevole', $globals.FdJWidget, ['benevole'], 'Benevoles');
+$core.addClass('FdJWidgetBenevole', $globals.FdJWidget, ['benevole', 'annulation'], 'Benevoles');
 $core.addMethod(
 $core.method({
 selector: "associe:",
@@ -5101,6 +5128,41 @@ source: "benevole\x0a\x09^ benevole",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []
+}),
+$globals.FdJWidgetBenevole);
+
+$core.addMethod(
+$core.method({
+selector: "renderAnnulationOn:",
+protocol: 'rendering',
+fn: function (html){
+var self=this;
+var btn;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2;
+self["@annulation"]=false;
+$1=$recv(html)._div();
+$recv($1)._class_("annul");
+$2=$recv($1)._with_("X");
+btn=$2;
+$recv(btn)._onClick_((function(){
+self["@annulation"]=true;
+return self["@annulation"];
+
+}));
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderAnnulationOn:",{html:html,btn:btn},$globals.FdJWidgetBenevole)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderAnnulationOn: html\x0a\x09| btn |\x0a\x09annulation := false.\x0a\x09btn := html div class: 'annul'; with: 'X'.\x0a\x09btn onClick: [ annulation := true ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "div", "with:", "onClick:"]
 }),
 $globals.FdJWidgetBenevole);
 
@@ -5258,7 +5320,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3,$4,$5;
+var $1,$2,$3;
 (
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.supercall = true, 
@@ -5272,13 +5334,7 @@ $recv(self["@div"])._with_((function(){
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 $1=$recv(html)._div();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["div"]=1;
-//>>excludeEnd("ctx");
 $recv($1)._class_("info");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["class:"]=1;
-//>>excludeEnd("ctx");
 $2=$recv($1)._with_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx3) {
@@ -5289,16 +5345,10 @@ return self._renderAssociationOn_(html);
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)});
 //>>excludeEnd("ctx");
 }));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["with:"]=2;
-//>>excludeEnd("ctx");
 $2;
 self._renderTShirtOn_(html);
 self._renderRepasOn_(html);
-$3=$recv(html)._div();
-$recv($3)._class_("annul");
-$4=$recv($3)._with_("X");
-return $4;
+return self._renderAnnulationOn_(html);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
 //>>excludeEnd("ctx");
@@ -5306,15 +5356,15 @@ return $4;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
-$5=$recv(self["@benevole"])._estInscrit();
-if(!$core.assert($5)){
+$3=$recv(self["@benevole"])._estInscrit();
+if(!$core.assert($3)){
 self._ajouteClasse_("noninscrit");
 };
 $recv(self["@div"])._onClick_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-return $recv(self["@presentateur"])._selectionne_(self["@benevole"]);
+return self._selectionne();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)});
 //>>excludeEnd("ctx");
@@ -5326,10 +5376,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderTShirtOn: html.\x0a\x09\x09self renderRepasOn: html.\x0a\x09\x09html div class: 'annul'; with: 'X' ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ presentateur selectionne: benevole ]",
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderTShirtOn: html.\x0a\x09\x09self renderRepasOn: html.\x0a\x09\x09self renderAnnulationOn: html ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ self selectionne ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderTShirtOn:", "renderRepasOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne:"]
+messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderTShirtOn:", "renderRepasOn:", "renderAnnulationOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne"]
 }),
 $globals.FdJWidgetBenevole);
 
@@ -5632,6 +5682,37 @@ source: "renderToolipOn: html with: tooltip on: adiv\x0a\x09| span |\x0a\x09adiv
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["ajouteClasse:", "with:", "span", "class:", "img", "src:"]
+}),
+$globals.FdJWidgetBenevole);
+
+$core.addMethod(
+$core.method({
+selector: "selectionne",
+protocol: 'rendering',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=self["@annulation"];
+if($core.assert($1)){
+$recv(self["@presentateur"])._annule_(self["@benevole"]);
+} else {
+$recv(self["@presentateur"])._selectionne_(self["@benevole"]);
+};
+self["@annulation"]=false;
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"selectionne",{},$globals.FdJWidgetBenevole)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "selectionne\x0a\x09annulation\x0a\x09\x09ifTrue: [ presentateur annule: benevole ]\x0a\x09\x09ifFalse: [ presentateur selectionne: benevole ].\x0a\x09annulation := false",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["ifTrue:ifFalse:", "annule:", "selectionne:"]
 }),
 $globals.FdJWidgetBenevole);
 
@@ -6559,8 +6640,14 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-$recv($recv(self["@input"])._asJQuery())._val_("");
+var $1;
+$1=$recv(self["@input"])._asJQuery();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["asJQuery"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._val_("");
 $recv(self["@liste"])._associe_($globals.HashedCollection._newFromPairs_([]));
+$recv($recv(self["@suite"])._asJQuery())._hide();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"defiltre",{},$globals.FdJWidgetSelectionneur)});
@@ -6568,10 +6655,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "defiltre\x0a\x09input asJQuery val: ''.\x0a\x09liste associe: #{}",
+source: "defiltre\x0a\x09input asJQuery val: ''.\x0a\x09liste associe: #{}.\x0a\x09suite asJQuery hide",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["val:", "asJQuery", "associe:"]
+messageSends: ["val:", "asJQuery", "associe:", "hide"]
 }),
 $globals.FdJWidgetSelectionneur);
 

@@ -60,6 +60,10 @@ annonce: etat
 	FdJAnnonceur current announce: (FdJApplicationChangeEtat new etat: etat; yourself)
 !
 
+annule: benevole
+	benevole reinit
+!
+
 charge
 	"Charge le modele (ou créé un exemple)"
 	historique := FdJStockage
@@ -160,17 +164,18 @@ initialize
 
 onBenevoleChangeEtat: benevole
 	self filtre: (selectionneur filtre).
-	benevole estEncours ifTrue: [
-		selectionneur defiltre.
-		distributeur ajoute: benevole ].
-	benevole estDistribue ifTrue: [
-		distributeur supprime: benevole ].
+	benevole estEncours
+		ifTrue: [
+			selectionneur defiltre.
+			distributeur ajoute: benevole ]
+	 	ifFalse: [
+			distributeur supprime: benevole ].
 	self sauve
 !
 
 reinit
-	benevoles reinit.
-	self sauve
+	benevoles reinit".
+	self sauve"
 !
 
 sauve
@@ -356,7 +361,7 @@ Object subclass: #FdJBenevole
 	package: 'Benevoles'!
 !FdJBenevole commentStamp!
 - tshirt: un TShirt
-- etat: pas encore venu, en cours de traitement, terminé!
+- etat: pas encore venu (nil), en cours de traitement (en cours), terminé (distribue)!
 
 !FdJBenevole methodsFor: 'accessing'!
 
@@ -526,7 +531,8 @@ prenomSansAccent
 !
 
 reinit
-	etat := nil
+	etat := nil.
+	self annonce
 !
 
 repas
@@ -1136,7 +1142,7 @@ FdJWidget subclass: #FdJWidgetBarre
 	package: 'Benevoles'!
 
 FdJWidget subclass: #FdJWidgetBenevole
-	instanceVariableNames: 'benevole'
+	instanceVariableNames: 'benevole annulation'
 	package: 'Benevoles'!
 
 !FdJWidgetBenevole methodsFor: 'rendering'!
@@ -1147,6 +1153,13 @@ associe: unBenevole
 
 benevole
 	^ benevole
+!
+
+renderAnnulationOn: html
+	| btn |
+	annulation := false.
+	btn := html div class: 'annul'; with: 'X'.
+	btn onClick: [ annulation := true ]
 !
 
 renderAssociationOn: html
@@ -1178,10 +1191,10 @@ renderOn: html
 			self renderAssociationOn: html ].
 		self renderTShirtOn: html.
 		self renderRepasOn: html.
-		html div class: 'annul'; with: 'X' ].
+		self renderAnnulationOn: html ].
 	benevole estInscrit ifFalse: [			
 		self ajouteClasse: 'noninscrit' ].
-	div onClick: [ presentateur selectionne: benevole ]
+	div onClick: [ self selectionne ]
 !
 
 renderRepasOn: html
@@ -1231,6 +1244,13 @@ renderToolipOn: html with: tooltip on: adiv
 			with: tooltip
 		].
 		^ span
+!
+
+selectionne
+	annulation
+		ifTrue: [ presentateur annule: benevole ]
+		ifFalse: [ presentateur selectionne: benevole ].
+	annulation := false
 ! !
 
 FdJWidget subclass: #FdJWidgetBenevoles
@@ -1407,7 +1427,8 @@ FdJWidget subclass: #FdJWidgetSelectionneur
 
 defiltre
 	input asJQuery val: ''.
-	liste associe: #{}
+	liste associe: #{}.
+	suite asJQuery hide
 !
 
 filtre

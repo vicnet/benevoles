@@ -258,7 +258,7 @@ accents
 !
 
 open
-	self new
+	^ self new
 ! !
 
 Object subclass: #FdJAssociation
@@ -723,7 +723,7 @@ affiche
 			  date dayOfMonth asString, '/', date month asString, '/', date year asString
 			, ' '
 			, date hours asString, ':', date minutes asString, ':', date seconds asString.
-		Transcript show: sdate, ',', (e at: 'evennement'), '''';cr ]
+		Transcript show: sdate, ',', (e at: 'evennement');cr ]
 !
 
 ajoute: texte
@@ -757,12 +757,11 @@ onApplicationChangeEtat: etat
 !
 
 onBenevoleChangeEtat: benevole
-	| nom |
-	nom := benevole nom, ' ', benevole prenom.
-	benevole estEncours ifTrue: [ 
-		self ajoute: 'Debut distribution ''', nom ].
-	benevole estDistribue ifTrue: [
-		self ajoute: 'Fin distribution ''', nom ]
+	| action |
+	benevole estEncours ifTrue: [ action := 'Debut distribution' ].
+	benevole estDistribue ifTrue: [ action := 'Fin distribution' ].
+	benevole estDisponible ifTrue: [ action := 'Annulation' ].
+	action ifNotNil: [ self ajoute: action, ' ''', benevole identite, '''' ]
 !
 
 sauve

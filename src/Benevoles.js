@@ -863,15 +863,16 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-self._new();
-return self;
+var $1;
+$1=self._new();
+return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"open",{},$globals.FdJApplication.klass)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "open\x0a\x09self new",
+source: "open\x0a\x09^ self new",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["new"]
@@ -3014,7 +3015,7 @@ function $Date(){return $globals.Date||(typeof Date=="undefined"?nil:Date)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$11,$10,$12,$9,$8,$13,$7,$6,$14,$5,$4,$15,$3,$2,$17,$16,$18;
+var $1,$11,$10,$12,$9,$8,$13,$7,$6,$14,$5,$4,$15,$3,$2,$16,$17;
 $recv($Transcript())._clear();
 $recv(self["@liste"])._do_((function(e){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -3087,17 +3088,13 @@ sdate=$recv($2).__comma($recv($recv(date)._seconds())._asString());
 $ctx2.sendIdx[","]=1;
 //>>excludeEnd("ctx");
 sdate;
-$17=$recv($recv(sdate).__comma(",")).__comma($recv(e)._at_("evennement"));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx[","]=12;
-//>>excludeEnd("ctx");
-$16=$recv($17).__comma("'");
+$16=$recv($recv(sdate).__comma(",")).__comma($recv(e)._at_("evennement"));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx2.sendIdx[","]=11;
 //>>excludeEnd("ctx");
 $recv($Transcript())._show_($16);
-$18=$recv($Transcript())._cr();
-return $18;
+$17=$recv($Transcript())._cr();
+return $17;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({e:e},$ctx1,1)});
 //>>excludeEnd("ctx");
@@ -3109,7 +3106,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "affiche\x0a\x09| date sdate |\x0a\x09Transcript clear.\x0a\x09liste do: [ :e |\x0a\x09\x09date := Date new: (e at: 'date').\x0a\x09\x09sdate :=\x0a\x09\x09\x09  date dayOfMonth asString, '/', date month asString, '/', date year asString\x0a\x09\x09\x09, ' '\x0a\x09\x09\x09, date hours asString, ':', date minutes asString, ':', date seconds asString.\x0a\x09\x09Transcript show: sdate, ',', (e at: 'evennement'), '''';cr ]",
+source: "affiche\x0a\x09| date sdate |\x0a\x09Transcript clear.\x0a\x09liste do: [ :e |\x0a\x09\x09date := Date new: (e at: 'date').\x0a\x09\x09sdate :=\x0a\x09\x09\x09  date dayOfMonth asString, '/', date month asString, '/', date year asString\x0a\x09\x09\x09, ' '\x0a\x09\x09\x09, date hours asString, ':', date minutes asString, ':', date seconds asString.\x0a\x09\x09Transcript show: sdate, ',', (e at: 'evennement');cr ]",
 referencedClasses: ["Transcript", "Date"],
 //>>excludeEnd("ide");
 messageSends: ["clear", "do:", "new:", "at:", ",", "asString", "dayOfMonth", "month", "year", "hours", "minutes", "seconds", "show:", "cr"]
@@ -3256,45 +3253,51 @@ selector: "onBenevoleChangeEtat:",
 protocol: 'as yet unclassified',
 fn: function (benevole){
 var self=this;
-var nom;
+var action;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3,$4;
-$1=$recv($recv(benevole)._nom()).__comma(" ");
+var $1,$2,$3,$4,$6,$5,$receiver;
+$1=$recv(benevole)._estEncours();
+if($core.assert($1)){
+action="Debut distribution";
+action;
+};
+$2=$recv(benevole)._estDistribue();
+if($core.assert($2)){
+action="Fin distribution";
+action;
+};
+$3=$recv(benevole)._estDisponible();
+if($core.assert($3)){
+action="Annulation";
+action;
+};
+$4=action;
+if(($receiver = $4) == null || $receiver.isNil){
+$4;
+} else {
+$6=$recv($recv(action).__comma(" '")).__comma($recv(benevole)._identite());
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx[","]=2;
 //>>excludeEnd("ctx");
-nom=$recv($1).__comma($recv(benevole)._prenom());
+$5=$recv($6).__comma("'");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx[","]=1;
 //>>excludeEnd("ctx");
-$2=$recv(benevole)._estEncours();
-if($core.assert($2)){
-$3="Debut distribution '".__comma(nom);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx[","]=3;
-//>>excludeEnd("ctx");
-self._ajoute_($3);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["ajoute:"]=1;
-//>>excludeEnd("ctx");
-};
-$4=$recv(benevole)._estDistribue();
-if($core.assert($4)){
-self._ajoute_("Fin distribution '".__comma(nom));
+self._ajoute_($5);
 };
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"onBenevoleChangeEtat:",{benevole:benevole,nom:nom},$globals.FdJHistorique)});
+}, function($ctx1) {$ctx1.fill(self,"onBenevoleChangeEtat:",{benevole:benevole,action:action},$globals.FdJHistorique)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["benevole"],
-source: "onBenevoleChangeEtat: benevole\x0a\x09| nom |\x0a\x09nom := benevole nom, ' ', benevole prenom.\x0a\x09benevole estEncours ifTrue: [ \x0a\x09\x09self ajoute: 'Debut distribution ''', nom ].\x0a\x09benevole estDistribue ifTrue: [\x0a\x09\x09self ajoute: 'Fin distribution ''', nom ]",
+source: "onBenevoleChangeEtat: benevole\x0a\x09| action |\x0a\x09benevole estEncours ifTrue: [ action := 'Debut distribution' ].\x0a\x09benevole estDistribue ifTrue: [ action := 'Fin distribution' ].\x0a\x09benevole estDisponible ifTrue: [ action := 'Annulation' ].\x0a\x09action ifNotNil: [ self ajoute: action, ' ''', benevole identite, '''' ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: [",", "nom", "prenom", "ifTrue:", "estEncours", "ajoute:", "estDistribue"]
+messageSends: ["ifTrue:", "estEncours", "estDistribue", "estDisponible", "ifNotNil:", "ajoute:", ",", "identite"]
 }),
 $globals.FdJHistorique);
 

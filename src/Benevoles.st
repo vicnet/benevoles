@@ -128,11 +128,13 @@ importe: texte
 initialize
 	| barre |
 	'body' asJQuery children remove.
+"	window onbeforeunload: [ self termine. nil ]."
+	window onunload: [ self termine ].
 	super initialize.
 	
 	"Modele"
 	self charge.
-	
+historique affiche.	
 	"Widgets"
 	barre := FdJWidgetBarre new
 		presentateur: self.
@@ -190,11 +192,9 @@ selectionne: benevole
 !
 
 termine
+	"notifie la fin de l'application"
 	self annonce: false.
-	selectionneur supprime.
-	distributeur supprime
-	"'body' asJQuery children remove"
-	"notifie le début de l'application"
+	'body' asJQuery children remove
 !
 
 vide
@@ -766,6 +766,11 @@ onBenevoleChangeEtat: benevole
 
 sauve
 	FdJStockage sauve: self
+!
+
+vide
+	liste := #().
+	self sauve
 ! !
 
 Object subclass: #FdJImporteur

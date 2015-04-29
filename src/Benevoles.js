@@ -567,6 +567,15 @@ $ctx1.sendIdx["asJQuery"]=1;
 //>>excludeEnd("ctx");
 $1=$recv($2)._children();
 $recv($1)._remove();
+$recv(window)._onunload_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._termine();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
 (
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.supercall = true, 
@@ -576,6 +585,7 @@ $globals.FdJApplication.superclass.fn.prototype._initialize.apply($recv(self), [
 $ctx1.supercall = false;
 //>>excludeEnd("ctx");;
 self._charge();
+$recv(self["@historique"])._affiche();
 $3=$recv($FdJWidgetBarre())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["new"]=1;
@@ -628,7 +638,7 @@ return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 return self._onBenevoleChangeEtat_($recv(evt)._benevole());
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,1)});
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,2)});
 //>>excludeEnd("ctx");
 }));
 $recv(self["@distributeur"])._associe_($recv(self["@benevoles"])._selectionnes());
@@ -640,10 +650,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).\x0a\x09\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
+source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x22\x09window onbeforeunload: [ self termine. nil ].\x22\x0a\x09window onunload: [ self termine ].\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0ahistorique affiche.\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).\x0a\x09\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
 referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetBenevoles", "FdJWidgetLegende", "FdJAnnonceur", "FdJBenevoleChangeEtat"],
 //>>excludeEnd("ide");
-messageSends: ["remove", "children", "asJQuery", "initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes", "annonce:"]
+messageSends: ["remove", "children", "asJQuery", "onunload:", "termine", "initialize", "charge", "affiche", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes", "annonce:"]
 }),
 $globals.FdJApplication);
 
@@ -773,11 +783,7 @@ var self=this;
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 self._annonce_(false);
-$recv(self["@selectionneur"])._supprime();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["supprime"]=1;
-//>>excludeEnd("ctx");
-$recv(self["@distributeur"])._supprime();
+$recv($recv("body"._asJQuery())._children())._remove();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"termine",{},$globals.FdJApplication)});
@@ -785,10 +791,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "termine\x0a\x09self annonce: false.\x0a\x09selectionneur supprime.\x0a\x09distributeur supprime\x0a\x09\x22'body' asJQuery children remove\x22\x0a\x09\x22notifie le début de l'application\x22",
+source: "termine\x0a\x09\x22notifie la fin de l'application\x22\x0a\x09self annonce: false.\x0a\x09'body' asJQuery children remove",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["annonce:", "supprime"]
+messageSends: ["annonce:", "remove", "children", "asJQuery"]
 }),
 $globals.FdJApplication);
 
@@ -3323,6 +3329,31 @@ source: "sauve\x0a\x09FdJStockage sauve: self",
 referencedClasses: ["FdJStockage"],
 //>>excludeEnd("ide");
 messageSends: ["sauve:"]
+}),
+$globals.FdJHistorique);
+
+$core.addMethod(
+$core.method({
+selector: "vide",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+self["@liste"]=[];
+self._sauve();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"vide",{},$globals.FdJHistorique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "vide\x0a\x09liste := #().\x0a\x09self sauve",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["sauve"]
 }),
 $globals.FdJHistorique);
 

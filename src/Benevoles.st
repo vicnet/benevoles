@@ -801,14 +801,16 @@ importeBooleen: value
 !
 
 importeComplet: row
-	| benevole |
+	| benevole participe |
+	participe := self importeBooleen: (row at: 'participe').
 	benevole := FdJStockage charge: FdJBenevole depuis: #{
 		'nom' -> (row at: 'nom').
 		'prenom' -> (row at: 'prenom').
 		'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).
-		'inscrit' -> (self importeBooleen: (row at: 'participe'))
+		'inscrit' -> participe
 		}.
-	benevole repas: (self importeRepas: row).
+	(row at: 'repas') ifNotEmpty: [
+		benevole repas: (self importeRepas: row) ].
 	benevole tshirt: (self importeTShirt: row).
 	^ benevole
 !
@@ -842,6 +844,7 @@ importeTShirt: row
 !FdJImporteur methodsFor: 'obsolete'!
 
 importeBenevole: row
+	"Import standart pour les listes simples spéciales: auteurs, ..."
 	^ FdJStockage charge: FdJBenevole depuis: #{
 		'nom' -> (row at: 'Nom').
 		'prenom' -> (row at: 'Prénom').
@@ -1437,8 +1440,7 @@ filtre
 renderOn: html
 	super renderOn: html.
 	div with: [
-		input := html input.
-		input onKeyUp: [ presentateur filtre: (self filtre) ].
+		self renderSelectionneurOn: html.
 		
 		html div class: 'menu'; with: [
 			suite := html div class: 'suite'; with: '...'.
@@ -1448,6 +1450,15 @@ renderOn: html
 			liste renderOn: html
 			]
 		]
+!
+
+renderSelectionneurOn: html
+	html span class: 'deleteicon';
+		with: [
+			input := html input.
+			input onKeyUp: [ presentateur filtre: (self filtre) ].
+			html span onClick: [ self defiltre ]
+			]
 !
 
 selectionne: benevoles

@@ -567,15 +567,6 @@ $ctx1.sendIdx["asJQuery"]=1;
 //>>excludeEnd("ctx");
 $1=$recv($2)._children();
 $recv($1)._remove();
-$recv(window)._onunload_((function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-return self._termine();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
-//>>excludeEnd("ctx");
-}));
 (
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.supercall = true, 
@@ -585,7 +576,6 @@ $globals.FdJApplication.superclass.fn.prototype._initialize.apply($recv(self), [
 $ctx1.supercall = false;
 //>>excludeEnd("ctx");;
 self._charge();
-$recv(self["@historique"])._affiche();
 $3=$recv($FdJWidgetBarre())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["new"]=1;
@@ -638,7 +628,7 @@ return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 return self._onBenevoleChangeEtat_($recv(evt)._benevole());
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,2)});
+}, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,1)});
 //>>excludeEnd("ctx");
 }));
 $recv(self["@distributeur"])._associe_($recv(self["@benevoles"])._selectionnes());
@@ -650,10 +640,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x22\x09window onbeforeunload: [ self termine. nil ].\x22\x0a\x09window onunload: [ self termine ].\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0ahistorique affiche.\x09\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).\x0a\x09\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
+source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x22\x09window onunload: [ self termine ].\x22\x0a\x09super initialize.\x0a\x09\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).\x0a\x09\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
 referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetBenevoles", "FdJWidgetLegende", "FdJAnnonceur", "FdJBenevoleChangeEtat"],
 //>>excludeEnd("ide");
-messageSends: ["remove", "children", "asJQuery", "onunload:", "termine", "initialize", "charge", "affiche", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes", "annonce:"]
+messageSends: ["remove", "children", "asJQuery", "initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes", "annonce:"]
 }),
 $globals.FdJApplication);
 
@@ -2624,12 +2614,11 @@ selector: "filtre:max:",
 protocol: 'as yet unclassified',
 fn: function (texte,max){
 var self=this;
-var parties,selection,result,valeur;
-function $Transcript(){return $globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+var result;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3,$5,$4,$6,$8,$7,$9,$10,$11,$12,$13,$receiver;
+var $1,$2,$3,$4,$5,$6;
 var $early={};
 try {
 $1=$recv(texte)._isEmpty();
@@ -2637,80 +2626,38 @@ if($core.assert($1)){
 $2=[];
 return $2;
 };
-parties=$recv($recv(texte)._tokenize_(" "))._collect_((function(p){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-return $recv(p)._sansAccent();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({p:p},$ctx1,2)});
-//>>excludeEnd("ctx");
-}));
-$3=self["@cache"];
-if(($receiver = $3) == null || $receiver.isNil){
-$3;
-} else {
-selection=$recv(self["@cache"])._at_($recv(texte)._first());
-selection;
-$5=$recv(selection)._size();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["size"]=1;
-//>>excludeEnd("ctx");
-$4="Cache active:".__comma($5);
-$recv($Transcript())._show_($4);
-$6=$recv($Transcript())._cr();
-$6;
-$8=$recv(texte)._size();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["size"]=2;
-//>>excludeEnd("ctx");
-$7=$recv($8).__eq((1));
-if(!$core.assert($7)){
-selection=self._filtreBrut_avec_(selection,parties);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["filtreBrut:avec:"]=1;
-//>>excludeEnd("ctx");
-selection;
-};
-};
-$9=selection;
-if(($receiver = $9) == null || $receiver.isNil){
-selection=self._filtreBrut_avec_(self["@liste"],parties);
-} else {
-selection=$9;
-};
 result=[];
-$recv(selection)._do_((function(s){
+$recv(self._filtreCache_(texte))._do_((function(s){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-$10=$recv(s)._estDisponible();
-if($core.assert($10)){
+$3=$recv(s)._estDisponible();
+if($core.assert($3)){
 $recv(result)._add_(s);
-$11=$recv($recv(result)._size()).__gt_eq(max);
-if($core.assert($11)){
-$12=result;
-throw $early=[$12];
+$4=$recv($recv(result)._size()).__gt_eq(max);
+if($core.assert($4)){
+$5=result;
+throw $early=[$5];
 };
 };
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,6)});
+}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,2)});
 //>>excludeEnd("ctx");
 }));
-$13=result;
-return $13;
+$6=result;
+return $6;
 }
 catch(e) {if(e===$early)return e[0]; throw e}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,parties:parties,selection:selection,result:result,valeur:valeur},$globals.FdJBenevoles)});
+}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,result:result},$globals.FdJBenevoles)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte", "max"],
-source: "filtre: texte max: max\x0a\x09\x22renvoie un tableau de taille maximum a max des benevoles correspondant a texte\x22\x0a\x09| parties selection result valeur |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09\x0a\x09\x22recherche benevoles repondant au critere\x22\x0a\x09cache ifNotNil: [\x0a\x09\x09selection := cache at: texte first.\x0a\x09\x09Transcript show: 'Cache active:',selection size; cr.\x0a\x09\x09(texte size = 1) ifFalse: [\x0a\x09\x09\x09\x09selection := self filtreBrut: selection avec: parties\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09selection := selection ifNil:\x0a\x09\x09[ self filtreBrut: liste avec: parties ].\x0a\x0a\x09\x22Restriction a max item\x22\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09(s estDisponible) ifTrue: [\x0a\x09\x09\x09result add: s.\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
-referencedClasses: ["Transcript"],
+source: "filtre: texte max: max\x0a\x09\x22renvoie un tableau de taille maximum a max des benevoles correspondant a texte\x22\x0a\x09| result |\x0a\x09\x22teste le nom\x22\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x0a\x09\x22recherche benevoles repondant au critere\x22\x0a\x09\x22Restriction a max item\x22\x0a\x09result := #().\x0a\x09(self filtreCache: texte) do: [ :s |\x0a\x09\x09(s estDisponible) ifTrue: [\x0a\x09\x09\x09result add: s.\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
+referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["ifTrue:", "isEmpty", "collect:", "tokenize:", "sansAccent", "ifNotNil:", "at:", "first", "show:", ",", "size", "cr", "ifFalse:", "=", "filtreBrut:avec:", "ifNil:", "do:", "estDisponible", "add:", ">="]
+messageSends: ["ifTrue:", "isEmpty", "do:", "filtreCache:", "estDisponible", "add:", ">=", "size"]
 }),
 $globals.FdJBenevoles);
 
@@ -2795,6 +2742,63 @@ $globals.FdJBenevoles);
 
 $core.addMethod(
 $core.method({
+selector: "filtreCache:",
+protocol: 'as yet unclassified',
+fn: function (texte){
+var self=this;
+var parties,sansaccent;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$3,$receiver;
+sansaccent=$recv(texte)._sansAccent();
+parties=$recv(sansaccent)._tokenize_(" ");
+$1=self["@cache"];
+if(($receiver = $1) == null || $receiver.isNil){
+$2=self._filtreBrut_avec_(self["@liste"],parties);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["filtreBrut:avec:"]=1;
+//>>excludeEnd("ctx");
+return $2;
+} else {
+$1;
+};
+$3=$recv(self["@cache"])._at_ifPresent_ifAbsent_($recv(sansaccent)._first(),(function(s){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._filtreBrut_avec_(s,parties);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["filtreBrut:avec:"]=2;
+//>>excludeEnd("ctx");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,2)});
+//>>excludeEnd("ctx");
+}),(function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._filtreBrut_avec_(self["@liste"],parties);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)});
+//>>excludeEnd("ctx");
+}));
+return $3;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"filtreCache:",{texte:texte,parties:parties,sansaccent:sansaccent},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["texte"],
+source: "filtreCache: texte\x0a\x09| parties sansaccent |\x0a\x09sansaccent := texte sansAccent.\x0a\x09parties := (sansaccent tokenize: ' ').\x0a\x0a\x09\x22si pas de cache, recherche complete\x22\x0a\x09cache ifNil: [ ^ self filtreBrut: liste avec: parties ].\x0a\x09\x22recherche benevoles repondant au critere\x22\x0a\x09^ cache at: sansaccent first\x0a\x09\x09ifPresent: [ :s | self filtreBrut: s avec: parties ]\x0a\x09\x09ifAbsent: [ self filtreBrut: liste avec: parties ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["sansAccent", "tokenize:", "ifNil:", "filtreBrut:avec:", "at:ifPresent:ifAbsent:", "first"]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
 selector: "fromJSON:",
 protocol: 'as yet unclassified',
 fn: function (variables){
@@ -2832,14 +2836,14 @@ selector: "majCache",
 protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
-function $HashedCollection(){return $globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
+var chars;
 function $String(){return $globals.String||(typeof String=="undefined"?nil:String)}
+function $HashedCollection(){return $globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1;
-self["@cache"]=$recv($HashedCollection())._new();
-$recv($recv((97)._to_((122)))._collect_((function(c){
+chars=$recv((97)._to_((122)))._collect_((function(c){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -2847,27 +2851,69 @@ return $recv($String())._fromCharCode_(c);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({c:c},$ctx1,1)});
 //>>excludeEnd("ctx");
-})))._do_((function(c){
+}));
+self["@cache"]=$recv($HashedCollection())._new();
+$recv(chars)._do_((function(c1){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-return $recv(self["@cache"])._at_put_(c,self._filtreBrut_avec_(self["@liste"],c));
+self._majCacheAvec_(c1);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({c:c},$ctx1,2)});
+$ctx2.sendIdx["majCacheAvec:"]=1;
+//>>excludeEnd("ctx");
+return $recv(chars)._do_((function(c2){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx3) {
+//>>excludeEnd("ctx");
+return self._majCacheAvec_($recv(c1).__comma(c2));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx3) {$ctx3.fillBlock({c2:c2},$ctx2,3)});
 //>>excludeEnd("ctx");
 }));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({c1:c1},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["do:"]=1;
+//>>excludeEnd("ctx");
 $1=self["@cache"];
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"majCache",{},$globals.FdJBenevoles)});
+}, function($ctx1) {$ctx1.fill(self,"majCache",{chars:chars},$globals.FdJBenevoles)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "majCache\x0a\x09cache := HashedCollection new.\x0a\x09((97 to: 122) collect: [ :c | String fromCharCode: c ])\x0a\x09\x09do: [ :c |\x0a\x09\x09\x09cache at: c\x0a\x09\x09\x09\x09put: (self filtreBrut: liste avec: c) ].\x0a\x09^ cache",
-referencedClasses: ["HashedCollection", "String"],
+source: "majCache\x0a\x09| chars |\x0a\x09chars := ((97 to: 122) collect: [ :c | String fromCharCode: c ]).\x0a\x09cache := HashedCollection new.\x0a\x09chars do: [ :c1 |\x0a\x09\x09self majCacheAvec: c1.\x0a\x09\x09chars do: [ :c2 | self majCacheAvec: c1,c2 ]\x0a\x09\x09].\x0a\x09^ cache",
+referencedClasses: ["String", "HashedCollection"],
 //>>excludeEnd("ide");
-messageSends: ["new", "do:", "collect:", "to:", "fromCharCode:", "at:put:", "filtreBrut:avec:"]
+messageSends: ["collect:", "to:", "fromCharCode:", "new", "do:", "majCacheAvec:", ","]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
+selector: "majCacheAvec:",
+protocol: 'as yet unclassified',
+fn: function (c){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv(self["@cache"])._at_put_(c,self._filtreCache_([c]));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"majCacheAvec:",{c:c},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["c"],
+source: "majCacheAvec: c\x0a\x09^ cache at: c put: (self filtreCache:  { c } )",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["at:put:", "filtreCache:"]
 }),
 $globals.FdJBenevoles);
 

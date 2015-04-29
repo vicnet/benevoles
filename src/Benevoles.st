@@ -128,13 +128,12 @@ importe: texte
 initialize
 	| barre |
 	'body' asJQuery children remove.
-"	window onbeforeunload: [ self termine. nil ]."
-	window onunload: [ self termine ].
+"	window onunload: [ self termine ]."
 	super initialize.
 	
 	"Modele"
 	self charge.
-historique affiche.	
+
 	"Widgets"
 	barre := FdJWidgetBarre new
 		presentateur: self.
@@ -627,25 +626,14 @@ contient: unBenevole
 
 filtre: texte max: max
 	"renvoie un tableau de taille maximum a max des benevoles correspondant a texte"
-	| parties selection result valeur |
-	texte isEmpty ifTrue: [ ^ #() ].
+	| result |
 	"teste le nom"
-	parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].
+	texte isEmpty ifTrue: [ ^ #() ].
 	
 	"recherche benevoles repondant au critere"
-	cache ifNotNil: [
-		selection := cache at: texte first.
-		Transcript show: 'Cache active:',selection size; cr.
-		(texte size = 1) ifFalse: [
-				selection := self filtreBrut: selection avec: parties
-			]
-		].
-	selection := selection ifNil:
-		[ self filtreBrut: liste avec: parties ].
-
 	"Restriction a max item"
 	result := #().
-	selection do: [ :s |
+	(self filtreCache: texte) do: [ :s |
 		(s estDisponible) ifTrue: [
 			result add: s.
 			(result size >= max) ifTrue: [ ^ result ]
@@ -670,6 +658,19 @@ filtreBrut: benevoles avec: parties
 		thenCollect: [ :s | s at: 2]
 !
 
+filtreCache: texte
+	| parties sansaccent |
+	sansaccent := texte sansAccent.
+	parties := (sansaccent tokenize: ' ').
+
+	"si pas de cache, recherche complete"
+	cache ifNil: [ ^ self filtreBrut: liste avec: parties ].
+	"recherche benevoles repondant au critere"
+	^ cache at: sansaccent first
+		ifPresent: [ :s | self filtreBrut: s avec: parties ]
+		ifAbsent: [ self filtreBrut: liste avec: parties ]
+!
+
 fromJSON: variables
 	liste := (variables at: 'liste') collect: [ :v |
 			FdJBenevole new fromJSON: v
@@ -677,12 +678,18 @@ fromJSON: variables
 !
 
 majCache
+	| chars |
+	chars := ((97 to: 122) collect: [ :c | String fromCharCode: c ]).
 	cache := HashedCollection new.
-	((97 to: 122) collect: [ :c | String fromCharCode: c ])
-		do: [ :c |
-			cache at: c
-				put: (self filtreBrut: liste avec: c) ].
+	chars do: [ :c1 |
+		self majCacheAvec: c1.
+		chars do: [ :c2 | self majCacheAvec: c1,c2 ]
+		].
 	^ cache
+!
+
+majCacheAvec: c
+	^ cache at: c put: (self filtreCache:  { c } )
 !
 
 reinit

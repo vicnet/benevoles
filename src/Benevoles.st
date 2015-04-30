@@ -51,7 +51,7 @@ new
 ! !
 
 Object subclass: #FdJApplication
-	instanceVariableNames: 'benevoles selectionneur distributeur importeur historique'
+	instanceVariableNames: 'benevoles selectionneur distributeur importeur historique cacheFiltre'
 	package: 'Benevoles'!
 
 !FdJApplication methodsFor: 'initialization'!
@@ -77,10 +77,19 @@ charge
 		sinon: [ FdJBenevoles exemple ]
 !
 
+defiltre
+	selectionneur defiltre.
+	cacheFiltre := ''
+!
+
 filtre: texte
 	| max liste |
+	cacheFiltre=texte ifTrue: [ ^ self ].
+	cacheFiltre := texte.
 	max := 4.
+Transcript show: 'filtre "',texte,'" ',(Date millisecondsToRun: [
 	liste := benevoles filtre: texte max: max+1.
+]),'ms';cr.
 	(liste size <= max)
 		ifTrue: [
 			selectionneur selectionne: liste max: false ]
@@ -96,7 +105,7 @@ importe: texte
 
 	fields := results meta fields.
 	rows := results data.
-"Differents fichiers 2014
+"Differents fichiers 2014 
 	(fields includes: 'Taille')
 		ifTrue: [ self importeTShirts: rows ].
 	
@@ -128,9 +137,12 @@ importe: texte
 initialize
 	| barre |
 	'body' asJQuery children remove.
-"	window onunload: [ self termine ]."
+	window onunload: [ self termine ].
+
 	super initialize.
 	
+	cacheFiltre	:= ''.
+
 	"Modele"
 	self charge.
 
@@ -164,12 +176,14 @@ initialize
 !
 
 onBenevoleChangeEtat: benevole
-	self filtre: (selectionneur filtre).
 	benevole estEncours
 		ifTrue: [
-			selectionneur defiltre.
+			"un benevole vient de passer en cours, on a clique dessus dans la selection"
+			self defiltre.
 			distributeur ajoute: benevole ]
 	 	ifFalse: [
+			"annulation ou fin de distribution"
+			self filtre: (selectionneur filtre).
 			distributeur supprime: benevole ].
 	self sauve
 !
@@ -193,7 +207,7 @@ selectionne: benevole
 termine
 	"notifie la fin de l'application"
 	self annonce: false.
-	'body' asJQuery children remove
+"	'body' asJQuery children remove"
 !
 
 vide
@@ -233,7 +247,7 @@ importeTShirts: rows
 	self sauve
 ! !
 
-FdJApplication class instanceVariableNames: 'accents'!
+FdJApplication class instanceVariableNames: 'instance accents'!
 
 !FdJApplication class methodsFor: 'as yet unclassified'!
 
@@ -256,8 +270,16 @@ accents
 	]
 !
 
+instance
+	^ instance ifNil: [ instance := super new ]
+!
+
+new
+	self shouldNotImplement
+!
+
 open
-	^ self new
+	^ self instance
 ! !
 
 Object subclass: #FdJAssociation
@@ -419,7 +441,7 @@ encours
 !
 
 estDisponible
-	^ etat==nil
+	^ etat isNil
 !
 
 estDistribue
@@ -626,14 +648,26 @@ contient: unBenevole
 
 filtre: texte max: max
 	"renvoie un tableau de taille maximum a max des benevoles correspondant a texte"
-	| result |
-	"teste le nom"
+	| parties selection result |
 	texte isEmpty ifTrue: [ ^ #() ].
+	"teste le nom"
+	parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].
 	
 	"recherche benevoles repondant au critere"
+	cache ifNotNil: [
+		selection := cache at: (texte first) ifAbsent: [ nil ].
+		selection ifNotNil: [
+			"Transcript show: 'Cache active:',selection size; cr."
+			(texte size = 1) ifFalse: [
+				selection := self filtreBrut: selection avec: parties ]
+			]
+		].
+	selection := selection
+		ifNil: [ self filtreBrut: liste avec: parties ].
+
 	"Restriction a max item"
 	result := #().
-	(self filtreCache: texte) do: [ :s |
+	selection do: [ :s |
 		(s estDisponible) ifTrue: [
 			result add: s.
 			(result size >= max) ifTrue: [ ^ result ]
@@ -658,19 +692,6 @@ filtreBrut: benevoles avec: parties
 		thenCollect: [ :s | s at: 2]
 !
 
-filtreCache: texte
-	| parties sansaccent |
-	sansaccent := texte sansAccent.
-	parties := (sansaccent tokenize: ' ').
-
-	"si pas de cache, recherche complete"
-	cache ifNil: [ ^ self filtreBrut: liste avec: parties ].
-	"recherche benevoles repondant au critere"
-	^ cache at: sansaccent first
-		ifPresent: [ :s | self filtreBrut: s avec: parties ]
-		ifAbsent: [ self filtreBrut: liste avec: parties ]
-!
-
 fromJSON: variables
 	liste := (variables at: 'liste') collect: [ :v |
 			FdJBenevole new fromJSON: v
@@ -678,18 +699,12 @@ fromJSON: variables
 !
 
 majCache
-	| chars |
-	chars := ((97 to: 122) collect: [ :c | String fromCharCode: c ]).
 	cache := HashedCollection new.
-	chars do: [ :c1 |
-		self majCacheAvec: c1.
-		chars do: [ :c2 | self majCacheAvec: c1,c2 ]
-		].
+	((97 to: 122) collect: [ :c | String fromCharCode: c ])
+		do: [ :c |
+			cache at: c
+				put: (self filtreBrut: liste avec: c) ].
 	^ cache
-!
-
-majCacheAvec: c
-	^ cache at: c put: (self filtreCache:  { c } )
 !
 
 reinit
@@ -1018,7 +1033,11 @@ charge: entite sinon: block
 !
 
 instance
-	^ instance ifNil: [ instance := self new ]
+	^ instance ifNil: [ instance := super new ]
+!
+
+new
+	self shouldNotImplement
 !
 
 sauve: objet
@@ -1469,7 +1488,7 @@ renderSelectionneurOn: html
 		with: [
 			input := html input.
 			input onKeyUp: [ presentateur filtre: (self filtre) ].
-			html span onClick: [ self defiltre ]
+			html span onClick: [ presentateur defiltre. input element focus ]
 			]
 !
 

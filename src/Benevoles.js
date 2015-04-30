@@ -2739,11 +2739,11 @@ selector: "filtre:max:",
 protocol: 'as yet unclassified',
 fn: function (texte,max){
 var self=this;
-var parties,selection,result;
+var result;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3,$4,$6,$5,$7,$8,$9,$10,$11,$receiver;
+var $1,$2,$3,$4,$5,$6;
 var $early={};
 try {
 $1=$recv(texte)._isEmpty();
@@ -2751,80 +2751,38 @@ if($core.assert($1)){
 $2=[];
 return $2;
 };
-parties=$recv($recv(texte)._tokenize_(" "))._collect_((function(p){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-return $recv(p)._sansAccent();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({p:p},$ctx1,2)});
-//>>excludeEnd("ctx");
-}));
-$3=self["@cache"];
-if(($receiver = $3) == null || $receiver.isNil){
-$3;
-} else {
-selection=$recv(self["@cache"])._at_ifAbsent_($recv(texte)._first(),(function(){
-return nil;
-
-}));
-selection;
-$4=selection;
-if(($receiver = $4) == null || $receiver.isNil){
-$4;
-} else {
-$6=$recv(texte)._size();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["size"]=1;
-//>>excludeEnd("ctx");
-$5=$recv($6).__eq((1));
-if(!$core.assert($5)){
-selection=self._filtreBrut_avec_(selection,parties);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["filtreBrut:avec:"]=1;
-//>>excludeEnd("ctx");
-selection;
-};
-};
-};
-$7=selection;
-if(($receiver = $7) == null || $receiver.isNil){
-selection=self._filtreBrut_avec_(self["@liste"],parties);
-} else {
-selection=$7;
-};
 result=[];
-$recv(selection)._do_((function(s){
+$recv(self._filtreCacheMaj_(texte))._do_((function(s){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-$8=$recv(s)._estDisponible();
-if($core.assert($8)){
+$3=$recv(s)._estDisponible();
+if($core.assert($3)){
 $recv(result)._add_(s);
-$9=$recv($recv(result)._size()).__gt_eq(max);
-if($core.assert($9)){
-$10=result;
-throw $early=[$10];
+$4=$recv($recv(result)._size()).__gt_eq(max);
+if($core.assert($4)){
+$5=result;
+throw $early=[$5];
 };
 };
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,8)});
+}, function($ctx2) {$ctx2.fillBlock({s:s},$ctx1,2)});
 //>>excludeEnd("ctx");
 }));
-$11=result;
-return $11;
+$6=result;
+return $6;
 }
 catch(e) {if(e===$early)return e[0]; throw e}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,parties:parties,selection:selection,result:result},$globals.FdJBenevoles)});
+}, function($ctx1) {$ctx1.fill(self,"filtre:max:",{texte:texte,max:max,result:result},$globals.FdJBenevoles)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte", "max"],
-source: "filtre: texte max: max\x0a\x09\x22renvoie un tableau de taille maximum a max des benevoles correspondant a texte\x22\x0a\x09| parties selection result |\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22teste le nom\x22\x0a\x09parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].\x0a\x09\x0a\x09\x22recherche benevoles repondant au critere\x22\x0a\x09cache ifNotNil: [\x0a\x09\x09selection := cache at: (texte first) ifAbsent: [ nil ].\x0a\x09\x09selection ifNotNil: [\x0a\x09\x09\x09\x22Transcript show: 'Cache active:',selection size; cr.\x22\x0a\x09\x09\x09(texte size = 1) ifFalse: [\x0a\x09\x09\x09\x09selection := self filtreBrut: selection avec: parties ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09selection := selection\x0a\x09\x09ifNil: [ self filtreBrut: liste avec: parties ].\x0a\x0a\x09\x22Restriction a max item\x22\x0a\x09result := #().\x0a\x09selection do: [ :s |\x0a\x09\x09(s estDisponible) ifTrue: [\x0a\x09\x09\x09result add: s.\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
+source: "filtre: texte max: max\x0a\x09\x22renvoie un tableau de taille maximum a max des benevoles correspondant a texte\x22\x0a\x09| result |\x0a\x09\x22teste le nom\x22\x0a\x09texte isEmpty ifTrue: [ ^ #() ].\x0a\x09\x22recherche benevoles repondant au critere\x22\x0a\x09\x22Restriction a max item\x22\x0a\x09result := #().\x0a\x09(self filtreCacheMaj: texte) do: [ :s |\x0a\x09\x09(s estDisponible) ifTrue: [\x0a\x09\x09\x09result add: s.\x0a\x09\x09\x09(result size >= max) ifTrue: [ ^ result ]\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09^ result",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["ifTrue:", "isEmpty", "collect:", "tokenize:", "sansAccent", "ifNotNil:", "at:ifAbsent:", "first", "ifFalse:", "=", "size", "filtreBrut:avec:", "ifNil:", "do:", "estDisponible", "add:", ">="]
+messageSends: ["ifTrue:", "isEmpty", "do:", "filtreCacheMaj:", "estDisponible", "add:", ">=", "size"]
 }),
 $globals.FdJBenevoles);
 
@@ -2909,6 +2867,121 @@ $globals.FdJBenevoles);
 
 $core.addMethod(
 $core.method({
+selector: "filtreCache:",
+protocol: 'as yet unclassified',
+fn: function (texte){
+var self=this;
+var parties,sansaccent,result;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$4,$3,$5,$6,$7,$receiver;
+var $early={};
+try {
+sansaccent=$recv(texte)._sansAccent();
+parties=$recv(sansaccent)._tokenize_(" ");
+$1=self["@cache"];
+if(($receiver = $1) == null || $receiver.isNil){
+$2=self._filtreBrut_avec_(self["@liste"],parties);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["filtreBrut:avec:"]=1;
+//>>excludeEnd("ctx");
+return $2;
+} else {
+$1;
+};
+$4=$recv(sansaccent)._size();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["size"]=1;
+//>>excludeEnd("ctx");
+$3=$recv($4)._min_((2));
+$recv($3)._to_by_do_((1),(-1),(function(n){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(self["@cache"])._at_ifPresent_($recv(sansaccent)._first_(n),(function(s){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx3) {
+//>>excludeEnd("ctx");
+$5=$recv(n).__eq($recv(sansaccent)._size());
+if($core.assert($5)){
+throw $early=[s];
+};
+$6=self._filtreBrut_avec_(s,parties);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["filtreBrut:avec:"]=2;
+//>>excludeEnd("ctx");
+throw $early=[$6];
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx3) {$ctx3.fillBlock({s:s},$ctx2,3)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({n:n},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+result=self._filtreBrut_avec_(self["@liste"],parties);
+$7=result;
+return $7;
+}
+catch(e) {if(e===$early)return e[0]; throw e}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"filtreCache:",{texte:texte,parties:parties,sansaccent:sansaccent,result:result},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["texte"],
+source: "filtreCache: texte\x0a\x09\x22Filtre en utilisant si possible le cache\x22\x0a\x09| parties sansaccent result |\x0a\x09sansaccent := texte sansAccent.\x0a\x09parties := (sansaccent tokenize: ' ').\x0a\x0a\x09\x22si pas de cache, recherche complete\x22\x0a\x09cache ifNil: [ ^ self filtreBrut: liste avec: parties ].\x0a\x22\x09cache ifNil: [ cache := HashedCollection new ].\x22\x0a\x0a\x09\x22recherche benevoles repondant au critere dans le cache\x22\x0a\x09(sansaccent size min: 2) to: 1 by:-1 do: [ :n |\x0a\x09\x09cache at: (sansaccent first: n)\x0a\x09\x09\x09ifPresent: [ :s |\x0a\x09\x09\x09\x09(n = sansaccent size) ifTrue: [ ^ s ].\x0a\x09\x09\x09\x09^ self filtreBrut: s avec: parties ]\x0a\x09\x09].\x0a\x09result := self filtreBrut: liste avec: parties.\x0a\x22\x09sansaccent size <= 2 ifTrue: [\x0a\x09\x09Transcript show: 'maj',sansaccent.\x0a\x09\x09cache at: sansaccent put: result\x0a\x09\x09].\x22\x0a\x09^ result",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["sansAccent", "tokenize:", "ifNil:", "filtreBrut:avec:", "to:by:do:", "min:", "size", "at:ifPresent:", "first:", "ifTrue:", "="]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
+selector: "filtreCacheMaj:",
+protocol: 'as yet unclassified',
+fn: function (texte){
+var self=this;
+var sansaccent,result;
+function $HashedCollection(){return $globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
+function $Transcript(){return $globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$3,$receiver;
+sansaccent=$recv(texte)._sansAccent();
+$1=self["@cache"];
+if(($receiver = $1) == null || $receiver.isNil){
+self["@cache"]=$recv($HashedCollection())._new();
+self["@cache"];
+} else {
+$1;
+};
+result=self._filtreCache_(sansaccent);
+$2=$recv($recv(sansaccent)._size()).__lt_eq((2));
+if($core.assert($2)){
+$recv($Transcript())._show_("maj".__comma(sansaccent));
+$recv(self["@cache"])._at_put_(sansaccent,result);
+};
+$3=result;
+return $3;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"filtreCacheMaj:",{texte:texte,sansaccent:sansaccent,result:result},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["texte"],
+source: "filtreCacheMaj: texte\x0a\x09\x22Filtre en utilisant si possible le cache et met a jour le cache\x22\x0a\x09| sansaccent result |\x0a\x09sansaccent := texte sansAccent.\x0a\x0a\x09\x22si pas de cache, on le créé\x22\x0a\x09cache ifNil: [ cache := HashedCollection new ].\x0a\x0a\x09\x22recherche benevoles repondant au critere dans le cache\x22\x0a\x09result := self filtreCache: sansaccent.\x0a\x09\x22cache maj si taille petite\x22\x0a\x09sansaccent size <= 2 ifTrue: [\x0a\x09\x09Transcript show: 'maj',sansaccent.\x0a\x09\x09cache at: sansaccent put: result\x0a\x09\x09].\x0a\x09^ result",
+referencedClasses: ["HashedCollection", "Transcript"],
+//>>excludeEnd("ide");
+messageSends: ["sansAccent", "ifNil:", "new", "filtreCache:", "ifTrue:", "<=", "size", "show:", ",", "at:put:"]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
 selector: "fromJSON:",
 protocol: 'as yet unclassified',
 fn: function (variables){
@@ -2946,14 +3019,14 @@ selector: "majCache",
 protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
-function $HashedCollection(){return $globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
+var chars;
 function $String(){return $globals.String||(typeof String=="undefined"?nil:String)}
+function $HashedCollection(){return $globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1;
-self["@cache"]=$recv($HashedCollection())._new();
-$recv($recv((97)._to_((122)))._collect_((function(c){
+chars=$recv((97)._to_((122)))._collect_((function(c){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -2961,27 +3034,69 @@ return $recv($String())._fromCharCode_(c);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({c:c},$ctx1,1)});
 //>>excludeEnd("ctx");
-})))._do_((function(c){
+}));
+self["@cache"]=$recv($HashedCollection())._new();
+$recv(chars)._do_((function(c1){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-return $recv(self["@cache"])._at_put_(c,self._filtreBrut_avec_(self["@liste"],c));
+self._majCacheAvec_(c1);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({c:c},$ctx1,2)});
+$ctx2.sendIdx["majCacheAvec:"]=1;
+//>>excludeEnd("ctx");
+return $recv(chars)._do_((function(c2){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx3) {
+//>>excludeEnd("ctx");
+return self._majCacheAvec_($recv(c1).__comma(c2));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx3) {$ctx3.fillBlock({c2:c2},$ctx2,3)});
 //>>excludeEnd("ctx");
 }));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({c1:c1},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["do:"]=1;
+//>>excludeEnd("ctx");
 $1=self["@cache"];
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"majCache",{},$globals.FdJBenevoles)});
+}, function($ctx1) {$ctx1.fill(self,"majCache",{chars:chars},$globals.FdJBenevoles)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "majCache\x0a\x09cache := HashedCollection new.\x0a\x09((97 to: 122) collect: [ :c | String fromCharCode: c ])\x0a\x09\x09do: [ :c |\x0a\x09\x09\x09cache at: c\x0a\x09\x09\x09\x09put: (self filtreBrut: liste avec: c) ].\x0a\x09^ cache",
-referencedClasses: ["HashedCollection", "String"],
+source: "majCache\x0a\x09| chars |\x0a\x09chars := ((97 to: 122) collect: [ :c | String fromCharCode: c ]).\x0a\x09cache := HashedCollection new.\x0a\x09chars do: [ :c1 |\x0a\x09\x09self majCacheAvec: c1.\x0a\x09\x09chars do: [ :c2 | self majCacheAvec: c1,c2 ]\x0a\x09\x09].\x0a\x09^ cache",
+referencedClasses: ["String", "HashedCollection"],
 //>>excludeEnd("ide");
-messageSends: ["new", "do:", "collect:", "to:", "fromCharCode:", "at:put:", "filtreBrut:avec:"]
+messageSends: ["collect:", "to:", "fromCharCode:", "new", "do:", "majCacheAvec:", ","]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
+selector: "majCacheAvec:",
+protocol: 'as yet unclassified',
+fn: function (c){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv(self["@cache"])._at_put_(c,self._filtreCache_(c));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"majCacheAvec:",{c:c},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["c"],
+source: "majCacheAvec: c\x0a\x09^ cache at: c put: (self filtreCache: c )",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["at:put:", "filtreCache:"]
 }),
 $globals.FdJBenevoles);
 

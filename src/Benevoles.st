@@ -648,26 +648,13 @@ contient: unBenevole
 
 filtre: texte max: max
 	"renvoie un tableau de taille maximum a max des benevoles correspondant a texte"
-	| parties selection result |
-	texte isEmpty ifTrue: [ ^ #() ].
+	| result |
 	"teste le nom"
-	parties := (texte tokenize: ' ') collect: [ :p | p sansAccent ].
-	
+	texte isEmpty ifTrue: [ ^ #() ].
 	"recherche benevoles repondant au critere"
-	cache ifNotNil: [
-		selection := cache at: (texte first) ifAbsent: [ nil ].
-		selection ifNotNil: [
-			"Transcript show: 'Cache active:',selection size; cr."
-			(texte size = 1) ifFalse: [
-				selection := self filtreBrut: selection avec: parties ]
-			]
-		].
-	selection := selection
-		ifNil: [ self filtreBrut: liste avec: parties ].
-
 	"Restriction a max item"
 	result := #().
-	selection do: [ :s |
+	(self filtreCacheMaj: texte) do: [ :s |
 		(s estDisponible) ifTrue: [
 			result add: s.
 			(result size >= max) ifTrue: [ ^ result ]
@@ -692,6 +679,49 @@ filtreBrut: benevoles avec: parties
 		thenCollect: [ :s | s at: 2]
 !
 
+filtreCache: texte
+	"Filtre en utilisant si possible le cache"
+	| parties sansaccent result |
+	sansaccent := texte sansAccent.
+	parties := (sansaccent tokenize: ' ').
+
+	"si pas de cache, recherche complete"
+	cache ifNil: [ ^ self filtreBrut: liste avec: parties ].
+"	cache ifNil: [ cache := HashedCollection new ]."
+
+	"recherche benevoles repondant au critere dans le cache"
+	(sansaccent size min: 2) to: 1 by:-1 do: [ :n |
+		cache at: (sansaccent first: n)
+			ifPresent: [ :s |
+				(n = sansaccent size) ifTrue: [ ^ s ].
+				^ self filtreBrut: s avec: parties ]
+		].
+	result := self filtreBrut: liste avec: parties.
+"	sansaccent size <= 2 ifTrue: [
+		Transcript show: 'maj',sansaccent.
+		cache at: sansaccent put: result
+		]."
+	^ result
+!
+
+filtreCacheMaj: texte
+	"Filtre en utilisant si possible le cache et met a jour le cache"
+	| sansaccent result |
+	sansaccent := texte sansAccent.
+
+	"si pas de cache, on le créé"
+	cache ifNil: [ cache := HashedCollection new ].
+
+	"recherche benevoles repondant au critere dans le cache"
+	result := self filtreCache: sansaccent.
+	"cache maj si taille petite"
+	sansaccent size <= 2 ifTrue: [
+		Transcript show: 'maj',sansaccent.
+		cache at: sansaccent put: result
+		].
+	^ result
+!
+
 fromJSON: variables
 	liste := (variables at: 'liste') collect: [ :v |
 			FdJBenevole new fromJSON: v
@@ -699,12 +729,18 @@ fromJSON: variables
 !
 
 majCache
+	| chars |
+	chars := ((97 to: 122) collect: [ :c | String fromCharCode: c ]).
 	cache := HashedCollection new.
-	((97 to: 122) collect: [ :c | String fromCharCode: c ])
-		do: [ :c |
-			cache at: c
-				put: (self filtreBrut: liste avec: c) ].
+	chars do: [ :c1 |
+		self majCacheAvec: c1.
+		chars do: [ :c2 | self majCacheAvec: c1,c2 ]
+		].
 	^ cache
+!
+
+majCacheAvec: c
+	^ cache at: c put: (self filtreCache: c )
 !
 
 reinit

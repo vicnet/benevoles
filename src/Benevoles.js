@@ -4319,6 +4319,57 @@ $core.addClass('FdJStock', $globals.Object, ['tshirts'], 'Benevoles');
 $core.addClass('FdJStockage', $globals.Object, ['stockage'], 'Benevoles');
 $core.addMethod(
 $core.method({
+selector: "chaine:depuis:",
+protocol: 'as yet unclassified',
+fn: function (entite,texte){
+var self=this;
+function $JSON(){return $globals.JSON||(typeof JSON=="undefined"?nil:JSON)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=self._charge_depuis_(entite,self._variablesPour_($recv($JSON())._parse_(texte)));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"chaine:depuis:",{entite:entite,texte:texte},$globals.FdJStockage)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["entite", "texte"],
+source: "chaine: entite depuis: texte\x0a\x09^ self charge: entite depuis: (self variablesPour: (JSON parse: texte))",
+referencedClasses: ["JSON"],
+//>>excludeEnd("ide");
+messageSends: ["charge:depuis:", "variablesPour:", "parse:"]
+}),
+$globals.FdJStockage);
+
+$core.addMethod(
+$core.method({
+selector: "chainePour:",
+protocol: 'as yet unclassified',
+fn: function (objet){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv(self._stockagePour_(objet))._replace_with_("'","''");
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"chainePour:",{objet:objet},$globals.FdJStockage)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["objet"],
+source: "chainePour: objet\x0a\x09^ (self stockagePour: objet) replace: '''' with: ''''''",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["replace:with:", "stockagePour:"]
+}),
+$globals.FdJStockage);
+
+$core.addMethod(
+$core.method({
 selector: "charge:",
 protocol: 'as yet unclassified',
 fn: function (entite){

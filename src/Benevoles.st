@@ -991,6 +991,14 @@ Object subclass: #FdJStockage
 
 !FdJStockage methodsFor: 'as yet unclassified'!
 
+chaine: entite depuis: texte
+	^ self charge: entite depuis: (self variablesPour: (JSON parse: texte))
+!
+
+chainePour: objet
+	^ (self stockagePour: objet) replace: '''' with: ''''''
+!
+
 charge: entite
 	^ self charge: entite depuis: (self jsonPour: entite)
 !

@@ -995,6 +995,12 @@ chaine: entite depuis: texte
 	^ self charge: entite depuis: (self variablesPour: (JSON parse: texte))
 !
 
+chaine: objet sauve: texte
+	stockage
+		setItem: (self nomPour: objet)
+		value: texte
+!
+
 chainePour: objet
 	^ (self stockagePour: objet) replace: '''' with: ''''''
 !

@@ -4345,6 +4345,30 @@ $globals.FdJStockage);
 
 $core.addMethod(
 $core.method({
+selector: "chaine:sauve:",
+protocol: 'as yet unclassified',
+fn: function (objet,texte){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+$recv(self["@stockage"])._setItem_value_(self._nomPour_(objet),texte);
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"chaine:sauve:",{objet:objet,texte:texte},$globals.FdJStockage)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["objet", "texte"],
+source: "chaine: objet sauve: texte\x0a\x09stockage\x0a\x09\x09setItem: (self nomPour: objet)\x0a\x09\x09value: texte",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["setItem:value:", "nomPour:"]
+}),
+$globals.FdJStockage);
+
+$core.addMethod(
+$core.method({
 selector: "chainePour:",
 protocol: 'as yet unclassified',
 fn: function (objet){

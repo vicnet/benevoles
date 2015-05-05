@@ -1,5 +1,5 @@
 Smalltalk createPackage: 'Benevoles'!
-(Smalltalk packageAt: 'Benevoles') imports: {'papaparse/papaparse'}!
+(Smalltalk packageAt: 'Benevoles') imports: {'Papa' -> 'papaparse'}!
 Object subclass: #FdJAnnonce
 	instanceVariableNames: ''
 	package: 'Benevoles'!

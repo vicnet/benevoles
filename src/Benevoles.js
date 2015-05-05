@@ -1,16 +1,16 @@
 define("amber-benevoles/Benevoles", ["amber/boot"
 //>>excludeStart("imports", pragmas.excludeImports);
-, "papaparse/papaparse"
+, "papaparse"
 //>>excludeEnd("imports");
 , "amber_core/Kernel-Objects", "amber_core/Kernel-Announcements", "amber/web/Web", "amber_core/Kernel-Collections"], function($boot
 //>>excludeStart("imports", pragmas.excludeImports);
-
+,Papa
 //>>excludeEnd("imports");
 ){
 var $core=$boot.api,nil=$boot.nil,$recv=$boot.asReceiver,$globals=$boot.globals;
 $core.addPackage('Benevoles');
 $core.packages["Benevoles"].innerEval = function (expr) { return eval(expr); };
-$core.packages["Benevoles"].imports = ["papaparse/papaparse"];
+$core.packages["Benevoles"].imports = ["Papa=papaparse"];
 $core.packages["Benevoles"].transport = {"type":"amd","amdNamespace":"amber-benevoles"};
 
 $core.addClass('FdJAnnonce', $globals.Object, [], 'Benevoles');

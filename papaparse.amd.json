@@ -1,6 +1,6 @@
 {
     "paths": {
-        "papaparse": "."
+        "papaparse": "papaparse"
     },
     "shim": {
         "papaparse": {

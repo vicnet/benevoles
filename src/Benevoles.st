@@ -87,9 +87,7 @@ filtre: texte
 	cacheFiltre=texte ifTrue: [ ^ self ].
 	cacheFiltre := texte.
 	max := 4.
-Transcript show: 'filtre "',texte,'" ',(Date millisecondsToRun: [
 	liste := benevoles filtre: texte max: max+1.
-]),'ms';cr.
 	(liste size <= max)
 		ifTrue: [
 			selectionneur selectionne: liste max: false ]
@@ -734,6 +732,7 @@ majCache
 	cache := HashedCollection new.
 	chars do: [ :c1 |
 		self majCacheAvec: c1.
+		self majCacheAvec: c1,' '.
 		chars do: [ :c2 | self majCacheAvec: c1,c2 ]
 		].
 	^ cache
@@ -1580,8 +1579,8 @@ sansAccent
 	   '[òóôõö]' -> 'o'.
 	   'œ' -> 'oe'.
 	   '[ùúûü]' -> 'u'.
-	   '[ýÿ]' -> 'y'.
-	   ' ' -> ''
+	   '[ýÿ]' -> 'y'".
+	   ' ' -> ''"
 	} keysAndValuesDo: [ :k :v |
 		s := s replace: k with: v
 	].

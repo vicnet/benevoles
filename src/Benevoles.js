@@ -316,43 +316,19 @@ protocol: 'initialization',
 fn: function (texte){
 var self=this;
 var max,liste;
-function $Transcript(){return $globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
-function $Date(){return $globals.Date||(typeof Date=="undefined"?nil:Date)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$4,$3,$2,$5,$6;
+var $1,$2;
 $1=$recv(self["@cacheFiltre"]).__eq(texte);
 if($core.assert($1)){
 return self;
 };
 self["@cacheFiltre"]=texte;
 max=(4);
-$4=$recv("filtre \x22".__comma(texte)).__comma("\x22 ");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx[","]=3;
-//>>excludeEnd("ctx");
-$3=$recv($4).__comma($recv($Date())._millisecondsToRun_((function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
 liste=$recv(self["@benevoles"])._filtre_max_(texte,$recv(max).__plus((1)));
-return liste;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)});
-//>>excludeEnd("ctx");
-})));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx[","]=2;
-//>>excludeEnd("ctx");
-$2=$recv($3).__comma("ms");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx[","]=1;
-//>>excludeEnd("ctx");
-$recv($Transcript())._show_($2);
-$5=$recv($Transcript())._cr();
-$6=$recv($recv(liste)._size()).__lt_eq(max);
-if($core.assert($6)){
+$2=$recv($recv(liste)._size()).__lt_eq(max);
+if($core.assert($2)){
 $recv(self["@selectionneur"])._selectionne_max_(liste,false);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["selectionne:max:"]=1;
@@ -368,10 +344,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "filtre: texte\x0a\x09| max liste |\x0a\x09cacheFiltre=texte ifTrue: [ ^ self ].\x0a\x09cacheFiltre := texte.\x0a\x09max := 4.\x0aTranscript show: 'filtre \x22',texte,'\x22 ',(Date millisecondsToRun: [\x0a\x09liste := benevoles filtre: texte max: max+1.\x0a]),'ms';cr.\x0a\x09(liste size <= max)\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09selectionneur selectionne: liste max: false ]\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09liste removeLast.\x0a\x09\x09\x09selectionneur selectionne: liste max: true ]",
-referencedClasses: ["Transcript", "Date"],
+source: "filtre: texte\x0a\x09| max liste |\x0a\x09cacheFiltre=texte ifTrue: [ ^ self ].\x0a\x09cacheFiltre := texte.\x0a\x09max := 4.\x0a\x09liste := benevoles filtre: texte max: max+1.\x0a\x09(liste size <= max)\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09selectionneur selectionne: liste max: false ]\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09liste removeLast.\x0a\x09\x09\x09selectionneur selectionne: liste max: true ]",
+referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["ifTrue:", "=", "show:", ",", "millisecondsToRun:", "filtre:max:", "+", "cr", "ifTrue:ifFalse:", "<=", "size", "selectionne:max:", "removeLast"]
+messageSends: ["ifTrue:", "=", "filtre:max:", "+", "ifTrue:ifFalse:", "<=", "size", "selectionne:max:", "removeLast"]
 }),
 $globals.FdJApplication);
 
@@ -3025,7 +3001,7 @@ function $HashedCollection(){return $globals.HashedCollection||(typeof HashedCol
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1;
+var $1,$2;
 chars=$recv((97)._to_((122)))._collect_((function(c){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
@@ -3044,6 +3020,14 @@ self._majCacheAvec_(c1);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx2.sendIdx["majCacheAvec:"]=1;
 //>>excludeEnd("ctx");
+$1=$recv(c1).__comma(" ");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx[","]=1;
+//>>excludeEnd("ctx");
+self._majCacheAvec_($1);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["majCacheAvec:"]=2;
+//>>excludeEnd("ctx");
 return $recv(chars)._do_((function(c2){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx3) {
@@ -3060,15 +3044,15 @@ return self._majCacheAvec_($recv(c1).__comma(c2));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["do:"]=1;
 //>>excludeEnd("ctx");
-$1=self["@cache"];
-return $1;
+$2=self["@cache"];
+return $2;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"majCache",{chars:chars},$globals.FdJBenevoles)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "majCache\x0a\x09| chars |\x0a\x09chars := ((97 to: 122) collect: [ :c | String fromCharCode: c ]).\x0a\x09cache := HashedCollection new.\x0a\x09chars do: [ :c1 |\x0a\x09\x09self majCacheAvec: c1.\x0a\x09\x09chars do: [ :c2 | self majCacheAvec: c1,c2 ]\x0a\x09\x09].\x0a\x09^ cache",
+source: "majCache\x0a\x09| chars |\x0a\x09chars := ((97 to: 122) collect: [ :c | String fromCharCode: c ]).\x0a\x09cache := HashedCollection new.\x0a\x09chars do: [ :c1 |\x0a\x09\x09self majCacheAvec: c1.\x0a\x09\x09self majCacheAvec: c1,' '.\x0a\x09\x09chars do: [ :c2 | self majCacheAvec: c1,c2 ]\x0a\x09\x09].\x0a\x09^ cache",
 referencedClasses: ["String", "HashedCollection"],
 //>>excludeEnd("ide");
 messageSends: ["collect:", "to:", "fromCharCode:", "new", "do:", "majCacheAvec:", ","]
@@ -7337,7 +7321,7 @@ return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1;
 s=self._asLowercase();
-$recv($globals.HashedCollection._newFromPairs_(["[àáâãäå]","a","æ","ae","ç","c","[èéêë]","e","[ìíîï]","i","ñ","n","[òóôõö]","o","œ","oe","[ùúûü]","u","[ýÿ]","y"," ",""]))._keysAndValuesDo_((function(k,v){
+$recv($globals.HashedCollection._newFromPairs_(["[àáâãäå]","a","æ","ae","ç","c","[èéêë]","e","[ìíîï]","i","ñ","n","[òóôõö]","o","œ","oe","[ùúûü]","u","[ýÿ]","y"]))._keysAndValuesDo_((function(k,v){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -7355,7 +7339,7 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "sansAccent\x0a\x09| s |\x0a  \x09s := self asLowercase.\x0a\x09#{ '[àáâãäå]' -> 'a'.\x0a\x09   'æ' -> 'ae'.\x0a\x09   'ç' -> 'c'.\x0a\x09   '[èéêë]' -> 'e'.\x0a\x09   '[ìíîï]' -> 'i'.\x0a\x09   'ñ' -> 'n'.\x0a\x09   '[òóôõö]' -> 'o'.\x0a\x09   'œ' -> 'oe'.\x0a\x09   '[ùúûü]' -> 'u'.\x0a\x09   '[ýÿ]' -> 'y'.\x0a\x09   ' ' -> ''\x0a\x09} keysAndValuesDo: [ :k :v |\x0a\x09\x09s := s replace: k with: v\x0a\x09].\x0a\x09^ s",
+source: "sansAccent\x0a\x09| s |\x0a  \x09s := self asLowercase.\x0a\x09#{ '[àáâãäå]' -> 'a'.\x0a\x09   'æ' -> 'ae'.\x0a\x09   'ç' -> 'c'.\x0a\x09   '[èéêë]' -> 'e'.\x0a\x09   '[ìíîï]' -> 'i'.\x0a\x09   'ñ' -> 'n'.\x0a\x09   '[òóôõö]' -> 'o'.\x0a\x09   'œ' -> 'oe'.\x0a\x09   '[ùúûü]' -> 'u'.\x0a\x09   '[ýÿ]' -> 'y'\x22.\x0a\x09   ' ' -> ''\x22\x0a\x09} keysAndValuesDo: [ :k :v |\x0a\x09\x09s := s replace: k with: v\x0a\x09].\x0a\x09^ s",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["asLowercase", "keysAndValuesDo:", "replace:with:"]

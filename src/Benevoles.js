@@ -579,10 +579,11 @@ selector: "initialize",
 protocol: 'initialization',
 fn: function (){
 var self=this;
-var barre;
+var barre,cache;
 function $FdJWidgetBarre(){return $globals.FdJWidgetBarre||(typeof FdJWidgetBarre=="undefined"?nil:FdJWidgetBarre)}
 function $FdJWidgetSelectionneur(){return $globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
 function $FdJWidgetImporteur(){return $globals.FdJWidgetImporteur||(typeof FdJWidgetImporteur=="undefined"?nil:FdJWidgetImporteur)}
+function $FdJWidgetCache(){return $globals.FdJWidgetCache||(typeof FdJWidgetCache=="undefined"?nil:FdJWidgetCache)}
 function $FdJWidgetBenevoles(){return $globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 function $FdJWidgetLegende(){return $globals.FdJWidgetLegende||(typeof FdJWidgetLegende=="undefined"?nil:FdJWidgetLegende)}
 function $FdJAnnonceur(){return $globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
@@ -637,6 +638,18 @@ self["@importeur"]=$recv($FdJWidgetImporteur())._new();
 $ctx1.sendIdx["new"]=3;
 //>>excludeEnd("ctx");
 $recv(barre)._ajoute_(self["@importeur"]);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["ajoute:"]=2;
+//>>excludeEnd("ctx");
+cache=$recv($FdJWidgetCache())._new();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["new"]=4;
+//>>excludeEnd("ctx");
+$recv(barre)._ajoute_(cache);
+$recv(cache)._presentateur_(self["@benevoles"]);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["presentateur:"]=2;
+//>>excludeEnd("ctx");
 $4=barre;
 $5="body"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -648,7 +661,7 @@ $ctx1.sendIdx["appendToJQuery:"]=1;
 //>>excludeEnd("ctx");
 $6=$recv($FdJWidgetBenevoles())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["new"]=4;
+$ctx1.sendIdx["new"]=5;
 //>>excludeEnd("ctx");
 $recv($6)._presentateur_(self);
 $8=$6;
@@ -675,13 +688,13 @@ $recv(self["@distributeur"])._associe_($recv(self["@benevoles"])._selectionnes()
 self._annonce_(true);
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre},$globals.FdJApplication)});
+}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre,cache:cache},$globals.FdJApplication)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initialize\x0a\x09| barre |\x0a\x09'body' asJQuery children remove.\x0a\x09window onunload: [ self termine ].\x0a\x0a\x09super initialize.\x0a\x09\x0a\x09cacheFiltre\x09:= ''.\x0a\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).\x0a\x09\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
-referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetBenevoles", "FdJWidgetLegende", "FdJAnnonceur", "FdJBenevoleChangeEtat"],
+source: "initialize\x0a\x09| barre cache |\x0a\x09'body' asJQuery children remove.\x0a\x09window onunload: [ self termine ].\x0a\x0a\x09super initialize.\x0a\x09\x0a\x09cacheFiltre\x09:= ''.\x0a\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x09\x0a\x09cache := FdJWidgetCache new.\x0a\x09barre ajoute: cache.\x0a\x09cache presentateur: benevoles.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).\x0a\x09\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
+referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetCache", "FdJWidgetBenevoles", "FdJWidgetLegende", "FdJAnnonceur", "FdJBenevoleChangeEtat"],
 //>>excludeEnd("ide");
 messageSends: ["remove", "children", "asJQuery", "onunload:", "termine", "initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes", "annonce:"]
 }),
@@ -936,18 +949,20 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-self._shouldNotImplement();
-return self;
+var $1;
+self["@instance"]=nil;
+$1=self._instance();
+return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"new",{},$globals.FdJApplication.klass)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "new\x0a\x09self shouldNotImplement",
+source: "new\x0a\x09instance := nil.\x0a\x09^ self instance",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["shouldNotImplement"]
+messageSends: ["instance"]
 }),
 $globals.FdJApplication.klass);
 
@@ -2922,7 +2937,6 @@ fn: function (texte){
 var self=this;
 var sansaccent,result;
 function $HashedCollection(){return $globals.HashedCollection||(typeof HashedCollection=="undefined"?nil:HashedCollection)}
-function $Transcript(){return $globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
@@ -2938,8 +2952,7 @@ $1;
 result=self._filtreCache_(sansaccent);
 $2=$recv($recv(sansaccent)._size()).__lt_eq((2));
 if($core.assert($2)){
-$recv($Transcript())._show_("maj".__comma(sansaccent));
-$recv(self["@cache"])._at_put_(sansaccent,result);
+$recv(self["@cache"])._at_ifAbsentPut_(sansaccent,result);
 };
 $3=result;
 return $3;
@@ -2949,10 +2962,10 @@ return $3;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "filtreCacheMaj: texte\x0a\x09\x22Filtre en utilisant si possible le cache et met a jour le cache\x22\x0a\x09| sansaccent result |\x0a\x09sansaccent := texte sansAccent.\x0a\x0a\x09\x22si pas de cache, on le créé\x22\x0a\x09cache ifNil: [ cache := HashedCollection new ].\x0a\x0a\x09\x22recherche benevoles repondant au critere dans le cache\x22\x0a\x09result := self filtreCache: sansaccent.\x0a\x09\x22cache maj si taille petite\x22\x0a\x09sansaccent size <= 2 ifTrue: [\x0a\x09\x09Transcript show: 'maj',sansaccent.\x0a\x09\x09cache at: sansaccent put: result\x0a\x09\x09].\x0a\x09^ result",
-referencedClasses: ["HashedCollection", "Transcript"],
+source: "filtreCacheMaj: texte\x0a\x09\x22Filtre en utilisant si possible le cache et met a jour le cache\x22\x0a\x09| sansaccent result |\x0a\x09sansaccent := texte sansAccent.\x0a\x0a\x09\x22si pas de cache, on le créé\x22\x0a\x09cache ifNil: [ cache := HashedCollection new ].\x0a\x0a\x09\x22recherche benevoles repondant au critere dans le cache\x22\x0a\x09result := self filtreCache: sansaccent.\x0a\x09\x22cache maj si taille petite\x22\x0a\x09sansaccent size <= 2 ifTrue: [\x0a\x09\x09cache at: sansaccent ifAbsentPut: result ].\x0a\x09^ result",
+referencedClasses: ["HashedCollection"],
 //>>excludeEnd("ide");
-messageSends: ["sansAccent", "ifNil:", "new", "filtreCache:", "ifTrue:", "<=", "size", "show:", ",", "at:put:"]
+messageSends: ["sansAccent", "ifNil:", "new", "filtreCache:", "ifTrue:", "<=", "size", "at:ifAbsentPut:"]
 }),
 $globals.FdJBenevoles);
 
@@ -6288,6 +6301,45 @@ $globals.FdJWidgetBenevoles);
 
 
 
+$core.addClass('FdJWidgetCache', $globals.FdJWidget, [], 'Benevoles');
+$core.addMethod(
+$core.method({
+selector: "renderOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2;
+$1=$recv(html)._button();
+$recv($1)._class_("special");
+$recv($1)._with_("C");
+$2=$recv($1)._onClick_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(self["@presentateur"])._majCache();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},$globals.FdJWidgetCache)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderOn: html\x0a\x09\x22bouton dans la barre directement\x22\x0a\x09html button\x0a\x09\x09class: 'special';\x0a\x09\x09with: 'C';\x0a\x09\x09onClick: [ presentateur majCache ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "button", "with:", "onClick:", "majCache"]
+}),
+$globals.FdJWidgetCache);
+
+
+
 $core.addClass('FdJWidgetImporteur', $globals.FdJWidget, ['input', 'dlg'], 'Benevoles');
 $core.addMethod(
 $core.method({
@@ -6461,20 +6513,7 @@ $recv(self["@div"])._with_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-self._renderDlgOn_(html);
-$1=$recv(html)._button();
-$recv($1)._class_("boutton");
-$recv($1)._with_("I");
-$2=$recv($1)._onClick_((function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx3) {
-//>>excludeEnd("ctx");
-return $recv($recv(self["@dlg"])._asJQuery())._fadeToggle();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)});
-//>>excludeEnd("ctx");
-}));
-return $2;
+return self._renderDlgOn_(html);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
 //>>excludeEnd("ctx");
@@ -6482,6 +6521,18 @@ return $2;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
+$1=$recv(html)._button();
+$recv($1)._class_("special");
+$recv($1)._with_("I");
+$2=$recv($1)._onClick_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($recv(self["@dlg"])._asJQuery())._fadeToggle();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},$globals.FdJWidgetImporteur)});
@@ -6489,7 +6540,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09self renderDlgOn: html.\x0a\x09\x09html button\x0a\x09\x09\x09class: 'boutton';\x0a\x09\x09\x09with: 'I';\x0a\x09\x09\x09onClick: [ dlg asJQuery fadeToggle ]\x0a\x09\x09]",
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09self renderDlgOn: html.\x0a\x09\x09].\x0a\x09\x22bouton dans la barre directement\x22\x0a\x09html button\x0a\x09\x09class: 'special';\x0a\x09\x09with: 'I';\x0a\x09\x09onClick: [ dlg asJQuery fadeToggle ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["renderOn:", "with:", "renderDlgOn:", "class:", "button", "onClick:", "fadeToggle", "asJQuery"]
@@ -6860,7 +6911,7 @@ selector: "renderOn:",
 protocol: 'as yet unclassified',
 fn: function (html){
 var self=this;
-var contenu;
+var contenu,btn;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
@@ -6893,12 +6944,14 @@ $2=$recv($1)._onClick_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx3) {
 //>>excludeEnd("ctx");
-return $recv($recv(contenu)._asJQuery())._fadeToggle();
+$recv($recv(contenu)._asJQuery())._fadeToggle();
+return $recv($recv($recv(btn)._element())._style())._margin_("-3px");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)});
 //>>excludeEnd("ctx");
 }));
-$2;
+btn=$2;
+btn;
 $3=$recv(html)._div();
 $recv($3)._class_("contenu");
 $4=$recv($3)._with_((function(){
@@ -6921,15 +6974,15 @@ $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html,contenu:contenu},$globals.FdJWidgetLegende)});
+}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html,contenu:contenu,btn:btn},$globals.FdJWidgetLegende)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderOn: html\x0a\x09| contenu |\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div\x0a\x09\x09\x09class: 'bouton';\x0a\x09\x09\x09with: 'Aide';\x0a\x09\x09\x09onClick: [ contenu asJQuery fadeToggle ].\x0a\x09\x09contenu := html div\x0a\x09\x09\x09class: 'contenu';\x0a\x09\x09\x09with: [ self renderContenuOn: html ]\x0a\x09\x09]",
+source: "renderOn: html\x0a\x09| contenu btn |\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09btn := html div\x0a\x09\x09\x09class: 'bouton';\x0a\x09\x09\x09with: 'Aide';\x0a\x09\x09\x09onClick: [ contenu asJQuery fadeToggle. btn element style margin: '-3px' ].\x0a\x09\x09contenu := html div\x0a\x09\x09\x09class: 'contenu';\x0a\x09\x09\x09with: [ self renderContenuOn: html ]\x0a\x09\x09]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["renderOn:", "with:", "class:", "div", "onClick:", "fadeToggle", "asJQuery", "renderContenuOn:"]
+messageSends: ["renderOn:", "with:", "class:", "div", "onClick:", "fadeToggle", "asJQuery", "margin:", "style", "element", "renderContenuOn:"]
 }),
 $globals.FdJWidgetLegende);
 

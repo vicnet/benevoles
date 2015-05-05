@@ -133,7 +133,7 @@ importe: texte
 !
 
 initialize
-	| barre |
+	| barre cache |
 	'body' asJQuery children remove.
 	window onunload: [ self termine ].
 
@@ -153,6 +153,10 @@ initialize
 	
 	importeur := FdJWidgetImporteur new.
 	barre ajoute: importeur.
+	
+	cache := FdJWidgetCache new.
+	barre ajoute: cache.
+	cache presentateur: benevoles.
 
 	barre appendToJQuery: 'body' asJQuery.
 
@@ -273,7 +277,8 @@ instance
 !
 
 new
-	self shouldNotImplement
+	instance := nil.
+	^ self instance
 !
 
 open
@@ -714,9 +719,7 @@ filtreCacheMaj: texte
 	result := self filtreCache: sansaccent.
 	"cache maj si taille petite"
 	sansaccent size <= 2 ifTrue: [
-		Transcript show: 'maj',sansaccent.
-		cache at: sansaccent put: result
-		].
+		cache at: sansaccent ifAbsentPut: result ].
 	^ result
 !
 
@@ -1372,6 +1375,20 @@ update
 		div with: [ self renderBenevolesOn: html ] ]
 ! !
 
+FdJWidget subclass: #FdJWidgetCache
+	instanceVariableNames: ''
+	package: 'Benevoles'!
+
+!FdJWidgetCache methodsFor: 'as yet unclassified'!
+
+renderOn: html
+	"bouton dans la barre directement"
+	html button
+		class: 'special';
+		with: 'C';
+		onClick: [ presentateur majCache ]
+! !
+
 FdJWidget subclass: #FdJWidgetImporteur
 	instanceVariableNames: 'input dlg'
 	package: 'Benevoles'!
@@ -1412,11 +1429,12 @@ renderOn: html
 	super renderOn: html.
 	div with: [
 		self renderDlgOn: html.
-		html button
-			class: 'boutton';
-			with: 'I';
-			onClick: [ dlg asJQuery fadeToggle ]
-		]
+		].
+	"bouton dans la barre directement"
+	html button
+		class: 'special';
+		with: 'I';
+		onClick: [ dlg asJQuery fadeToggle ]
 ! !
 
 FdJWidget subclass: #FdJWidgetLegende
@@ -1479,13 +1497,13 @@ renderIdentiteOn: html texte: texte
 !
 
 renderOn: html
-	| contenu |
+	| contenu btn |
 	super renderOn: html.
 	div with: [
-		html div
+		btn := html div
 			class: 'bouton';
 			with: 'Aide';
-			onClick: [ contenu asJQuery fadeToggle ].
+			onClick: [ contenu asJQuery fadeToggle. btn element style margin: '-3px' ].
 		contenu := html div
 			class: 'contenu';
 			with: [ self renderContenuOn: html ]

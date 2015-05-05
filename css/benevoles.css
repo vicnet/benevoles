@@ -166,10 +166,16 @@ body {
 .barre div {
     display: inline-block;
 }
-.barre * button {
+.barre button {
     margin-top: -10px; /* ? */
     height: 36px;
     font-size: 140%;
+    cursor: pointer;
+}
+button.special {
+    margin-right: 10px;
+    margin-top: 0px;
+    float: right;
 }
 .importeur .dialog {
     display:none;
@@ -222,6 +228,7 @@ body {
     float:left;
     margin: -7px;
     position: relative; z-index: 8;
+    cursor: pointer;
 }
 .legende .contenu {
     float:right;

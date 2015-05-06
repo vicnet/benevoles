@@ -84,7 +84,7 @@ defiltre
 
 filtre: texte
 	| max liste |
-	cacheFiltre=texte ifTrue: [ ^ self ].
+	cacheFiltre=texte ifTrue: [ ^ nil ].
 	cacheFiltre := texte.
 	max := 4.
 	liste := benevoles filtre: texte max: max+1.
@@ -93,7 +93,8 @@ filtre: texte
 			selectionneur selectionne: liste max: false ]
 		ifFalse: [
 			liste removeLast.
-			selectionneur selectionne: liste max: true ]
+			selectionneur selectionne: liste max: true ].
+	^ liste
 !
 
 importe: texte
@@ -214,7 +215,8 @@ termine
 
 vide
 	FdJStockage vide.
-	benevoles vide
+	benevoles vide.
+	historique vide
 ! !
 
 !FdJApplication methodsFor: 'obsolete'!
@@ -960,6 +962,10 @@ asJSON
 	^ #{ 'jours'->jours. 'vegetarien'->vegetarien }
 !
 
+estVide
+	^ (jours includes: true) not
+!
+
 fromJSON: variables
 	jours := variables at: 'jours'.
 	vegetarien := variables at: 'vegetarien'
@@ -1283,23 +1289,24 @@ renderOn: html
 !
 
 renderRepasOn: html
-	| d jours t tooltip |
+	| d jours tooltip repas |
 	jours := { 'Dimanche soir'. 'Dimanche midi'. 'Samedi soir'. 'Samedi midi'. 'Vendredi soir'. 'Vendredi midi' }.
 	d := html div class: 'repas';
 			      with: [ html div class: 'img' ].
-	benevole repas ifNotNil: [ :repas |
-		repas vegetarien ifTrue: [ d ajouteClasse: 'vegetarien' ].
-		d with: [
-			repas jours do: [ :r |
-				t := html div
-					with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);
-					class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ]).
-				tooltip := self renderToolipOn: html
-					with: (jours removeLast)
-					on: t.
-				tooltip with: [html br]; with: (r ifTrue: [ 'Repas pris' ] ifFalse: [ 'Repas non pris' ]);
-						with: [html br]; with: (repas vegetarien ifTrue: [ 'Végétarien' ] ifFalse: [ '' ])
-				]
+	benevole repas ifNil: [ ^ self ].
+	repas := benevole repas.
+	repas estVide ifTrue: [ ^ self ].
+	repas vegetarien ifTrue: [ d ajouteClasse: 'vegetarien' ].
+	d with: [
+		repas jours do: [ :r | | t |
+			t := html div
+				with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);
+				class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ]).
+			tooltip := self renderToolipOn: html
+				with: (jours removeLast)
+				on: t.
+			tooltip with: [html br]; with: (r ifTrue: [ 'Repas pris' ] ifFalse: [ 'Repas non pris' ]);
+					with: [html br]; with: (repas vegetarien ifTrue: [ 'Végétarien' ] ifFalse: [ '' ])
 			]
 		]
 !
@@ -1443,15 +1450,6 @@ FdJWidget subclass: #FdJWidgetLegende
 
 !FdJWidgetLegende methodsFor: 'as yet unclassified'!
 
-enderTShirtOn: html
-	html div class: 'tshirt';
-		with: [
-			html div with: 'H/F'.
-			html div with: 'taille'.
-			html div with: 'lsf' ];
-		class: 'tshirt homme'
-!
-
 renderAssociationOn: html texte: texte
 	html div class: 'association';
 		with: texte
@@ -1467,7 +1465,11 @@ renderBenevoleOn: html type: benevole
 				texte: (benevole at: #assoc)
 			].
 		((benevole at: #type) = 'auteur') ifFalse: [
-			self renderTShirtOn: html ]
+			self renderTShirtOn: html.
+			html div class: 'repas';
+			      with: [ html div class: 'img'. 	
+				  		  html div class: 'texte'; with: 'repas' ]
+			]
 		]
 !
 
@@ -1480,7 +1482,7 @@ renderContenuOn: html
 	self renderBenevoleOn: html type: #{
 		#type->'festival'. #assoc->'association' }.
 	self renderBenevoleOn: html type: #{
-		#type->'auteur'. #nom->'Auteur'. #assoc->'distri speciale' }.
+		#type->'auteur'. #nom->'Auteur/Editeur'. #assoc->'special: pas de distri' }.
 	self renderBenevoleOn: html type: #{
 			#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }
 !

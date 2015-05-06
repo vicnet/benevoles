@@ -319,10 +319,10 @@ var max,liste;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2;
+var $1,$2,$3;
 $1=$recv(self["@cacheFiltre"]).__eq(texte);
 if($core.assert($1)){
-return self;
+return nil;
 };
 self["@cacheFiltre"]=texte;
 max=(4);
@@ -337,14 +337,15 @@ $ctx1.sendIdx["selectionne:max:"]=1;
 $recv(liste)._removeLast();
 $recv(self["@selectionneur"])._selectionne_max_(liste,true);
 };
-return self;
+$3=liste;
+return $3;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"filtre:",{texte:texte,max:max,liste:liste},$globals.FdJApplication)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "filtre: texte\x0a\x09| max liste |\x0a\x09cacheFiltre=texte ifTrue: [ ^ self ].\x0a\x09cacheFiltre := texte.\x0a\x09max := 4.\x0a\x09liste := benevoles filtre: texte max: max+1.\x0a\x09(liste size <= max)\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09selectionneur selectionne: liste max: false ]\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09liste removeLast.\x0a\x09\x09\x09selectionneur selectionne: liste max: true ]",
+source: "filtre: texte\x0a\x09| max liste |\x0a\x09cacheFiltre=texte ifTrue: [ ^ nil ].\x0a\x09cacheFiltre := texte.\x0a\x09max := 4.\x0a\x09liste := benevoles filtre: texte max: max+1.\x0a\x09(liste size <= max)\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09selectionneur selectionne: liste max: false ]\x0a\x09\x09ifFalse: [\x0a\x09\x09\x09liste removeLast.\x0a\x09\x09\x09selectionneur selectionne: liste max: true ].\x0a\x09^ liste",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["ifTrue:", "=", "filtre:max:", "+", "ifTrue:ifFalse:", "<=", "size", "selectionne:max:", "removeLast"]
@@ -855,6 +856,10 @@ $recv($FdJStockage())._vide();
 $ctx1.sendIdx["vide"]=1;
 //>>excludeEnd("ctx");
 $recv(self["@benevoles"])._vide();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["vide"]=2;
+//>>excludeEnd("ctx");
+$recv(self["@historique"])._vide();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"vide",{},$globals.FdJApplication)});
@@ -862,7 +867,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "vide\x0a\x09FdJStockage vide.\x0a\x09benevoles vide",
+source: "vide\x0a\x09FdJStockage vide.\x0a\x09benevoles vide.\x0a\x09historique vide",
 referencedClasses: ["FdJStockage"],
 //>>excludeEnd("ide");
 messageSends: ["vide"]
@@ -4203,6 +4208,31 @@ $globals.FdJRepas);
 
 $core.addMethod(
 $core.method({
+selector: "estVide",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv($recv(self["@jours"])._includes_(true))._not();
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"estVide",{},$globals.FdJRepas)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "estVide\x0a\x09^ (jours includes: true) not",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["not", "includes:"]
+}),
+$globals.FdJRepas);
+
+$core.addMethod(
+$core.method({
 selector: "fromJSON:",
 protocol: 'as yet unclassified',
 fn: function (variables){
@@ -5768,11 +5798,11 @@ selector: "renderRepasOn:",
 protocol: 'rendering',
 fn: function (html){
 var self=this;
-var d,jours,t,tooltip;
+var d,jours,tooltip,repas;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$3,$2,$4,$5,$6,$7,$8,$10,$11,$9,$12,$13,$14,$16,$18,$17,$15,$receiver;
+var $1,$3,$2,$4,$5,$6,$7,$8,$9,$11,$12,$10,$13,$14,$15,$17,$19,$18,$16,$receiver;
 jours=["Dimanche soir","Dimanche midi","Samedi soir","Samedi midi","Vendredi soir","Vendredi midi"];
 $1=$recv(html)._div();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -5803,16 +5833,24 @@ $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
 d=$2;
 $4=$recv(self["@benevole"])._repas();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["repas"]=1;
+//>>excludeEnd("ctx");
 if(($receiver = $4) == null || $receiver.isNil){
-$4;
+return self;
 } else {
-var repas;
-repas=$receiver;
-$5=$recv(repas)._vegetarien();
+$4;
+};
+repas=$recv(self["@benevole"])._repas();
+$5=$recv(repas)._estVide();
+if($core.assert($5)){
+return self;
+};
+$6=$recv(repas)._vegetarien();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["vegetarien"]=1;
 //>>excludeEnd("ctx");
-if($core.assert($5)){
+if($core.assert($6)){
 $recv(d)._ajouteClasse_("vegetarien");
 };
 $recv(d)._with_((function(){
@@ -5820,33 +5858,34 @@ $recv(d)._with_((function(){
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 return $recv($recv(repas)._jours())._do_((function(r){
+var t;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx3) {
 //>>excludeEnd("ctx");
-$6=$recv(html)._div();
-$7=$6;
+$7=$recv(html)._div();
+$8=$7;
 if($core.assert(r)){
-$8="O";
+$9="O";
 } else {
-$8="N";
+$9="N";
 };
-$recv($7)._with_($8);
+$recv($8)._with_($9);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx3.sendIdx["with:"]=3;
 //>>excludeEnd("ctx");
-$10=$6;
+$11=$7;
 if($core.assert(r)){
-$11="pris";
+$12="pris";
 } else {
-$11="aucun";
+$12="aucun";
 };
-$9=$recv($10)._class_($11);
-t=$9;
+$10=$recv($11)._class_($12);
+t=$10;
 t;
 tooltip=self._renderToolipOn_with_on_(html,$recv(jours)._removeLast(),t);
 tooltip;
-$12=tooltip;
-$recv($12)._with_((function(){
+$13=tooltip;
+$recv($13)._with_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx4) {
 //>>excludeEnd("ctx");
@@ -5855,66 +5894,65 @@ return $recv(html)._br();
 $ctx4.sendIdx["br"]=1;
 //>>excludeEnd("ctx");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx4) {$ctx4.fillBlock({},$ctx3,10)});
+}, function($ctx4) {$ctx4.fillBlock({},$ctx3,11)});
 //>>excludeEnd("ctx");
 }));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx3.sendIdx["with:"]=4;
 //>>excludeEnd("ctx");
-$13=$12;
+$14=$13;
 if($core.assert(r)){
-$14="Repas pris";
+$15="Repas pris";
 } else {
-$14="Repas non pris";
+$15="Repas non pris";
 };
-$recv($13)._with_($14);
+$recv($14)._with_($15);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx3.sendIdx["with:"]=5;
 //>>excludeEnd("ctx");
-$recv($12)._with_((function(){
+$recv($13)._with_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx4) {
 //>>excludeEnd("ctx");
 return $recv(html)._br();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx4) {$ctx4.fillBlock({},$ctx3,13)});
+}, function($ctx4) {$ctx4.fillBlock({},$ctx3,14)});
 //>>excludeEnd("ctx");
 }));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx3.sendIdx["with:"]=6;
 //>>excludeEnd("ctx");
-$16=$12;
-$18=$recv(repas)._vegetarien();
-if($core.assert($18)){
-$17="Végétarien";
+$17=$13;
+$19=$recv(repas)._vegetarien();
+if($core.assert($19)){
+$18="Végétarien";
 } else {
-$17="";
+$18="";
 };
-$15=$recv($16)._with_($17);
-return $15;
+$16=$recv($17)._with_($18);
+return $16;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx3) {$ctx3.fillBlock({r:r},$ctx2,5)});
+}, function($ctx3) {$ctx3.fillBlock({r:r,t:t},$ctx2,6)});
 //>>excludeEnd("ctx");
 }));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)});
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)});
 //>>excludeEnd("ctx");
 }));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["with:"]=2;
 //>>excludeEnd("ctx");
-};
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"renderRepasOn:",{html:html,d:d,jours:jours,t:t,tooltip:tooltip},$globals.FdJWidgetBenevole)});
+}, function($ctx1) {$ctx1.fill(self,"renderRepasOn:",{html:html,d:d,jours:jours,tooltip:tooltip,repas:repas},$globals.FdJWidgetBenevole)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderRepasOn: html\x0a\x09| d jours t tooltip |\x0a\x09jours := { 'Dimanche soir'. 'Dimanche midi'. 'Samedi soir'. 'Samedi midi'. 'Vendredi soir'. 'Vendredi midi' }.\x0a\x09d := html div class: 'repas';\x0a\x09\x09\x09      with: [ html div class: 'img' ].\x0a\x09benevole repas ifNotNil: [ :repas |\x0a\x09\x09repas vegetarien ifTrue: [ d ajouteClasse: 'vegetarien' ].\x0a\x09\x09d with: [\x0a\x09\x09\x09repas jours do: [ :r |\x0a\x09\x09\x09\x09t := html div\x0a\x09\x09\x09\x09\x09with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);\x0a\x09\x09\x09\x09\x09class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ]).\x0a\x09\x09\x09\x09tooltip := self renderToolipOn: html\x0a\x09\x09\x09\x09\x09with: (jours removeLast)\x0a\x09\x09\x09\x09\x09on: t.\x0a\x09\x09\x09\x09tooltip with: [html br]; with: (r ifTrue: [ 'Repas pris' ] ifFalse: [ 'Repas non pris' ]);\x0a\x09\x09\x09\x09\x09\x09with: [html br]; with: (repas vegetarien ifTrue: [ 'Végétarien' ] ifFalse: [ '' ])\x0a\x09\x09\x09\x09]\x0a\x09\x09\x09]\x0a\x09\x09]",
+source: "renderRepasOn: html\x0a\x09| d jours tooltip repas |\x0a\x09jours := { 'Dimanche soir'. 'Dimanche midi'. 'Samedi soir'. 'Samedi midi'. 'Vendredi soir'. 'Vendredi midi' }.\x0a\x09d := html div class: 'repas';\x0a\x09\x09\x09      with: [ html div class: 'img' ].\x0a\x09benevole repas ifNil: [ ^ self ].\x0a\x09repas := benevole repas.\x0a\x09repas estVide ifTrue: [ ^ self ].\x0a\x09repas vegetarien ifTrue: [ d ajouteClasse: 'vegetarien' ].\x0a\x09d with: [\x0a\x09\x09repas jours do: [ :r | | t |\x0a\x09\x09\x09t := html div\x0a\x09\x09\x09\x09with: (r ifTrue: [ 'O' ] ifFalse: [ 'N' ]);\x0a\x09\x09\x09\x09class: (r ifTrue: [ 'pris' ] ifFalse: [ 'aucun' ]).\x0a\x09\x09\x09tooltip := self renderToolipOn: html\x0a\x09\x09\x09\x09with: (jours removeLast)\x0a\x09\x09\x09\x09on: t.\x0a\x09\x09\x09tooltip with: [html br]; with: (r ifTrue: [ 'Repas pris' ] ifFalse: [ 'Repas non pris' ]);\x0a\x09\x09\x09\x09\x09with: [html br]; with: (repas vegetarien ifTrue: [ 'Végétarien' ] ifFalse: [ '' ])\x0a\x09\x09\x09]\x0a\x09\x09]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["class:", "div", "with:", "ifNotNil:", "repas", "ifTrue:", "vegetarien", "ajouteClasse:", "do:", "jours", "ifTrue:ifFalse:", "renderToolipOn:with:on:", "removeLast", "br"]
+messageSends: ["class:", "div", "with:", "ifNil:", "repas", "ifTrue:", "estVide", "vegetarien", "ajouteClasse:", "do:", "jours", "ifTrue:ifFalse:", "renderToolipOn:with:on:", "removeLast", "br"]
 }),
 $globals.FdJWidgetBenevole);
 
@@ -6552,67 +6590,6 @@ $globals.FdJWidgetImporteur);
 $core.addClass('FdJWidgetLegende', $globals.FdJWidget, [], 'Benevoles');
 $core.addMethod(
 $core.method({
-selector: "enderTShirtOn:",
-protocol: 'as yet unclassified',
-fn: function (html){
-var self=this;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx1) {
-//>>excludeEnd("ctx");
-var $1,$2,$3,$4;
-$1=$recv(html)._div();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["div"]=1;
-//>>excludeEnd("ctx");
-$recv($1)._class_("tshirt");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["class:"]=1;
-//>>excludeEnd("ctx");
-$recv($1)._with_((function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-$2=$recv(html)._div();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["div"]=2;
-//>>excludeEnd("ctx");
-$recv($2)._with_("H/F");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["with:"]=2;
-//>>excludeEnd("ctx");
-$3=$recv(html)._div();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["div"]=3;
-//>>excludeEnd("ctx");
-$recv($3)._with_("taille");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["with:"]=3;
-//>>excludeEnd("ctx");
-return $recv($recv(html)._div())._with_("lsf");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
-//>>excludeEnd("ctx");
-}));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["with:"]=1;
-//>>excludeEnd("ctx");
-$4=$recv($1)._class_("tshirt homme");
-return self;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"enderTShirtOn:",{html:html},$globals.FdJWidgetLegende)});
-//>>excludeEnd("ctx");
-},
-//>>excludeStart("ide", pragmas.excludeIdeData);
-args: ["html"],
-source: "enderTShirtOn: html\x0a\x09html div class: 'tshirt';\x0a\x09\x09with: [\x0a\x09\x09\x09html div with: 'H/F'.\x0a\x09\x09\x09html div with: 'taille'.\x0a\x09\x09\x09html div with: 'lsf' ];\x0a\x09\x09class: 'tshirt homme'",
-referencedClasses: [],
-//>>excludeEnd("ide");
-messageSends: ["class:", "div", "with:"]
-}),
-$globals.FdJWidgetLegende);
-
-$core.addMethod(
-$core.method({
 selector: "renderAssociationOn:texte:",
 protocol: 'as yet unclassified',
 fn: function (html,texte){
@@ -6647,7 +6624,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$4,$3,$6,$8,$7,$9,$5;
+var $1,$2,$4,$3,$6,$8,$7,$9,$10,$12,$13,$14,$11,$5;
 $1=$recv(html)._div();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["div"]=1;
@@ -6667,7 +6644,13 @@ $5=$recv($1)._with_((function(){
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 $6=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["div"]=2;
+//>>excludeEnd("ctx");
 $recv($6)._class_("info");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["class:"]=2;
+//>>excludeEnd("ctx");
 $7=$recv($6)._with_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx3) {
@@ -6698,10 +6681,45 @@ return self._renderAssociationOn_texte_(html,$8);
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)});
 //>>excludeEnd("ctx");
 }));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["with:"]=2;
+//>>excludeEnd("ctx");
 $7;
 $9=$recv($recv(benevole)._at_("type")).__eq("auteur");
 if(!$core.assert($9)){
-return self._renderTShirtOn_(html);
+self._renderTShirtOn_(html);
+$10=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["div"]=3;
+//>>excludeEnd("ctx");
+$recv($10)._class_("repas");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["class:"]=3;
+//>>excludeEnd("ctx");
+$11=$recv($10)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx3) {
+//>>excludeEnd("ctx");
+$12=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["div"]=4;
+//>>excludeEnd("ctx");
+$recv($12)._class_("img");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["class:"]=4;
+//>>excludeEnd("ctx");
+$13=$recv(html)._div();
+$recv($13)._class_("texte");
+$14=$recv($13)._with_("repas");
+return $14;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,6)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["with:"]=3;
+//>>excludeEnd("ctx");
+return $11;
 };
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
@@ -6717,7 +6735,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html", "benevole"],
-source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09((benevole at: #type) = 'auteur') ifFalse: [\x0a\x09\x09\x09self renderTShirtOn: html ]\x0a\x09\x09]",
+source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09((benevole at: #type) = 'auteur') ifFalse: [\x0a\x09\x09\x09self renderTShirtOn: html.\x0a\x09\x09\x09html div class: 'repas';\x0a\x09\x09\x09      with: [ html div class: 'img'. \x09\x0a\x09\x09\x09\x09  \x09\x09  html div class: 'texte'; with: 'repas' ]\x0a\x09\x09\x09]\x0a\x09\x09]",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["class:", "div", ",", "at:", "with:", "at:ifPresent:ifAbsent:", "renderIdentiteOn:texte:", "renderIdentiteOn:", "renderAssociationOn:texte:", "ifFalse:", "=", "renderTShirtOn:"]
@@ -6779,7 +6797,7 @@ self._renderBenevoleOn_type_(html,$globals.HashedCollection._newFromPairs_(["typ
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["renderBenevoleOn:type:"]=1;
 //>>excludeEnd("ctx");
-self._renderBenevoleOn_type_(html,$globals.HashedCollection._newFromPairs_(["type","auteur","nom","Auteur","assoc","distri speciale"]));
+self._renderBenevoleOn_type_(html,$globals.HashedCollection._newFromPairs_(["type","auteur","nom","Auteur/Editeur","assoc","special: pas de distri"]));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["renderBenevoleOn:type:"]=2;
 //>>excludeEnd("ctx");
@@ -6791,7 +6809,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderContenuOn: html\x0a\x09html div class: 'texte'; with: [\x0a\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.\x0a\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'festival'. #assoc->'association' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'auteur'. #nom->'Auteur'. #assoc->'distri speciale' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }",
+source: "renderContenuOn: html\x0a\x09html div class: 'texte'; with: [\x0a\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.\x0a\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'festival'. #assoc->'association' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'auteur'. #nom->'Auteur/Editeur'. #assoc->'special: pas de distri' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["class:", "div", "with:", "renderBenevoleOn:type:"]

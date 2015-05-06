@@ -204,6 +204,9 @@ button.special {
 .benevole.auteur {
     background: linear-gradient(to top, orange 0%, white 33%, white 66%,  orange 100%);
 }
+.benevole.editeur {
+    background: linear-gradient(to top, orange 0%, white 33%, white 66%,  orange 100%);
+}
 .benevole.auteur.noninscrit {
     background: linear-gradient(to top, orange 0%, lightgray 33%, lightgray 66%,  orange 100%);
 }
@@ -249,11 +252,32 @@ button.special {
     background: white
 }
 .legende .tshirt {
-    width: 40%;
+    width: 32%;
     height: 100%
 }
 .legende .tshirt div {
     background: rgba(255,255,255,0);
+}
+.legende .repas {
+    width: 40px;
+    height: 40px;
+}
+.legende .img {
+    width: 100%;
+    height: 100%;
+    position: inherit;
+    float: right;
+}
+.legende .repas .texte {
+    position: fixed;
+    margin-top: 20px;
+    font-size: 100%;
+}
+.legende .noninscrit .repas .texte {
+    position: fixed;
+    margin-top: 20px;
+    font-size: 100%;
+    opacity: 0.5;
 }
 div.tooltip {
 	outline:none; 

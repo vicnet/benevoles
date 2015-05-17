@@ -133,17 +133,9 @@ importe: texte
 	self sauve
 !
 
-initialize
+initWidgets
 	| barre cache |
 	'body' asJQuery children remove.
-	window onunload: [ self termine ].
-
-	super initialize.
-	
-	cacheFiltre	:= ''.
-
-	"Modele"
-	self charge.
 
 	"Widgets"
 	barre := FdJWidgetBarre new
@@ -152,12 +144,15 @@ initialize
 	selectionneur := FdJWidgetSelectionneur	new.
 	barre ajoute: selectionneur.
 	
+	"TODO importeur n'est pas utilisé ailleurs à priori !!"
 	importeur := FdJWidgetImporteur new.
 	barre ajoute: importeur.
 	
 	cache := FdJWidgetCache new.
 	barre ajoute: cache.
 	cache presentateur: benevoles.
+
+	barre ajoute: (FdJWidgetStatistique new).
 
 	barre appendToJQuery: 'body' asJQuery.
 
@@ -168,12 +163,26 @@ initialize
 	FdJWidgetLegende new
 		appendToJQuery: 'body' asJQuery.
 
+	"init"
+	distributeur associe: (benevoles selectionnes).
+!
+
+initialize
+	'body' asJQuery children remove.
+	window onunload: [ self termine ].
+
+	super initialize.
+	
+	cacheFiltre	:= ''.
+
+	"Modele"
+	self charge.
+
+	self initWidgets.
+
 	FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |
 		self onBenevoleChangeEtat: evt benevole ].
 
-	"init"
-	distributeur associe: (benevoles selectionnes).
-	
 	"notifie le début de l'application"
 	self annonce: true
 !
@@ -461,6 +470,10 @@ estInscrit
 	^ inscrit
 !
 
+estSpecial
+	^ (assoc nomSansAccent = 'auteur') | (assoc nomSansAccent = 'editeur')
+!
+
 fromJSON: variables
 	self nom: (variables at: 'nom').
 	self prenom: (variables at: 'prenom').
@@ -538,6 +551,11 @@ normalise
 	"passe le nom en majuscule et le prénom avec la 1ere lettre en majuscule"
 	self nom: nom asUppercase.
 	self prenom: prenom capitalized
+!
+
+prendRepas: unJour
+	repas ifNil: [ ^ false ].
+	^ repas estPris: unJour
 !
 
 prenom
@@ -796,6 +814,18 @@ ajoute: texte
 	self sauve
 !
 
+calculeStats
+	| date result |
+	result := #().
+	date := (Date new: '08/05/2015').
+	liste do: [ :e | | delta |
+		delta := (Date new: (e at: 'date')) dayOfMonth - date dayOfMonth + 1.
+			result at: delta
+				put: ((result at: delta ifAbsent: [ 0 ])+1)
+		].
+	^ result
+!
+
 fromJSON: variables
 	liste := variables at: 'liste'
 !
@@ -960,6 +990,10 @@ ajouteJour: repasPris
 
 asJSON
 	^ #{ 'jours'->jours. 'vegetarien'->vegetarien }
+!
+
+estPris: unJour
+	^ jours at: unJour
 !
 
 estVide
@@ -1435,8 +1469,7 @@ renderDlgOn: html
 renderOn: html
 	super renderOn: html.
 	div with: [
-		self renderDlgOn: html.
-		].
+		self renderDlgOn: html ].
 	"bouton dans la barre directement"
 	html button
 		class: 'special';
@@ -1570,6 +1603,53 @@ selectionne: benevoles max: max
 	max	ifTrue:  [ suite asJQuery fadeIn ]
 		ifFalse: [ suite asJQuery fadeOut ].
 	liste associe: benevoles
+! !
+
+FdJWidget subclass: #FdJWidgetStatistique
+	instanceVariableNames: 'dlg barres'
+	package: 'Benevoles'!
+
+!FdJWidgetStatistique methodsFor: 'as yet unclassified'!
+
+ajoute: pourcentage
+	(pourcentage isKindOf: Array) ifTrue: [
+		^ self ajoute: (pourcentage at: 1) pour: (pourcentage at: 2) ].
+	(pourcentage isKindOf: Association) ifTrue: [
+		^ self ajoute: (pourcentage key) pour: (pourcentage value) ].
+	self ajoute: pourcentage pour: ''
+!
+
+ajoute: pourcentage pour: texte
+	[ :html |
+	    html div  class: 'ligne'; with: [
+	    	html div  class: 'titre'; with: texte.
+	   		html div  class: 'image'; with: [
+				html div asJQuery width: pourcentage asString,'%' ]
+		]
+	] appendToJQuery: barres asJQuery
+!
+
+ajouteTous: pourcentages
+	pourcentages do: [ :p | self ajoute: p ]
+!
+
+renderDlgOn: html
+	dlg := html div
+		class: 'dialog';
+		with: [
+			html div with: 'Statistique'.
+			barres := html div class: 'barres' ]
+!
+
+renderOn: html
+	super renderOn: html.
+	div with: [
+		self renderDlgOn: html ].
+	"bouton dans la barre directement"
+	html button
+		class: 'special';
+		with: 'S';
+		onClick: [ dlg asJQuery fadeToggle ]
 ! !
 
 !String methodsFor: '*Benevoles'!

@@ -10,11 +10,11 @@ body {
     float: left;
 }
 .benevole {
-    width: 600px;
+    width: 900px;
     padding: 5px;
     border: solid;
     border-radius: 10px;
-    font-size: 200%;
+    font-size: 320%;
     display: inline-block;
     background: white;
 }
@@ -38,8 +38,8 @@ body {
 }
 .benevole .tshirt,.repas {
     float: right;
-    width: 100px;
-    height: 75px;
+    width: 140px;
+    height: 120px;
     font-size: 70%;
     font-weight:900;
     text-align: center;
@@ -49,8 +49,8 @@ body {
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
-    width: 100px;
-    height: 80px;
+    width: 140px;
+    height: 120px;
     opacity: 0.3;
     position: absolute;
 }
@@ -177,7 +177,7 @@ button.special {
     margin-top: 0px;
     float: right;
 }
-.importeur .dialog {
+.dialog {
     display:none;
     position: fixed;
     left: 440px;
@@ -296,7 +296,8 @@ div.tooltip span {
 }
 div.tooltip:hover span {
 	display:inline;
-	position:absolute; color:#111;
+	position:absolute;
+	color:#111;
     border:1px solid #DCA;
 	background:#fffAF0;
 }
@@ -313,8 +314,8 @@ div.tooltip span
 }
 .annul {
     position: absolute;
-    margin-top: -85px;
-    margin-left: 580px;
+    margin-top: -8px;
+    margin-left: 440px;
 
     display:none;
     width: 30px;
@@ -357,4 +358,26 @@ span.deleteicon span {
 }
 span.deleteicon input {
 	padding-right: 16px;
+}
+.statistique .barres {
+    background-color: white;
+    width: 100%;
+    height: 94%
+}
+.statistique .ligne {
+    width: 100%;
+    height: 26px;
+}
+.statistique .titre {
+	vertical-align: bottom;
+    width: 30%;
+    height: 100%;
+}
+.statistique .image {
+    width: 70%;
+    height: 100%;
+}
+.statistique .image div {
+    background-color: #F00;
+    height: 100%;
 }

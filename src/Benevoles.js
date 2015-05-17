@@ -576,7 +576,7 @@ $globals.FdJApplication);
 
 $core.addMethod(
 $core.method({
-selector: "initialize",
+selector: "initWidgets",
 protocol: 'initialization',
 fn: function (){
 var self=this;
@@ -585,39 +585,19 @@ function $FdJWidgetBarre(){return $globals.FdJWidgetBarre||(typeof FdJWidgetBarr
 function $FdJWidgetSelectionneur(){return $globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
 function $FdJWidgetImporteur(){return $globals.FdJWidgetImporteur||(typeof FdJWidgetImporteur=="undefined"?nil:FdJWidgetImporteur)}
 function $FdJWidgetCache(){return $globals.FdJWidgetCache||(typeof FdJWidgetCache=="undefined"?nil:FdJWidgetCache)}
+function $FdJWidgetStatistique(){return $globals.FdJWidgetStatistique||(typeof FdJWidgetStatistique=="undefined"?nil:FdJWidgetStatistique)}
 function $FdJWidgetBenevoles(){return $globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 function $FdJWidgetLegende(){return $globals.FdJWidgetLegende||(typeof FdJWidgetLegende=="undefined"?nil:FdJWidgetLegende)}
-function $FdJAnnonceur(){return $globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
-function $FdJBenevoleChangeEtat(){return $globals.FdJBenevoleChangeEtat||(typeof FdJBenevoleChangeEtat=="undefined"?nil:FdJBenevoleChangeEtat)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $2,$1,$3,$4,$5,$6,$8,$9,$7;
+var $2,$1,$3,$4,$5,$6,$7,$8,$10,$11,$9;
 $2="body"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["asJQuery"]=1;
 //>>excludeEnd("ctx");
 $1=$recv($2)._children();
 $recv($1)._remove();
-$recv(window)._onunload_((function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-return self._termine();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
-//>>excludeEnd("ctx");
-}));
-(
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = true, 
-//>>excludeEnd("ctx");
-$globals.FdJApplication.superclass.fn.prototype._initialize.apply($recv(self), []));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.supercall = false;
-//>>excludeEnd("ctx");;
-self["@cacheFiltre"]="";
-self._charge();
 $3=$recv($FdJWidgetBarre())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["new"]=1;
@@ -647,35 +627,91 @@ cache=$recv($FdJWidgetCache())._new();
 $ctx1.sendIdx["new"]=4;
 //>>excludeEnd("ctx");
 $recv(barre)._ajoute_(cache);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["ajoute:"]=3;
+//>>excludeEnd("ctx");
 $recv(cache)._presentateur_(self["@benevoles"]);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["presentateur:"]=2;
 //>>excludeEnd("ctx");
 $4=barre;
-$5="body"._asJQuery();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["asJQuery"]=2;
-//>>excludeEnd("ctx");
-$recv($4)._appendToJQuery_($5);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["appendToJQuery:"]=1;
-//>>excludeEnd("ctx");
-$6=$recv($FdJWidgetBenevoles())._new();
+$5=$recv($FdJWidgetStatistique())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["new"]=5;
 //>>excludeEnd("ctx");
-$recv($6)._presentateur_(self);
-$8=$6;
-$9="body"._asJQuery();
+$recv($4)._ajoute_($5);
+$6=barre;
+$7="body"._asJQuery();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["asJQuery"]=2;
+//>>excludeEnd("ctx");
+$recv($6)._appendToJQuery_($7);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["appendToJQuery:"]=1;
+//>>excludeEnd("ctx");
+$8=$recv($FdJWidgetBenevoles())._new();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["new"]=6;
+//>>excludeEnd("ctx");
+$recv($8)._presentateur_(self);
+$10=$8;
+$11="body"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["asJQuery"]=3;
 //>>excludeEnd("ctx");
-$7=$recv($8)._appendToJQuery_($9);
+$9=$recv($10)._appendToJQuery_($11);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["appendToJQuery:"]=2;
 //>>excludeEnd("ctx");
-self["@distributeur"]=$7;
+self["@distributeur"]=$9;
 $recv($recv($FdJWidgetLegende())._new())._appendToJQuery_("body"._asJQuery());
+$recv(self["@distributeur"])._associe_($recv(self["@benevoles"])._selectionnes());
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"initWidgets",{barre:barre,cache:cache},$globals.FdJApplication)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "initWidgets\x0a\x09| barre cache |\x0a\x09'body' asJQuery children remove.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09\x22TODO importeur n'est pas utilisé ailleurs à priori !\x22\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x09\x0a\x09cache := FdJWidgetCache new.\x0a\x09barre ajoute: cache.\x0a\x09cache presentateur: benevoles.\x0a\x0a\x09barre ajoute: (FdJWidgetStatistique new).\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).",
+referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetCache", "FdJWidgetStatistique", "FdJWidgetBenevoles", "FdJWidgetLegende"],
+//>>excludeEnd("ide");
+messageSends: ["remove", "children", "asJQuery", "presentateur:", "new", "ajoute:", "appendToJQuery:", "associe:", "selectionnes"]
+}),
+$globals.FdJApplication);
+
+$core.addMethod(
+$core.method({
+selector: "initialize",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+function $FdJAnnonceur(){return $globals.FdJAnnonceur||(typeof FdJAnnonceur=="undefined"?nil:FdJAnnonceur)}
+function $FdJBenevoleChangeEtat(){return $globals.FdJBenevoleChangeEtat||(typeof FdJBenevoleChangeEtat=="undefined"?nil:FdJBenevoleChangeEtat)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+$recv($recv("body"._asJQuery())._children())._remove();
+$recv(window)._onunload_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._termine();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+(
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = true, 
+//>>excludeEnd("ctx");
+$globals.FdJApplication.superclass.fn.prototype._initialize.apply($recv(self), []));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = false;
+//>>excludeEnd("ctx");;
+self["@cacheFiltre"]="";
+self._charge();
+self._initWidgets();
 $recv($recv($FdJAnnonceur())._current())._on_do_($FdJBenevoleChangeEtat(),(function(evt){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
@@ -685,19 +721,18 @@ return self._onBenevoleChangeEtat_($recv(evt)._benevole());
 }, function($ctx2) {$ctx2.fillBlock({evt:evt},$ctx1,2)});
 //>>excludeEnd("ctx");
 }));
-$recv(self["@distributeur"])._associe_($recv(self["@benevoles"])._selectionnes());
 self._annonce_(true);
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"initialize",{barre:barre,cache:cache},$globals.FdJApplication)});
+}, function($ctx1) {$ctx1.fill(self,"initialize",{},$globals.FdJApplication)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initialize\x0a\x09| barre cache |\x0a\x09'body' asJQuery children remove.\x0a\x09window onunload: [ self termine ].\x0a\x0a\x09super initialize.\x0a\x09\x0a\x09cacheFiltre\x09:= ''.\x0a\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x09\x0a\x09cache := FdJWidgetCache new.\x0a\x09barre ajoute: cache.\x0a\x09cache presentateur: benevoles.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).\x0a\x09\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
-referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetCache", "FdJWidgetBenevoles", "FdJWidgetLegende", "FdJAnnonceur", "FdJBenevoleChangeEtat"],
+source: "initialize\x0a\x09'body' asJQuery children remove.\x0a\x09window onunload: [ self termine ].\x0a\x0a\x09super initialize.\x0a\x09\x0a\x09cacheFiltre\x09:= ''.\x0a\x0a\x09\x22Modele\x22\x0a\x09self charge.\x0a\x0a\x09self initWidgets.\x0a\x0a\x09FdJAnnonceur current on: FdJBenevoleChangeEtat do: [ :evt |\x0a\x09\x09self onBenevoleChangeEtat: evt benevole ].\x0a\x0a\x09\x22notifie le début de l'application\x22\x0a\x09self annonce: true",
+referencedClasses: ["FdJAnnonceur", "FdJBenevoleChangeEtat"],
 //>>excludeEnd("ide");
-messageSends: ["remove", "children", "asJQuery", "onunload:", "termine", "initialize", "charge", "presentateur:", "new", "ajoute:", "appendToJQuery:", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "associe:", "selectionnes", "annonce:"]
+messageSends: ["remove", "children", "asJQuery", "onunload:", "termine", "initialize", "charge", "initWidgets", "on:do:", "current", "onBenevoleChangeEtat:", "benevole", "annonce:"]
 }),
 $globals.FdJApplication);
 
@@ -1835,6 +1870,39 @@ $globals.FdJBenevole);
 
 $core.addMethod(
 $core.method({
+selector: "estSpecial",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $3,$2,$1;
+$3=$recv(self["@assoc"])._nomSansAccent();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["nomSansAccent"]=1;
+//>>excludeEnd("ctx");
+$2=$recv($3).__eq("auteur");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["="]=1;
+//>>excludeEnd("ctx");
+$1=$recv($2).__or($recv($recv(self["@assoc"])._nomSansAccent()).__eq("editeur"));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"estSpecial",{},$globals.FdJBenevole)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "estSpecial\x0a\x09^ (assoc nomSansAccent = 'auteur') | (assoc nomSansAccent = 'editeur')",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["|", "=", "nomSansAccent"]
+}),
+$globals.FdJBenevole);
+
+$core.addMethod(
+$core.method({
 selector: "fromJSON:",
 protocol: 'accessing',
 fn: function (variables){
@@ -2205,6 +2273,37 @@ source: "normalise\x0a\x09\x22passe le nom en majuscule et le prénom avec la 1e
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["nom:", "asUppercase", "prenom:", "capitalized"]
+}),
+$globals.FdJBenevole);
+
+$core.addMethod(
+$core.method({
+selector: "prendRepas:",
+protocol: 'accessing',
+fn: function (unJour){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$receiver;
+$1=self["@repas"];
+if(($receiver = $1) == null || $receiver.isNil){
+return false;
+} else {
+$1;
+};
+$2=$recv(self["@repas"])._estPris_(unJour);
+return $2;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"prendRepas:",{unJour:unJour},$globals.FdJBenevole)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["unJour"],
+source: "prendRepas: unJour\x0a\x09repas ifNil: [ ^ false ].\x0a\x09^ repas estPris: unJour",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["ifNil:", "estPris:"]
 }),
 $globals.FdJBenevole);
 
@@ -3378,6 +3477,61 @@ $globals.FdJHistorique);
 
 $core.addMethod(
 $core.method({
+selector: "calculeStats",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+var date,result;
+function $Date(){return $globals.Date||(typeof Date=="undefined"?nil:Date)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $2,$1,$3;
+result=[];
+date=$recv($Date())._new_("08/05/2015");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["new:"]=1;
+//>>excludeEnd("ctx");
+$recv(self["@liste"])._do_((function(e){
+var delta;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$2=$recv($recv($Date())._new_($recv(e)._at_("date")))._dayOfMonth();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["dayOfMonth"]=1;
+//>>excludeEnd("ctx");
+$1=$recv($2).__minus($recv(date)._dayOfMonth());
+delta=$recv($1).__plus((1));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["+"]=1;
+//>>excludeEnd("ctx");
+delta;
+return $recv(result)._at_put_(delta,$recv($recv(result)._at_ifAbsent_(delta,(function(){
+return (0);
+
+}))).__plus((1)));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({e:e,delta:delta},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+$3=result;
+return $3;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"calculeStats",{date:date,result:result},$globals.FdJHistorique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "calculeStats\x0a\x09| date result |\x0a\x09result := #().\x0a\x09date := (Date new: '08/05/2015').\x0a\x09liste do: [ :e | | delta |\x0a\x09\x09delta := (Date new: (e at: 'date')) dayOfMonth - date dayOfMonth + 1.\x0a\x09\x09\x09result at: delta\x0a\x09\x09\x09\x09put: ((result at: delta ifAbsent: [ 0 ])+1)\x0a\x09\x09].\x0a\x09^ result",
+referencedClasses: ["Date"],
+//>>excludeEnd("ide");
+messageSends: ["new:", "do:", "+", "-", "dayOfMonth", "at:", "at:put:", "at:ifAbsent:"]
+}),
+$globals.FdJHistorique);
+
+$core.addMethod(
+$core.method({
 selector: "fromJSON:",
 protocol: 'as yet unclassified',
 fn: function (variables){
@@ -4203,6 +4357,31 @@ source: "asJSON\x0a\x09^ #{ 'jours'->jours. 'vegetarien'->vegetarien }",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []
+}),
+$globals.FdJRepas);
+
+$core.addMethod(
+$core.method({
+selector: "estPris:",
+protocol: 'as yet unclassified',
+fn: function (unJour){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv(self["@jours"])._at_(unJour);
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"estPris:",{unJour:unJour},$globals.FdJRepas)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["unJour"],
+source: "estPris: unJour\x0a\x09^ jours at: unJour",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["at:"]
 }),
 $globals.FdJRepas);
 
@@ -6578,7 +6757,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09self renderDlgOn: html.\x0a\x09\x09].\x0a\x09\x22bouton dans la barre directement\x22\x0a\x09html button\x0a\x09\x09class: 'special';\x0a\x09\x09with: 'I';\x0a\x09\x09onClick: [ dlg asJQuery fadeToggle ]",
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09self renderDlgOn: html ].\x0a\x09\x22bouton dans la barre directement\x22\x0a\x09html button\x0a\x09\x09class: 'special';\x0a\x09\x09with: 'I';\x0a\x09\x09onClick: [ dlg asJQuery fadeToggle ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["renderOn:", "with:", "renderDlgOn:", "class:", "button", "onClick:", "fadeToggle", "asJQuery"]
@@ -7317,6 +7496,282 @@ referencedClasses: [],
 messageSends: ["ifTrue:ifFalse:", "fadeIn", "asJQuery", "fadeOut", "associe:"]
 }),
 $globals.FdJWidgetSelectionneur);
+
+
+
+$core.addClass('FdJWidgetStatistique', $globals.FdJWidget, ['dlg', 'barres'], 'Benevoles');
+$core.addMethod(
+$core.method({
+selector: "ajoute:",
+protocol: 'as yet unclassified',
+fn: function (pourcentage){
+var self=this;
+function $Array(){return $globals.Array||(typeof Array=="undefined"?nil:Array)}
+function $Association(){return $globals.Association||(typeof Association=="undefined"?nil:Association)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$3,$2,$4,$5;
+$1=$recv(pourcentage)._isKindOf_($Array());
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["isKindOf:"]=1;
+//>>excludeEnd("ctx");
+if($core.assert($1)){
+$3=$recv(pourcentage)._at_((1));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=1;
+//>>excludeEnd("ctx");
+$2=self._ajoute_pour_($3,$recv(pourcentage)._at_((2)));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["ajoute:pour:"]=1;
+//>>excludeEnd("ctx");
+return $2;
+};
+$4=$recv(pourcentage)._isKindOf_($Association());
+if($core.assert($4)){
+$5=self._ajoute_pour_($recv(pourcentage)._key(),$recv(pourcentage)._value());
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["ajoute:pour:"]=2;
+//>>excludeEnd("ctx");
+return $5;
+};
+self._ajoute_pour_(pourcentage,"");
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"ajoute:",{pourcentage:pourcentage},$globals.FdJWidgetStatistique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["pourcentage"],
+source: "ajoute: pourcentage\x0a\x09(pourcentage isKindOf: Array) ifTrue: [\x0a\x09\x09^ self ajoute: (pourcentage at: 1) pour: (pourcentage at: 2) ].\x0a\x09(pourcentage isKindOf: Association) ifTrue: [\x0a\x09\x09^ self ajoute: (pourcentage key) pour: (pourcentage value) ].\x0a\x09self ajoute: pourcentage pour: ''",
+referencedClasses: ["Array", "Association"],
+//>>excludeEnd("ide");
+messageSends: ["ifTrue:", "isKindOf:", "ajoute:pour:", "at:", "key", "value"]
+}),
+$globals.FdJWidgetStatistique);
+
+$core.addMethod(
+$core.method({
+selector: "ajoute:pour:",
+protocol: 'as yet unclassified',
+fn: function (pourcentage,texte){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$3,$4,$5,$7,$6,$2;
+$recv((function(html){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$1=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["div"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._class_("ligne");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["class:"]=1;
+//>>excludeEnd("ctx");
+$2=$recv($1)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx3) {
+//>>excludeEnd("ctx");
+$3=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["div"]=2;
+//>>excludeEnd("ctx");
+$recv($3)._class_("titre");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["class:"]=2;
+//>>excludeEnd("ctx");
+$4=$recv($3)._with_(texte);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["with:"]=2;
+//>>excludeEnd("ctx");
+$4;
+$5=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx3.sendIdx["div"]=3;
+//>>excludeEnd("ctx");
+$recv($5)._class_("image");
+$6=$recv($5)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx4) {
+//>>excludeEnd("ctx");
+$7=$recv($recv(html)._div())._asJQuery();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx4.sendIdx["asJQuery"]=1;
+//>>excludeEnd("ctx");
+return $recv($7)._width_($recv($recv(pourcentage)._asString()).__comma("%"));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx4) {$ctx4.fillBlock({},$ctx3,3)});
+//>>excludeEnd("ctx");
+}));
+return $6;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["with:"]=1;
+//>>excludeEnd("ctx");
+return $2;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({html:html},$ctx1,1)});
+//>>excludeEnd("ctx");
+}))._appendToJQuery_($recv(self["@barres"])._asJQuery());
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"ajoute:pour:",{pourcentage:pourcentage,texte:texte},$globals.FdJWidgetStatistique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["pourcentage", "texte"],
+source: "ajoute: pourcentage pour: texte\x0a\x09[ :html |\x0a\x09    html div  class: 'ligne'; with: [\x0a\x09    \x09html div  class: 'titre'; with: texte.\x0a\x09   \x09\x09html div  class: 'image'; with: [\x0a\x09\x09\x09\x09html div asJQuery width: pourcentage asString,'%' ]\x0a\x09\x09]\x0a\x09] appendToJQuery: barres asJQuery ",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["appendToJQuery:", "class:", "div", "with:", "width:", "asJQuery", ",", "asString"]
+}),
+$globals.FdJWidgetStatistique);
+
+$core.addMethod(
+$core.method({
+selector: "ajouteTous:",
+protocol: 'as yet unclassified',
+fn: function (pourcentages){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+$recv(pourcentages)._do_((function(p){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._ajoute_(p);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({p:p},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"ajouteTous:",{pourcentages:pourcentages},$globals.FdJWidgetStatistique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["pourcentages"],
+source: "ajouteTous: pourcentages\x0a\x09pourcentages do: [ :p | self ajoute: p ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["do:", "ajoute:"]
+}),
+$globals.FdJWidgetStatistique);
+
+$core.addMethod(
+$core.method({
+selector: "renderDlgOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$3,$2;
+$1=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["div"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._class_("dialog");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["class:"]=1;
+//>>excludeEnd("ctx");
+$2=$recv($1)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$3=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["div"]=2;
+//>>excludeEnd("ctx");
+$recv($3)._with_("Statistique");
+self["@barres"]=$recv($recv(html)._div())._class_("barres");
+return self["@barres"];
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["with:"]=1;
+//>>excludeEnd("ctx");
+self["@dlg"]=$2;
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderDlgOn:",{html:html},$globals.FdJWidgetStatistique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderDlgOn: html\x0a\x09dlg := html div\x0a\x09\x09class: 'dialog';\x0a\x09\x09with: [\x0a\x09\x09\x09html div with: 'Statistique'.\x0a\x09\x09\x09barres := html div class: 'barres' ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "div", "with:"]
+}),
+$globals.FdJWidgetStatistique);
+
+$core.addMethod(
+$core.method({
+selector: "renderOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2;
+(
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = true, 
+//>>excludeEnd("ctx");
+$globals.FdJWidgetStatistique.superclass.fn.prototype._renderOn_.apply($recv(self), [html]));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.supercall = false;
+//>>excludeEnd("ctx");;
+$recv(self["@div"])._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._renderDlgOn_(html);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["with:"]=1;
+//>>excludeEnd("ctx");
+$1=$recv(html)._button();
+$recv($1)._class_("special");
+$recv($1)._with_("S");
+$2=$recv($1)._onClick_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($recv(self["@dlg"])._asJQuery())._fadeToggle();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},$globals.FdJWidgetStatistique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09self renderDlgOn: html ].\x0a\x09\x22bouton dans la barre directement\x22\x0a\x09html button\x0a\x09\x09class: 'special';\x0a\x09\x09with: 'S';\x0a\x09\x09onClick: [ dlg asJQuery fadeToggle ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["renderOn:", "with:", "renderDlgOn:", "class:", "button", "onClick:", "fadeToggle", "asJQuery"]
+}),
+$globals.FdJWidgetStatistique);
 
 
 $core.addMethod(

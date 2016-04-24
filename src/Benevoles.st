@@ -426,7 +426,7 @@ Object subclass: #FdJBenevole
 !FdJBenevole methodsFor: 'accessing'!
 
 aBracelet
-	^ bracelet
+	^ bracelet ifNil: [ bracelet := false ]
 !
 
 affiche
@@ -1341,6 +1341,19 @@ renderAssociationOn: html
 	self ajouteClasse: (benevole association nomSansAccent)
 !
 
+renderBraceletOn: html
+	| d tooltip |
+	d := html div class: 'bracelet'.
+	(benevole aBracelet) ifTrue: [d ajouteClasse: 'aucun'].
+	tooltip := self renderToolipOn: html
+		with: 'Bracelet'
+		on: d.
+	tooltip with: [ html br ];
+			with: ((benevole aBracelet)
+					ifTrue: [ 'déjà donné' ]
+					ifFalse: [ 'à donner' ])
+!
+
 renderIdentiteOn: html
 	| prenom size |
 	prenom :=  benevole prenom.
@@ -1359,6 +1372,7 @@ renderOn: html
 		html div class: 'info'; with: [
 			self renderIdentiteOn: html.
 			self renderAssociationOn: html ].
+		self renderBraceletOn: html.
 		self renderTShirtOn: html.
 		self renderRepasOn: html.
 		self renderAnnulationOn: html ].

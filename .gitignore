@@ -13,3 +13,7 @@ bower_components/
 # Other generated or transient files
 config.js
 the.js
+
+# pas la doc
+doc
+**/.directory

@@ -104,6 +104,23 @@ body {
     background-repeat: no-repeat;
     background-position: center;
 }
+.bracelet {
+    background: url('../img/bracelet.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 20px;
+    height: 120px;
+    float: right;
+    font-size: 70%;
+}
+.bracelet.aucun {
+    background: url('../img/bracelet-aucun.png');
+    background-size: 100% 100%;
+}
+.bracelet.tooltip span {
+    width: auto;
+}
 .noninscrit .pris {
     opacity: 0.4
 }
@@ -152,6 +169,9 @@ body {
     display: none;
 }
 .selectionneur .benevole .repas {
+    display: none;
+}
+.selectionneur .benevole .bracelet {
     display: none;
 }
 .barre {
@@ -292,7 +312,7 @@ div.tooltip span {
 	margin-left:14px;
 	line-height:16px;
 	font-size: 50%;
-	width: 200%
+	width: 200%;
 }
 div.tooltip:hover span {
 	display:inline;

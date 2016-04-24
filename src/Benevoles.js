@@ -1556,17 +1556,28 @@ selector: "aBracelet",
 protocol: 'accessing',
 fn: function (){
 var self=this;
-var $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $2,$1,$receiver;
+$2=self["@bracelet"];
+if(($receiver = $2) == null || $receiver.isNil){
+self["@bracelet"]=false;
 $1=self["@bracelet"];
+} else {
+$1=$2;
+};
 return $1;
-
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"aBracelet",{},$globals.FdJBenevole)});
+//>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "aBracelet\x0a\x09^ bracelet",
+source: "aBracelet\x0a\x09^ bracelet ifNil: [ bracelet := false ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: []
+messageSends: ["ifNil:"]
 }),
 $globals.FdJBenevole);
 
@@ -5993,6 +6004,61 @@ $globals.FdJWidgetBenevole);
 
 $core.addMethod(
 $core.method({
+selector: "renderBraceletOn:",
+protocol: 'rendering',
+fn: function (html){
+var self=this;
+var d,tooltip;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$4,$6,$5,$3;
+d=$recv($recv(html)._div())._class_("bracelet");
+$1=$recv(self["@benevole"])._aBracelet();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["aBracelet"]=1;
+//>>excludeEnd("ctx");
+if($core.assert($1)){
+$recv(d)._ajouteClasse_("aucun");
+};
+tooltip=self._renderToolipOn_with_on_(html,"Bracelet",d);
+$2=tooltip;
+$recv($2)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(html)._br();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["with:"]=1;
+//>>excludeEnd("ctx");
+$4=$2;
+$6=$recv(self["@benevole"])._aBracelet();
+if($core.assert($6)){
+$5="déjà donné";
+} else {
+$5="à donner";
+};
+$3=$recv($4)._with_($5);
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderBraceletOn:",{html:html,d:d,tooltip:tooltip},$globals.FdJWidgetBenevole)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderBraceletOn: html\x0a\x09| d tooltip |\x0a\x09d := html div class: 'bracelet'.\x0a\x09(benevole aBracelet) ifTrue: [d ajouteClasse: 'aucun'].\x0a\x09tooltip := self renderToolipOn: html\x0a\x09\x09with: 'Bracelet'\x0a\x09\x09on: d.\x0a\x09tooltip with: [ html br ];\x0a\x09\x09\x09with: ((benevole aBracelet)\x0a\x09\x09\x09\x09\x09ifTrue: [ 'déjà donné' ]\x0a\x09\x09\x09\x09\x09ifFalse: [ 'à donner' ])",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "div", "ifTrue:", "aBracelet", "ajouteClasse:", "renderToolipOn:with:on:", "with:", "br", "ifTrue:ifFalse:"]
+}),
+$globals.FdJWidgetBenevole);
+
+$core.addMethod(
+$core.method({
 selector: "renderIdentiteOn:",
 protocol: 'rendering',
 fn: function (html){
@@ -6132,6 +6198,7 @@ return self._renderAssociationOn_(html);
 //>>excludeEnd("ctx");
 }));
 $2;
+self._renderBraceletOn_(html);
 self._renderTShirtOn_(html);
 self._renderRepasOn_(html);
 return self._renderAnnulationOn_(html);
@@ -6162,10 +6229,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderTShirtOn: html.\x0a\x09\x09self renderRepasOn: html.\x0a\x09\x09self renderAnnulationOn: html ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ self selectionne ]",
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderBraceletOn: html.\x0a\x09\x09self renderTShirtOn: html.\x0a\x09\x09self renderRepasOn: html.\x0a\x09\x09self renderAnnulationOn: html ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ self selectionne ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderTShirtOn:", "renderRepasOn:", "renderAnnulationOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne"]
+messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderBraceletOn:", "renderTShirtOn:", "renderRepasOn:", "renderAnnulationOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne"]
 }),
 $globals.FdJWidgetBenevole);
 

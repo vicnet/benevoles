@@ -120,7 +120,13 @@ importe: texte
 		ifTrue: [
 			benevoles ajouteUnique: (imp importeBenevoles: rows) ].
 "
-"Fichiers unique 2015"
+"2016: importe la distribution de bracelet"
+	(fields includes: 'bracelet')
+		ifTrue: [
+			self importeBracelets: rows.
+			^ self ].
+
+"Fichiers unique 2015 donc mais en 2 passes"
 	(fields includes: 'asso')
 		ifTrue: [
 			imp importeAssociations: rows.
@@ -229,6 +235,25 @@ vide
 ! !
 
 !FdJApplication methodsFor: 'obsolete'!
+
+importeBracelets: rows
+	| bracelets key |
+Transcript show: 'Importe bracelets'; cr.
+
+	bracelets := FdJImporteur new importeBracelets: rows.
+	benevoles benevoles do: [ :b |
+		key := b identite asLowercase.
+		(bracelets includes: key) ifTrue: [
+				b bracelet: true.
+				 "on supprime de la liste les trouvés pour
+				 voir les non trouvés à la fin"
+				bracelets remove: key
+			]
+		].
+	bracelets ifNotEmpty: [ Transcript show: 'Bracelets non importés:'; cr ].
+	bracelets do: [ :b | Transcript show: ('- ', b);cr ].
+	self sauve
+!
 
 importeRepas: rows
 	| repas key |
@@ -392,13 +417,17 @@ instance
 ! !
 
 Object subclass: #FdJBenevole
-	instanceVariableNames: 'nom prenom assoc tshirt repas etat inscrit nomSansAccent prenomSansAccent'
+	instanceVariableNames: 'nom prenom assoc tshirt repas etat inscrit nomSansAccent prenomSansAccent bracelet'
 	package: 'Benevoles'!
 !FdJBenevole commentStamp!
 - tshirt: un TShirt
 - etat: pas encore venu (nil), en cours de traitement (en cours), terminé (distribue)!
 
 !FdJBenevole methodsFor: 'accessing'!
+
+aBracelet
+	^ bracelet
+!
 
 affiche
 	Transcript show:
@@ -437,6 +466,11 @@ association
 
 association: uneAssoc
 	assoc := uneAssoc
+!
+
+bracelet: aBracelet
+	"Positionne le fait de posseder ou non un bracelet à l'avance"
+	bracelet := aBracelet
 !
 
 correspond: unBenevole
@@ -872,7 +906,8 @@ Object subclass: #FdJImporteur
 !FdJImporteur methodsFor: 'as yet unclassified'!
 
 importe: texte
-	| tous fields rows |
+	"Parse le texte pour le décomposer en header + tableau de données"
+	| tous |
 	tous := Papa
 		parse: texte
 		config: #{ 'header'->true. 'dynamicTyping'->false }.
@@ -891,10 +926,8 @@ importeAssociations: rows
 	rows do: [ :row | self importeAssociation: row ]
 !
 
-importeBooleen: value
-	value ifNil: [ ^ false].
-	value ifEmpty: [ ^ false].
-	^ (#( 'false' 'n' 'non') includes: value asLowercase) not
+importeBracelet: row
+	^ (((row at: 'nom'), ' ', (row at: 'prenom')) asLowercase) copyFrom: 2 to: 1000
 !
 
 importeComplet: row
@@ -938,6 +971,14 @@ importeTShirt: row
 	^ FdJTShirt at: ts
 ! !
 
+!FdJImporteur methodsFor: 'helpers'!
+
+importeBooleen: value
+	value ifNil: [ ^ false].
+	value ifEmpty: [ ^ false].
+	^ (#( 'false' 'n' 'non') includes: value asLowercase) not
+! !
+
 !FdJImporteur methodsFor: 'obsolete'!
 
 importeBenevole: row
@@ -956,6 +997,10 @@ importeBenevoles: rows
 	^ rows
 		select: [ :row | (row at: 'Nom') isEmpty not ]
 		thenCollect: [ :row | self importeBenevole: row ]
+!
+
+importeBracelets: rows
+	^ (rows collect: [ :row | self importeBracelet: row ]) asSet
 !
 
 importeNomTShirt: row

@@ -365,21 +365,29 @@ function $FdJAssociations(){return $globals.FdJAssociations||(typeof FdJAssociat
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2;
+var $1,$2,$3;
 imp=$recv($FdJImporteur())._new();
 results=$recv(imp)._importe_(texte);
 fields=$recv($recv(results)._meta())._fields();
 rows=$recv(results)._data();
-$1=$recv(fields)._includes_("asso");
+$1=$recv(fields)._includes_("bracelet");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["includes:"]=1;
 //>>excludeEnd("ctx");
 if($core.assert($1)){
+self._importeBracelets_(rows);
+return self;
+};
+$2=$recv(fields)._includes_("asso");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["includes:"]=2;
+//>>excludeEnd("ctx");
+if($core.assert($2)){
 $recv(imp)._importeAssociations_(rows);
 $recv($FdJStockage())._sauve_($recv($FdJAssociations())._instance());
 };
-$2=$recv(fields)._includes_("nom");
-if($core.assert($2)){
+$3=$recv(fields)._includes_("nom");
+if($core.assert($3)){
 $recv(self["@benevoles"])._ajouteTous_($recv(imp)._importeComplets_(rows));
 };
 self._sauve();
@@ -390,10 +398,93 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results meta fields.\x0a\x09rows := results data.\x0a\x22Differents fichiers 2014 \x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'Vendredi midi')\x0a\x09\x09ifTrue: [ self importeRepas: rows ].\x0a\x0a\x09(fields includes: 'Nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteUnique: (imp importeBenevoles: rows) ].\x0a\x22\x0a\x22Fichiers unique 2015\x22\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteTous: (imp importeComplets: rows) ].\x0a\x0a\x09self sauve",
+source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results meta fields.\x0a\x09rows := results data.\x0a\x22Differents fichiers 2014 \x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'Vendredi midi')\x0a\x09\x09ifTrue: [ self importeRepas: rows ].\x0a\x0a\x09(fields includes: 'Nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteUnique: (imp importeBenevoles: rows) ].\x0a\x22\x0a\x222016: importe la distribution de bracelet\x22\x0a\x09(fields includes: 'bracelet')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self importeBracelets: rows.\x0a\x09\x09\x09^ self ].\x0a\x0a\x22Fichiers unique 2015 donc mais en 2 passes\x22\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteTous: (imp importeComplets: rows) ].\x0a\x0a\x09self sauve",
 referencedClasses: ["FdJImporteur", "FdJStockage", "FdJAssociations"],
 //>>excludeEnd("ide");
-messageSends: ["new", "importe:", "fields", "meta", "data", "ifTrue:", "includes:", "importeAssociations:", "sauve:", "instance", "ajouteTous:", "importeComplets:", "sauve"]
+messageSends: ["new", "importe:", "fields", "meta", "data", "ifTrue:", "includes:", "importeBracelets:", "importeAssociations:", "sauve:", "instance", "ajouteTous:", "importeComplets:", "sauve"]
+}),
+$globals.FdJApplication);
+
+$core.addMethod(
+$core.method({
+selector: "importeBracelets:",
+protocol: 'obsolete',
+fn: function (rows){
+var self=this;
+var bracelets,key;
+function $Transcript(){return $globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
+function $FdJImporteur(){return $globals.FdJImporteur||(typeof FdJImporteur=="undefined"?nil:FdJImporteur)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$3,$4;
+$recv($Transcript())._show_("Importe bracelets");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["show:"]=1;
+//>>excludeEnd("ctx");
+$1=$recv($Transcript())._cr();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["cr"]=1;
+//>>excludeEnd("ctx");
+bracelets=$recv($recv($FdJImporteur())._new())._importeBracelets_(rows);
+$recv($recv(self["@benevoles"])._benevoles())._do_((function(b){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+key=$recv($recv(b)._identite())._asLowercase();
+key;
+$2=$recv(bracelets)._includes_(key);
+if($core.assert($2)){
+$recv(b)._bracelet_(true);
+return $recv(bracelets)._remove_(key);
+};
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["do:"]=1;
+//>>excludeEnd("ctx");
+$recv(bracelets)._ifNotEmpty_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$recv($Transcript())._show_("Bracelets non importés:");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["show:"]=2;
+//>>excludeEnd("ctx");
+$3=$recv($Transcript())._cr();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["cr"]=2;
+//>>excludeEnd("ctx");
+return $3;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,3)});
+//>>excludeEnd("ctx");
+}));
+$recv(bracelets)._do_((function(b){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$recv($Transcript())._show_("- ".__comma(b));
+$4=$recv($Transcript())._cr();
+return $4;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,4)});
+//>>excludeEnd("ctx");
+}));
+self._sauve();
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"importeBracelets:",{rows:rows,bracelets:bracelets,key:key},$globals.FdJApplication)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["rows"],
+source: "importeBracelets: rows\x0a\x09| bracelets key |\x0aTranscript show: 'Importe bracelets'; cr.\x0a\x0a\x09bracelets := FdJImporteur new importeBracelets: rows.\x0a\x09benevoles benevoles do: [ :b |\x0a\x09\x09key := b identite asLowercase.\x0a\x09\x09(bracelets includes: key) ifTrue: [\x0a\x09\x09\x09\x09b bracelet: true.\x0a\x09\x09\x09\x09 \x22on supprime de la liste les trouvés pour\x0a\x09\x09\x09\x09 voir les non trouvés à la fin\x22\x0a\x09\x09\x09\x09bracelets remove: key\x0a\x09\x09\x09]\x0a\x09\x09].\x0a\x09bracelets ifNotEmpty: [ Transcript show: 'Bracelets non importés:'; cr ].\x0a\x09bracelets do: [ :b | Transcript show: ('- ', b);cr ].\x0a\x09self sauve",
+referencedClasses: ["Transcript", "FdJImporteur"],
+//>>excludeEnd("ide");
+messageSends: ["show:", "cr", "importeBracelets:", "new", "do:", "benevoles", "asLowercase", "identite", "ifTrue:", "includes:", "bracelet:", "remove:", "ifNotEmpty:", ",", "sauve"]
 }),
 $globals.FdJApplication);
 
@@ -1455,10 +1546,30 @@ messageSends: ["ifNil:", "new"]
 $globals.FdJAssociations.klass);
 
 
-$core.addClass('FdJBenevole', $globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'repas', 'etat', 'inscrit', 'nomSansAccent', 'prenomSansAccent'], 'Benevoles');
+$core.addClass('FdJBenevole', $globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'repas', 'etat', 'inscrit', 'nomSansAccent', 'prenomSansAccent', 'bracelet'], 'Benevoles');
 //>>excludeStart("ide", pragmas.excludeIdeData);
 $globals.FdJBenevole.comment="- tshirt: un TShirt\x0a- etat: pas encore venu (nil), en cours de traitement (en cours), terminé (distribue)";
 //>>excludeEnd("ide");
+$core.addMethod(
+$core.method({
+selector: "aBracelet",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@bracelet"];
+return $1;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "aBracelet\x0a\x09^ bracelet",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.FdJBenevole);
+
 $core.addMethod(
 $core.method({
 selector: "affiche",
@@ -1692,6 +1803,25 @@ return self;
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["uneAssoc"],
 source: "association: uneAssoc\x0a\x09assoc := uneAssoc",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.FdJBenevole);
+
+$core.addMethod(
+$core.method({
+selector: "bracelet:",
+protocol: 'accessing',
+fn: function (aBracelet){
+var self=this;
+self["@bracelet"]=aBracelet;
+return self;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["aBracelet"],
+source: "bracelet: aBracelet\x0a\x09\x22Positionne le fait de posseder ou non un bracelet à l'avance\x22\x0a\x09bracelet := aBracelet",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: []
@@ -3751,7 +3881,7 @@ selector: "importe:",
 protocol: 'as yet unclassified',
 fn: function (texte){
 var self=this;
-var tous,fields,rows;
+var tous;
 function $Papa(){return $globals.Papa||(typeof Papa=="undefined"?nil:Papa)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
@@ -3761,12 +3891,12 @@ tous=$recv($Papa())._parse_config_(texte,$globals.HashedCollection._newFromPairs
 $1=tous;
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,tous:tous,fields:fields,rows:rows},$globals.FdJImporteur)});
+}, function($ctx1) {$ctx1.fill(self,"importe:",{texte:texte,tous:tous},$globals.FdJImporteur)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "importe: texte\x0a\x09| tous fields rows |\x0a\x09tous := Papa\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'header'->true. 'dynamicTyping'->false }.\x0a\x09^ tous",
+source: "importe: texte\x0a\x09\x22Parse le texte pour le décomposer en header + tableau de données\x22\x0a\x09| tous |\x0a\x09tous := Papa\x0a\x09\x09parse: texte\x0a\x09\x09config: #{ 'header'->true. 'dynamicTyping'->false }.\x0a\x09^ tous",
 referencedClasses: ["Papa"],
 //>>excludeEnd("ide");
 messageSends: ["parse:config:"]
@@ -3938,7 +4068,7 @@ $globals.FdJImporteur);
 $core.addMethod(
 $core.method({
 selector: "importeBooleen:",
-protocol: 'as yet unclassified',
+protocol: 'helpers',
 fn: function (value){
 var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -3970,6 +4100,74 @@ source: "importeBooleen: value\x0a\x09value ifNil: [ ^ false].\x0a\x09value ifEm
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["ifNil:", "ifEmpty:", "not", "includes:", "asLowercase"]
+}),
+$globals.FdJImporteur);
+
+$core.addMethod(
+$core.method({
+selector: "importeBracelet:",
+protocol: 'as yet unclassified',
+fn: function (row){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $5,$4,$3,$2,$1;
+$5=$recv(row)._at_("nom");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=1;
+//>>excludeEnd("ctx");
+$4=$recv($5).__comma(" ");
+$3=$recv($4).__comma($recv(row)._at_("prenom"));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx[","]=1;
+//>>excludeEnd("ctx");
+$2=$recv($3)._asLowercase();
+$1=$recv($2)._copyFrom_to_((2),(1000));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"importeBracelet:",{row:row},$globals.FdJImporteur)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["row"],
+source: "importeBracelet: row\x0a\x09^ (((row at: 'nom'), ' ', (row at: 'prenom')) asLowercase) copyFrom: 2 to: 1000",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["copyFrom:to:", "asLowercase", ",", "at:"]
+}),
+$globals.FdJImporteur);
+
+$core.addMethod(
+$core.method({
+selector: "importeBracelets:",
+protocol: 'obsolete',
+fn: function (rows){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv($recv(rows)._collect_((function(row){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return self._importeBracelet_(row);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({row:row},$ctx1,1)});
+//>>excludeEnd("ctx");
+})))._asSet();
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"importeBracelets:",{rows:rows},$globals.FdJImporteur)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["rows"],
+source: "importeBracelets: rows\x0a\x09^ (rows collect: [ :row | self importeBracelet: row ]) asSet",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["asSet", "collect:", "importeBracelet:"]
 }),
 $globals.FdJImporteur);
 

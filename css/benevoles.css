@@ -45,7 +45,7 @@ body {
     text-align: center;
 }
 .repas .img {
-    background: url('../img/repas.png');
+    background-image: url('../img/repas.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
@@ -62,18 +62,16 @@ body {
     margin-right: auto;    
 }
 .tshirt {
-    background: url('../img/tshirt-h.png');
+    background-image: url('../img/tshirt-h.png');
     background-size:100% 100%;
     opacity: 0.1;
 }
 .tshirt.homme {
-    background: url('../img/tshirt-h.png');
-    background-size:100% 100%;
+    background-image: url('../img/tshirt-h.png');
     opacity: 1;
 }
 .tshirt.femme {
-    background: url('../img/tshirt-f.png');
-    background-size:100% 100%;
+    background-image: url('../img/tshirt-f.png');
     opacity: 1;
 }
 .noninscrit .tshirt {
@@ -86,26 +84,26 @@ body {
     color: transparent;
 }
 .repas .pris {
-    background: url('../img/repas-normal.png');
+    background-image: url('../img/repas-normal.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
 }
 .repas .aucun {
-    background: url('../img/repas-aucun.png');
+    background-image: url('../img/repas-aucun.png');
     background-size: 70% 70%;
     background-repeat: no-repeat;
     background-position: center;
 	opacity: 0.5;
 }
 .repas.vegetarien .pris {
-    background: url('../img/repas-vegetarien.png');
+    background-image: url('../img/repas-vegetarien.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
 }
 .bracelet {
-    background: url('../img/bracelet.png');
+    background-image: url('../img/bracelet.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center;
@@ -115,8 +113,7 @@ body {
     font-size: 70%;
 }
 .bracelet.aucun {
-    background: url('../img/bracelet-aucun.png');
-    background-size: 100% 100%;
+    background-image: url('../img/bracelet-aucun.png');
 }
 .bracelet.tooltip span {
     width: auto;
@@ -196,6 +193,13 @@ button.special {
     margin-right: 10px;
     margin-top: 0px;
     float: right;
+}
+button.special.annuler {
+    background-image: url('../img/annulation.png') ;
+    background-size: 85%;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: transparent;
 }
 .dialog {
     display:none;
@@ -299,8 +303,28 @@ button.special {
     font-size: 100%;
     opacity: 0.5;
 }
+.legende .bracelet {
+    width: 10px;
+    height: 44px;
+    background-image: none;
+}
+.legende .bracelet .img {
+    background-image:  url('../img/bracelet.png');
+    background-size: 100% 100%;
+    opacity: 0.4;
+}
+.legende .bracelet .texte {
+    transform: rotate(270deg);
+    transform-origin: left top;
+    width: 42px;
+    height: 12px;
+    font-size: 80%;
+    font-weight: bold;
+    opacity: 1;
+    display: inline-block;
+}
 div.tooltip {
-	outline:none; 
+	outline:none;
 }
 div.tooltip:hover {
 	text-decoration:none;
@@ -319,7 +343,7 @@ div.tooltip:hover span {
 	position:absolute;
 	color:#111;
     border:1px solid #DCA;
-	background:#fffAF0;
+	background: #fffAF0;
 }
 div.tooltip span
 {

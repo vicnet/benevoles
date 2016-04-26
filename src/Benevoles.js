@@ -166,7 +166,7 @@ messageSends: ["shouldNotImplement"]
 $globals.FdJAnnonceur.klass);
 
 
-$core.addClass('FdJApplication', $globals.Object, ['benevoles', 'selectionneur', 'distributeur', 'importeur', 'historique', 'cacheFiltre'], 'Benevoles');
+$core.addClass('FdJApplication', $globals.Object, ['benevoles', 'selectionneur', 'distributeur', 'importeur', 'historique', 'cacheFiltre', 'dernier'], 'Benevoles');
 $core.addMethod(
 $core.method({
 selector: "annonce:",
@@ -194,6 +194,38 @@ source: "annonce: etat\x0a\x09FdJAnnonceur current announce: (FdJApplicationChan
 referencedClasses: ["FdJAnnonceur", "FdJApplicationChangeEtat"],
 //>>excludeEnd("ide");
 messageSends: ["announce:", "current", "etat:", "new", "yourself"]
+}),
+$globals.FdJApplication);
+
+$core.addMethod(
+$core.method({
+selector: "annule",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$receiver;
+$1=self["@dernier"];
+if(($receiver = $1) == null || $receiver.isNil){
+$1;
+} else {
+$recv(self["@dernier"])._reinit();
+self["@dernier"]=nil;
+self["@dernier"];
+};
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"annule",{},$globals.FdJApplication)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "annule\x0a\x09dernier ifNotNil: [\x0a\x09\x09dernier reinit.\x0a\x09\x09dernier := nil ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["ifNotNil:", "reinit"]
 }),
 $globals.FdJApplication);
 
@@ -286,6 +318,42 @@ $globals.FdJApplication);
 
 $core.addMethod(
 $core.method({
+selector: "cherche:",
+protocol: 'initialization',
+fn: function (texte){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv($recv(self["@benevoles"])._filtreCache_(texte))._ifEmpty_ifNotEmpty_((function(){
+return nil;
+
+}),(function(l){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(l)._first();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({l:l},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"cherche:",{texte:texte},$globals.FdJApplication)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["texte"],
+source: "cherche: texte\x0a\x09^ (benevoles filtreCache: texte)\x0a\x09\x09ifEmpty: [ nil ]\x0a\x09\x09ifNotEmpty: [ :l | l first ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["ifEmpty:ifNotEmpty:", "filtreCache:", "first"]
+}),
+$globals.FdJApplication);
+
+$core.addMethod(
+$core.method({
 selector: "defiltre",
 protocol: 'initialization',
 fn: function (){
@@ -355,7 +423,7 @@ $globals.FdJApplication);
 $core.addMethod(
 $core.method({
 selector: "importe:",
-protocol: 'initialization',
+protocol: 'importing',
 fn: function (texte){
 var self=this;
 var results,fields,rows,imp;
@@ -365,29 +433,34 @@ function $FdJAssociations(){return $globals.FdJAssociations||(typeof FdJAssociat
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3;
+var $2,$1,$3,$4,$5;
 imp=$recv($FdJImporteur())._new();
 results=$recv(imp)._importe_(texte);
 fields=$recv($recv(results)._meta())._fields();
 rows=$recv(results)._data();
-$1=$recv(fields)._includes_("bracelet");
+$2=$recv(fields)._includes_("bracelet");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["includes:"]=1;
 //>>excludeEnd("ctx");
+$1=$recv($2).__and($recv($recv(fields)._size()).__lt((4)));
 if($core.assert($1)){
 self._importeBracelets_(rows);
-return self;
+$3=self._sauve();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["sauve"]=1;
+//>>excludeEnd("ctx");
+return $3;
 };
-$2=$recv(fields)._includes_("asso");
+$4=$recv(fields)._includes_("asso");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["includes:"]=2;
 //>>excludeEnd("ctx");
-if($core.assert($2)){
+if($core.assert($4)){
 $recv(imp)._importeAssociations_(rows);
 $recv($FdJStockage())._sauve_($recv($FdJAssociations())._instance());
 };
-$3=$recv(fields)._includes_("nom");
-if($core.assert($3)){
+$5=$recv(fields)._includes_("nom");
+if($core.assert($5)){
 $recv(self["@benevoles"])._ajouteTous_($recv(imp)._importeComplets_(rows));
 };
 self._sauve();
@@ -398,17 +471,17 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["texte"],
-source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results meta fields.\x0a\x09rows := results data.\x0a\x22Differents fichiers 2014 \x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'Vendredi midi')\x0a\x09\x09ifTrue: [ self importeRepas: rows ].\x0a\x0a\x09(fields includes: 'Nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteUnique: (imp importeBenevoles: rows) ].\x0a\x22\x0a\x222016: importe la distribution de bracelet\x22\x0a\x09(fields includes: 'bracelet')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self importeBracelets: rows.\x0a\x09\x09\x09^ self ].\x0a\x0a\x22Fichiers unique 2015 donc mais en 2 passes\x22\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteTous: (imp importeComplets: rows) ].\x0a\x0a\x09self sauve",
+source: "importe: texte\x0a\x09| results fields rows imp |\x0a\x09imp := FdJImporteur new.\x0a\x09results := imp importe: texte.\x0a\x0a\x09fields := results meta fields.\x0a\x09rows := results data.\x0a\x0a\x222016: importe la distribution de bracelet et sort car spécial\x22\x0a\x09((fields includes: 'bracelet') & (fields size < 4))\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09self importeBracelets: rows.\x0a\x09\x09\x09^ self sauve ].\x0a\x0a\x22Fichiers unique 2015 donc mais en 2 passes\x22\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteTous: (imp importeComplets: rows) ].\x22\x0a\x09\x09\x09benevoles ajouteUnique: (imp importeComplets: rows) ].\x22\x0a\x0a\x09self sauve\x0a\x09\x0a\x22Differents fichiers 2014 \x0a\x09(fields includes: 'Taille')\x0a\x09\x09ifTrue: [ self importeTShirts: rows ].\x0a\x09\x0a\x09(fields includes: 'asso')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09imp importeAssociations: rows.\x0a\x09\x09\x09FdJStockage sauve: FdJAssociations instance ].\x0a\x0a\x09(fields includes: 'Vendredi midi')\x0a\x09\x09ifTrue: [ self importeRepas: rows ].\x0a\x0a\x09(fields includes: 'Nom')\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09benevoles ajouteUnique: (imp importeBenevoles: rows) ].\x0a\x22",
 referencedClasses: ["FdJImporteur", "FdJStockage", "FdJAssociations"],
 //>>excludeEnd("ide");
-messageSends: ["new", "importe:", "fields", "meta", "data", "ifTrue:", "includes:", "importeBracelets:", "importeAssociations:", "sauve:", "instance", "ajouteTous:", "importeComplets:", "sauve"]
+messageSends: ["new", "importe:", "fields", "meta", "data", "ifTrue:", "&", "includes:", "<", "size", "importeBracelets:", "sauve", "importeAssociations:", "sauve:", "instance", "ajouteTous:", "importeComplets:"]
 }),
 $globals.FdJApplication);
 
 $core.addMethod(
 $core.method({
 selector: "importeBracelets:",
-protocol: 'obsolete',
+protocol: 'importing',
 fn: function (rows){
 var self=this;
 var bracelets,key;
@@ -671,12 +744,13 @@ selector: "initWidgets",
 protocol: 'initialization',
 fn: function (){
 var self=this;
-var barre,cache;
+var barre,cache,annul;
 function $FdJWidgetBarre(){return $globals.FdJWidgetBarre||(typeof FdJWidgetBarre=="undefined"?nil:FdJWidgetBarre)}
 function $FdJWidgetSelectionneur(){return $globals.FdJWidgetSelectionneur||(typeof FdJWidgetSelectionneur=="undefined"?nil:FdJWidgetSelectionneur)}
 function $FdJWidgetImporteur(){return $globals.FdJWidgetImporteur||(typeof FdJWidgetImporteur=="undefined"?nil:FdJWidgetImporteur)}
 function $FdJWidgetCache(){return $globals.FdJWidgetCache||(typeof FdJWidgetCache=="undefined"?nil:FdJWidgetCache)}
 function $FdJWidgetStatistique(){return $globals.FdJWidgetStatistique||(typeof FdJWidgetStatistique=="undefined"?nil:FdJWidgetStatistique)}
+function $FdJWidgetAnnul(){return $globals.FdJWidgetAnnul||(typeof FdJWidgetAnnul=="undefined"?nil:FdJWidgetAnnul)}
 function $FdJWidgetBenevoles(){return $globals.FdJWidgetBenevoles||(typeof FdJWidgetBenevoles=="undefined"?nil:FdJWidgetBenevoles)}
 function $FdJWidgetLegende(){return $globals.FdJWidgetLegende||(typeof FdJWidgetLegende=="undefined"?nil:FdJWidgetLegende)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -731,6 +805,14 @@ $5=$recv($FdJWidgetStatistique())._new();
 $ctx1.sendIdx["new"]=5;
 //>>excludeEnd("ctx");
 $recv($4)._ajoute_($5);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["ajoute:"]=4;
+//>>excludeEnd("ctx");
+annul=$recv($FdJWidgetAnnul())._new();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["new"]=6;
+//>>excludeEnd("ctx");
+$recv(barre)._ajoute_(annul);
 $6=barre;
 $7="body"._asJQuery();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -742,7 +824,7 @@ $ctx1.sendIdx["appendToJQuery:"]=1;
 //>>excludeEnd("ctx");
 $8=$recv($FdJWidgetBenevoles())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["new"]=6;
+$ctx1.sendIdx["new"]=7;
 //>>excludeEnd("ctx");
 $recv($8)._presentateur_(self);
 $10=$8;
@@ -759,13 +841,13 @@ $recv($recv($FdJWidgetLegende())._new())._appendToJQuery_("body"._asJQuery());
 $recv(self["@distributeur"])._associe_($recv(self["@benevoles"])._selectionnes());
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"initWidgets",{barre:barre,cache:cache},$globals.FdJApplication)});
+}, function($ctx1) {$ctx1.fill(self,"initWidgets",{barre:barre,cache:cache,annul:annul},$globals.FdJApplication)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initWidgets\x0a\x09| barre cache |\x0a\x09'body' asJQuery children remove.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09\x22TODO importeur n'est pas utilisé ailleurs à priori !\x22\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x09\x0a\x09cache := FdJWidgetCache new.\x0a\x09barre ajoute: cache.\x0a\x09cache presentateur: benevoles.\x0a\x0a\x09barre ajoute: (FdJWidgetStatistique new).\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).",
-referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetCache", "FdJWidgetStatistique", "FdJWidgetBenevoles", "FdJWidgetLegende"],
+source: "initWidgets\x0a\x09| barre cache annul |\x0a\x09'body' asJQuery children remove.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09\x22TODO importeur n'est pas utilisé ailleurs à priori !\x22\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09cache := FdJWidgetCache new.\x0a\x09barre ajoute: cache.\x0a\x09cache presentateur: benevoles.\x0a\x0a\x09barre ajoute: (FdJWidgetStatistique new).\x0a\x0a\x09annul := FdJWidgetAnnul new.\x0a\x09barre ajoute: annul.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).",
+referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetCache", "FdJWidgetStatistique", "FdJWidgetAnnul", "FdJWidgetBenevoles", "FdJWidgetLegende"],
 //>>excludeEnd("ide");
 messageSends: ["remove", "children", "asJQuery", "presentateur:", "new", "ajoute:", "appendToJQuery:", "associe:", "selectionnes"]
 }),
@@ -837,6 +919,7 @@ var self=this;
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1;
+self["@dernier"]=benevole;
 $1=$recv(benevole)._estEncours();
 if($core.assert($1)){
 self._defiltre();
@@ -853,7 +936,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["benevole"],
-source: "onBenevoleChangeEtat: benevole\x0a\x09benevole estEncours\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09\x22un benevole vient de passer en cours, on a clique dessus dans la selection\x22\x0a\x09\x09\x09self defiltre.\x0a\x09\x09\x09distributeur ajoute: benevole ]\x0a\x09 \x09ifFalse: [\x0a\x09\x09\x09\x22annulation ou fin de distribution\x22\x0a\x09\x09\x09self filtre: (selectionneur filtre).\x0a\x09\x09\x09distributeur supprime: benevole ].\x0a\x09self sauve",
+source: "onBenevoleChangeEtat: benevole\x0a\x09dernier := benevole.\x0a\x09benevole estEncours\x0a\x09\x09ifTrue: [\x0a\x09\x09\x09\x22un benevole vient de passer en cours, on a clique dessus dans la selection\x22\x0a\x09\x09\x09self defiltre.\x0a\x09\x09\x09distributeur ajoute: benevole ]\x0a\x09 \x09ifFalse: [\x0a\x09\x09\x09\x22annulation ou fin de distribution\x22\x0a\x09\x09\x09self filtre: (selectionneur filtre).\x0a\x09\x09\x09distributeur supprime: benevole ].\x0a\x09self sauve",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["ifTrue:ifFalse:", "estEncours", "defiltre", "ajoute:", "filtre:", "filtre", "supprime:", "sauve"]
@@ -2018,16 +2101,28 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $3,$2,$1;
-$3=$recv(self["@assoc"])._nomSansAccent();
+var $4,$3,$6,$5,$2,$1;
+$4=$recv(self["@assoc"])._nomSansAccent();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["nomSansAccent"]=1;
 //>>excludeEnd("ctx");
-$2=$recv($3).__eq("auteur");
+$3=$recv($4).__eq("auteur");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["="]=1;
 //>>excludeEnd("ctx");
-$1=$recv($2).__or($recv($recv(self["@assoc"])._nomSansAccent()).__eq("editeur"));
+$6=$recv(self["@assoc"])._nomSansAccent();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["nomSansAccent"]=2;
+//>>excludeEnd("ctx");
+$5=$recv($6).__eq("editeur");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["="]=2;
+//>>excludeEnd("ctx");
+$2=$recv($3).__or($5);
+$1=$recv($2).__or($recv($recv(self["@assoc"])._nomSansAccent()).__eq("illustrateur"));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["|"]=1;
+//>>excludeEnd("ctx");
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"estSpecial",{},$globals.FdJBenevole)});
@@ -2035,7 +2130,7 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "estSpecial\x0a\x09^ (assoc nomSansAccent = 'auteur') | (assoc nomSansAccent = 'editeur')",
+source: "estSpecial\x0a\x09^ (assoc nomSansAccent = 'auteur') | (assoc nomSansAccent = 'editeur') | (assoc nomSansAccent = 'illustrateur')",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["|", "=", "nomSansAccent"]
@@ -2865,7 +2960,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["desBenevoles"],
-source: "ajouteUnique: desBenevoles\x0a\x09Transcript show: 'Benevoles déjà existants:'; cr.\x0a\x09liste addAll:\x0a\x09\x09(desBenevoles\x0a\x09\x09\x09\x09select: [ :b |\x0a\x09\x09\x09\x09\x09(self contient: b)\x0a\x09\x09\x09\x09\x09\x09ifTrue: [ Transcript show: '- ', b nom, ' ', b prenom; cr. false ]\x0a\x09\x09\x09\x09\x09\x09ifFalse: [ true ]\x0a\x09\x09\x09\x09\x09]\x0a\x09\x09\x09\x09thenCollect: [ :b | b normalise ])",
+source: "ajouteUnique: desBenevoles\x0a\x09Transcript show: 'Benevoles déjà existants:'; cr.\x0a\x09liste addAll:\x0a\x09\x09(desBenevoles\x0a\x09\x09\x09select: [ :b |\x0a\x09\x09\x09\x09(self contient: b)\x0a\x09\x09\x09\x09\x09ifTrue: [ Transcript show: '- ', b nom, ' ', b prenom; cr. false ]\x0a\x09\x09\x09\x09\x09ifFalse: [ true ]\x0a\x09\x09\x09\x09]\x0a\x09\x09\x09thenCollect: [ :b | b normalise ])",
 referencedClasses: ["Transcript"],
 //>>excludeEnd("ide");
 messageSends: ["show:", "cr", "addAll:", "select:thenCollect:", "ifTrue:ifFalse:", "contient:", ",", "nom", "prenom", "normalise"]
@@ -3917,7 +4012,7 @@ $globals.FdJImporteur);
 $core.addMethod(
 $core.method({
 selector: "importeAssociation:",
-protocol: 'as yet unclassified',
+protocol: 'importing',
 fn: function (row){
 var self=this;
 function $FdJAssociations(){return $globals.FdJAssociations||(typeof FdJAssociations=="undefined"?nil:FdJAssociations)}
@@ -3960,7 +4055,7 @@ $globals.FdJImporteur);
 $core.addMethod(
 $core.method({
 selector: "importeAssociations:",
-protocol: 'as yet unclassified',
+protocol: 'importing',
 fn: function (rows){
 var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -4117,7 +4212,7 @@ $globals.FdJImporteur);
 $core.addMethod(
 $core.method({
 selector: "importeBracelet:",
-protocol: 'as yet unclassified',
+protocol: 'importing',
 fn: function (row){
 var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -4128,13 +4223,16 @@ $5=$recv(row)._at_("nom");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:"]=1;
 //>>excludeEnd("ctx");
-$4=$recv($5).__comma(" ");
-$3=$recv($4).__comma($recv(row)._at_("prenom"));
+$4=$recv($5)._trimBoth();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["trimBoth"]=1;
+//>>excludeEnd("ctx");
+$3=$recv($4).__comma(" ");
+$2=$recv($3).__comma($recv($recv(row)._at_("prenom"))._trimBoth());
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx[","]=1;
 //>>excludeEnd("ctx");
-$2=$recv($3)._asLowercase();
-$1=$recv($2)._copyFrom_to_((2),(1000));
+$1=$recv($2)._asLowercase();
 return $1;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"importeBracelet:",{row:row},$globals.FdJImporteur)});
@@ -4142,17 +4240,17 @@ return $1;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["row"],
-source: "importeBracelet: row\x0a\x09^ (((row at: 'nom'), ' ', (row at: 'prenom')) asLowercase) copyFrom: 2 to: 1000",
+source: "importeBracelet: row\x0a\x09^ ((row at: 'nom') trimBoth, ' ', (row at: 'prenom') trimBoth) asLowercase",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["copyFrom:to:", "asLowercase", ",", "at:"]
+messageSends: ["asLowercase", ",", "trimBoth", "at:"]
 }),
 $globals.FdJImporteur);
 
 $core.addMethod(
 $core.method({
 selector: "importeBracelets:",
-protocol: 'obsolete',
+protocol: 'as yet unclassified',
 fn: function (rows){
 var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -4185,21 +4283,24 @@ $globals.FdJImporteur);
 $core.addMethod(
 $core.method({
 selector: "importeComplet:",
-protocol: 'as yet unclassified',
+protocol: 'importing',
 fn: function (row){
 var self=this;
-var benevole,participe;
+var benevole,participe,bracelet;
 function $FdJStockage(){return $globals.FdJStockage||(typeof FdJStockage=="undefined"?nil:FdJStockage)}
 function $FdJBenevole(){return $globals.FdJBenevole||(typeof FdJBenevole=="undefined"?nil:FdJBenevole)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$3,$4,$2,$5;
+var $1,$3,$4,$2,$5,$6;
 $1=$recv(row)._at_("participe");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:"]=1;
 //>>excludeEnd("ctx");
 participe=self._importeBooleen_($1);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["importeBooleen:"]=1;
+//>>excludeEnd("ctx");
 $3=$recv(row)._at_("nom");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:"]=2;
@@ -4213,7 +4314,11 @@ return "Festival";
 
 })),"inscrit",participe]);
 benevole=$recv($FdJStockage())._charge_depuis_($FdJBenevole(),$2);
-$recv($recv(row)._at_("repas"))._ifNotEmpty_((function(){
+$5=$recv(row)._at_("repas");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=4;
+//>>excludeEnd("ctx");
+$recv($5)._ifNotEmpty_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -4223,18 +4328,20 @@ return $recv(benevole)._repas_(self._importeRepas_(row));
 //>>excludeEnd("ctx");
 }));
 $recv(benevole)._tshirt_(self._importeTShirt_(row));
-$5=benevole;
-return $5;
+bracelet=self._importeBooleen_($recv(row)._at_("bracelet"));
+$recv(benevole)._bracelet_(bracelet);
+$6=benevole;
+return $6;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx1) {$ctx1.fill(self,"importeComplet:",{row:row,benevole:benevole,participe:participe},$globals.FdJImporteur)});
+}, function($ctx1) {$ctx1.fill(self,"importeComplet:",{row:row,benevole:benevole,participe:participe,bracelet:bracelet},$globals.FdJImporteur)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["row"],
-source: "importeComplet: row\x0a\x09| benevole participe |\x0a\x09participe := self importeBooleen: (row at: 'participe').\x0a\x09benevole := FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (row at: 'nom').\x0a\x09\x09'prenom' -> (row at: 'prenom').\x0a\x09\x09'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).\x0a\x09\x09'inscrit' -> participe\x0a\x09\x09}.\x0a\x09(row at: 'repas') ifNotEmpty: [\x0a\x09\x09benevole repas: (self importeRepas: row) ].\x0a\x09benevole tshirt: (self importeTShirt: row).\x0a\x09^ benevole",
+source: "importeComplet: row\x0a\x09| benevole participe bracelet |\x0a\x09\x22Creation du bénévole\x22\x0a\x09participe := self importeBooleen: (row at: 'participe').\x0a\x09benevole := FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (row at: 'nom').\x0a\x09\x09'prenom' -> (row at: 'prenom').\x0a\x09\x09'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).\x0a\x09\x09'inscrit' -> participe\x0a\x09\x09}.\x0a\x09\x22Creation du repas associé\x22 \x0a\x09(row at: 'repas') ifNotEmpty: [\x0a\x09\x09benevole repas: (self importeRepas: row) ].\x0a\x09\x22Creation du tshirt associé\x22\x0a\x09benevole tshirt: (self importeTShirt: row).\x0a\x09\x22Gestion du bracelet\x22\x0a\x09bracelet := self importeBooleen: (row at: 'bracelet').\x0a\x09benevole bracelet: bracelet.\x0a\x09\x22Ok\x22\x0a\x09^ benevole",
 referencedClasses: ["FdJStockage", "FdJBenevole"],
 //>>excludeEnd("ide");
-messageSends: ["importeBooleen:", "at:", "charge:depuis:", "at:ifAbsent:", "ifNotEmpty:", "repas:", "importeRepas:", "tshirt:", "importeTShirt:"]
+messageSends: ["importeBooleen:", "at:", "charge:depuis:", "at:ifAbsent:", "ifNotEmpty:", "repas:", "importeRepas:", "tshirt:", "importeTShirt:", "bracelet:"]
 }),
 $globals.FdJImporteur);
 
@@ -4343,7 +4450,7 @@ $globals.FdJImporteur);
 $core.addMethod(
 $core.method({
 selector: "importeRepas:",
-protocol: 'as yet unclassified',
+protocol: 'importing',
 fn: function (row){
 var self=this;
 var repas;
@@ -4353,7 +4460,7 @@ return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1,$3,$2,$4;
 repas=$recv($FdJRepas())._new();
-["-Ven 8 Mai MIDI", "Ven 8 Mai SOIR", "Sam 9 Mai MIDI", "Sam 9 Mai SOIR", "Dim 10 Mai MIDI", "-Dim 10 Mai SOIR"]._do_((function(jour){
+["-Ven 29 Avril MIDI", "Ven 29 Avril SOIR", "Sam 30 Avril MIDI", "Sam 30 Avril SOIR", "Dim 1er Mai MIDI", "-Dim 1er Mai SOIR"]._do_((function(jour){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -4377,7 +4484,7 @@ return $4;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["row"],
-source: "importeRepas: row\x0a\x09| repas |\x0a\x09repas := FdJRepas new.\x0a\x09\x22Les repas du vendredi midi et dimanche soir ne sont pas pris en compte d'ou le signe - devant le texte\x22\x0a\x09#('-Ven 8 Mai MIDI' 'Ven 8 Mai SOIR' 'Sam 9 Mai MIDI' 'Sam 9 Mai SOIR' 'Dim 10 Mai MIDI' '-Dim 10 Mai SOIR')\x0a\x09\x09do: [ :jour |\x0a\x09\x09\x09repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].\x0a\x09repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).\x0a\x09^ repas",
+source: "importeRepas: row\x0a\x09| repas |\x0a\x09repas := FdJRepas new.\x0a\x09\x22Les repas du vendredi midi et dimanche soir ne sont pas pris en compte d'ou le signe - devant le texte\x22\x0a\x09#('-Ven 29 Avril MIDI' 'Ven 29 Avril SOIR' 'Sam 30 Avril MIDI' 'Sam 30 Avril SOIR' 'Dim 1er Mai MIDI' '-Dim 1er Mai SOIR')\x0a\x09\x09do: [ :jour |\x0a\x09\x09\x09repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].\x0a\x09repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).\x0a\x09^ repas",
 referencedClasses: ["FdJRepas"],
 //>>excludeEnd("ide");
 messageSends: ["new", "do:", "ajouteJour:", "includesSubString:", "at:", "vegetarien:", "importeBooleen:"]
@@ -4421,7 +4528,7 @@ $globals.FdJImporteur);
 $core.addMethod(
 $core.method({
 selector: "importeTShirt:",
-protocol: 'as yet unclassified',
+protocol: 'importing',
 fn: function (row){
 var self=this;
 var ts;
@@ -5885,6 +5992,45 @@ $globals.FdJWidget);
 
 
 
+$core.addClass('FdJWidgetAnnul', $globals.FdJWidget, [], 'Benevoles');
+$core.addMethod(
+$core.method({
+selector: "renderOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2;
+$1=$recv(html)._button();
+$recv($1)._class_("special annuler");
+$recv($1)._with_("Z");
+$2=$recv($1)._onClick_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(self["@presentateur"])._annule();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderOn:",{html:html},$globals.FdJWidgetAnnul)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderOn: html\x0a\x09\x22bouton dans la barre directement\x22\x0a\x09html button\x0a\x09\x09class: 'special annuler';\x0a\x09\x09with: 'Z';\x0a\x09\x09onClick: [ presentateur annule ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "button", "with:", "onClick:", "annule"]
+}),
+$globals.FdJWidgetAnnul);
+
+
+
 $core.addClass('FdJWidgetBarre', $globals.FdJWidget, [], 'Benevoles');
 
 
@@ -6959,6 +7105,7 @@ return $4;
 $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
 self["@dlg"]=$2;
+$recv($recv(self["@dlg"])._asJQuery())._hide();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"renderDlgOn:",{html:html},$globals.FdJWidgetImporteur)});
@@ -6966,10 +7113,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderDlgOn: html\x0a\x09dlg := html div\x0a\x09\x09class: 'dialog';\x0a\x09\x09with: [\x0a\x09\x09\x09input := html textarea.\x0a\x09\x09\x09html div class: 'actions';\x0a\x09\x09\x09\x09 with: [ self renderActionsOn: html ]\x0a\x09\x09]",
+source: "renderDlgOn: html\x0a\x09dlg := html div\x0a\x09\x09class: 'dialog';\x0a\x09\x09with: [\x0a\x09\x09\x09input := html textarea.\x0a\x09\x09\x09html div class: 'actions';\x0a\x09\x09\x09\x09 with: [ self renderActionsOn: html ]\x0a\x09\x09].\x0a\x09dlg asJQuery hide",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["class:", "div", "with:", "textarea", "renderActionsOn:"]
+messageSends: ["class:", "div", "with:", "textarea", "renderActionsOn:", "hide", "asJQuery"]
 }),
 $globals.FdJWidgetImporteur);
 
@@ -7068,7 +7215,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$4,$3,$6,$8,$7,$9,$10,$12,$13,$14,$11,$5;
+var $1,$2,$4,$3,$6,$8,$7,$9,$5;
 $1=$recv(html)._div();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["div"]=1;
@@ -7088,13 +7235,7 @@ $5=$recv($1)._with_((function(){
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 $6=$recv(html)._div();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["div"]=2;
-//>>excludeEnd("ctx");
 $recv($6)._class_("info");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["class:"]=2;
-//>>excludeEnd("ctx");
 $7=$recv($6)._with_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx3) {
@@ -7125,45 +7266,12 @@ return self._renderAssociationOn_texte_(html,$8);
 }, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)});
 //>>excludeEnd("ctx");
 }));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["with:"]=2;
-//>>excludeEnd("ctx");
 $7;
 $9=$recv($recv(benevole)._at_("type")).__eq("auteur");
 if(!$core.assert($9)){
+self._renderBraceletOn_(html);
 self._renderTShirtOn_(html);
-$10=$recv(html)._div();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["div"]=3;
-//>>excludeEnd("ctx");
-$recv($10)._class_("repas");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["class:"]=3;
-//>>excludeEnd("ctx");
-$11=$recv($10)._with_((function(){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx3) {
-//>>excludeEnd("ctx");
-$12=$recv(html)._div();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx3.sendIdx["div"]=4;
-//>>excludeEnd("ctx");
-$recv($12)._class_("img");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx3.sendIdx["class:"]=4;
-//>>excludeEnd("ctx");
-$13=$recv(html)._div();
-$recv($13)._class_("texte");
-$14=$recv($13)._with_("repas");
-return $14;
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx3) {$ctx3.fillBlock({},$ctx2,6)});
-//>>excludeEnd("ctx");
-}));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["with:"]=3;
-//>>excludeEnd("ctx");
-return $11;
+return self._renderRepasOn_(html);
 };
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
@@ -7179,10 +7287,76 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html", "benevole"],
-source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09((benevole at: #type) = 'auteur') ifFalse: [\x0a\x09\x09\x09self renderTShirtOn: html.\x0a\x09\x09\x09html div class: 'repas';\x0a\x09\x09\x09      with: [ html div class: 'img'. \x09\x0a\x09\x09\x09\x09  \x09\x09  html div class: 'texte'; with: 'repas' ]\x0a\x09\x09\x09]\x0a\x09\x09]",
+source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09((benevole at: #type) = 'auteur') ifFalse: [\x0a\x09\x09\x09self renderBraceletOn: html.\x0a\x09\x09\x09self renderTShirtOn: html.\x0a\x09\x09\x09self renderRepasOn: html ]\x0a\x09\x09]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["class:", "div", ",", "at:", "with:", "at:ifPresent:ifAbsent:", "renderIdentiteOn:texte:", "renderIdentiteOn:", "renderAssociationOn:texte:", "ifFalse:", "=", "renderTShirtOn:"]
+messageSends: ["class:", "div", ",", "at:", "with:", "at:ifPresent:ifAbsent:", "renderIdentiteOn:texte:", "renderIdentiteOn:", "renderAssociationOn:texte:", "ifFalse:", "=", "renderBraceletOn:", "renderTShirtOn:", "renderRepasOn:"]
+}),
+$globals.FdJWidgetLegende);
+
+$core.addMethod(
+$core.method({
+selector: "renderBraceletOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2,$4,$5,$3;
+$1=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["div"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._class_("bracelet");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["class:"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$2=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["div"]=2;
+//>>excludeEnd("ctx");
+return $recv($2)._class_("img");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["class:"]=2;
+//>>excludeEnd("ctx");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["with:"]=1;
+//>>excludeEnd("ctx");
+$3=$recv($1)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$4=$recv(html)._div();
+$recv($4)._class_("texte");
+$5=$recv($4)._with_("bracelet?");
+return $5;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,2)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["with:"]=2;
+//>>excludeEnd("ctx");
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderBraceletOn:",{html:html},$globals.FdJWidgetLegende)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderBraceletOn: html\x0a\x09html div class: 'bracelet';\x0a\x09\x09with: [ html div class: 'img' ];\x0a\x09\x09with: [ html div class: 'texte'; with: 'bracelet?' ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "div", "with:"]
 }),
 $globals.FdJWidgetLegende);
 
@@ -7241,7 +7415,7 @@ self._renderBenevoleOn_type_(html,$globals.HashedCollection._newFromPairs_(["typ
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["renderBenevoleOn:type:"]=1;
 //>>excludeEnd("ctx");
-self._renderBenevoleOn_type_(html,$globals.HashedCollection._newFromPairs_(["type","auteur","nom","Auteur/Editeur","assoc","special: pas de distri"]));
+self._renderBenevoleOn_type_(html,$globals.HashedCollection._newFromPairs_(["type","auteur","nom","Auteur/Editeur/Illustrateur","assoc","special: pas de distri"]));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["renderBenevoleOn:type:"]=2;
 //>>excludeEnd("ctx");
@@ -7253,7 +7427,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderContenuOn: html\x0a\x09html div class: 'texte'; with: [\x0a\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.\x0a\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'festival'. #assoc->'association' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'auteur'. #nom->'Auteur/Editeur'. #assoc->'special: pas de distri' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }",
+source: "renderContenuOn: html\x0a\x09html div class: 'texte'; with: [\x0a\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.\x0a\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'festival'. #assoc->'association' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'auteur'. #nom->'Auteur/Editeur/Illustrateur'. #assoc->'special: pas de distri' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["class:", "div", "with:", "renderBenevoleOn:type:"]
@@ -7450,6 +7624,61 @@ $globals.FdJWidgetLegende);
 
 $core.addMethod(
 $core.method({
+selector: "renderRepasOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$3,$4,$5,$2;
+$1=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["div"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._class_("repas");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["class:"]=1;
+//>>excludeEnd("ctx");
+$2=$recv($1)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$3=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["div"]=2;
+//>>excludeEnd("ctx");
+$recv($3)._class_("img");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["class:"]=2;
+//>>excludeEnd("ctx");
+$4=$recv(html)._div();
+$recv($4)._class_("texte");
+$5=$recv($4)._with_("repas");
+return $5;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["with:"]=1;
+//>>excludeEnd("ctx");
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderRepasOn:",{html:html},$globals.FdJWidgetLegende)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderRepasOn: html\x0a\x09html div class: 'repas';\x0a\x09\x09 with: [ html div class: 'img'. \x09\x0a\x09\x09 \x09\x09 html div class: 'texte'; with: 'repas' ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "div", "with:"]
+}),
+$globals.FdJWidgetLegende);
+
+$core.addMethod(
+$core.method({
 selector: "renderTShirtOn:",
 protocol: 'as yet unclassified',
 fn: function (html){
@@ -7502,7 +7731,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderTShirtOn: html\x0a\x09html div class: 'tshirt';\x0a\x09\x09with: [\x0a\x09\x09\x09html div with: 'H/F'.\x0a\x09\x09\x09html div with: 'taille'.\x0a\x09\x09\x09html div with: 'lsf?' ];\x0a\x09\x09class: 'tshirt homme'",
+source: "renderTShirtOn: html\x0a\x09html div class: 'tshirt';\x0a\x09\x09 with: [\x0a\x09\x09\x09html div with: 'H/F'.\x0a\x09\x09\x09html div with: 'taille'.\x0a\x09\x09\x09html div with: 'lsf?' ];\x0a\x09\x09 class: 'tshirt homme'",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["class:", "div", "with:"]
@@ -7968,6 +8197,7 @@ return self["@barres"];
 $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
 self["@dlg"]=$2;
+$recv($recv(self["@dlg"])._asJQuery())._hide();
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"renderDlgOn:",{html:html},$globals.FdJWidgetStatistique)});
@@ -7975,10 +8205,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderDlgOn: html\x0a\x09dlg := html div\x0a\x09\x09class: 'dialog';\x0a\x09\x09with: [\x0a\x09\x09\x09html div with: 'Statistique'.\x0a\x09\x09\x09barres := html div class: 'barres' ]",
+source: "renderDlgOn: html\x0a\x09dlg := html div\x0a\x09\x09class: 'dialog';\x0a\x09\x09with: [\x0a\x09\x09\x09html div with: 'Statistique'.\x0a\x09\x09\x09barres := html div class: 'barres' ].\x0a\x09dlg asJQuery hide",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["class:", "div", "with:"]
+messageSends: ["class:", "div", "with:", "hide", "asJQuery"]
 }),
 $globals.FdJWidgetStatistique);
 

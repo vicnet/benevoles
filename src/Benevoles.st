@@ -51,13 +51,85 @@ new
 ! !
 
 Object subclass: #FdJApplication
-	instanceVariableNames: 'benevoles selectionneur distributeur importeur historique cacheFiltre'
+	instanceVariableNames: 'benevoles selectionneur distributeur importeur historique cacheFiltre dernier'
 	package: 'Benevoles'!
+
+!FdJApplication methodsFor: 'importing'!
+
+importe: texte
+	| results fields rows imp |
+	imp := FdJImporteur new.
+	results := imp importe: texte.
+
+	fields := results meta fields.
+	rows := results data.
+
+"2016: importe la distribution de bracelet et sort car spécial"
+	((fields includes: 'bracelet') & (fields size < 4))
+		ifTrue: [
+			self importeBracelets: rows.
+			^ self sauve ].
+
+"Fichiers unique 2015 donc mais en 2 passes"
+	(fields includes: 'asso')
+		ifTrue: [
+			imp importeAssociations: rows.
+			FdJStockage sauve: FdJAssociations instance ].
+
+	(fields includes: 'nom')
+		ifTrue: [
+			benevoles ajouteTous: (imp importeComplets: rows) ]."
+			benevoles ajouteUnique: (imp importeComplets: rows) ]."
+
+	self sauve
+	
+"Differents fichiers 2014 
+	(fields includes: 'Taille')
+		ifTrue: [ self importeTShirts: rows ].
+	
+	(fields includes: 'asso')
+		ifTrue: [
+			imp importeAssociations: rows.
+			FdJStockage sauve: FdJAssociations instance ].
+
+	(fields includes: 'Vendredi midi')
+		ifTrue: [ self importeRepas: rows ].
+
+	(fields includes: 'Nom')
+		ifTrue: [
+			benevoles ajouteUnique: (imp importeBenevoles: rows) ].
+"
+!
+
+importeBracelets: rows
+	| bracelets key |
+Transcript show: 'Importe bracelets'; cr.
+
+	bracelets := FdJImporteur new importeBracelets: rows.
+	benevoles benevoles do: [ :b |
+		key := b identite asLowercase.
+		(bracelets includes: key) ifTrue: [
+				b bracelet: true.
+				 "on supprime de la liste les trouvés pour
+				 voir les non trouvés à la fin"
+				bracelets remove: key
+			]
+		].
+	bracelets ifNotEmpty: [ Transcript show: 'Bracelets non importés:'; cr ].
+	bracelets do: [ :b | Transcript show: ('- ', b);cr ].
+	self sauve
+! !
 
 !FdJApplication methodsFor: 'initialization'!
 
 annonce: etat
 	FdJAnnonceur current announce: (FdJApplicationChangeEtat new etat: etat; yourself)
+!
+
+annule
+	dernier ifNotNil: [
+		dernier reinit.
+		dernier := nil ]
 !
 
 annule: benevole
@@ -75,6 +147,12 @@ charge
 	benevoles := FdJStockage
 		charge: FdJBenevoles
 		sinon: [ FdJBenevoles exemple ]
+!
+
+cherche: texte
+	^ (benevoles filtreCache: texte)
+		ifEmpty: [ nil ]
+		ifNotEmpty: [ :l | l first ]
 !
 
 defiltre
@@ -97,50 +175,8 @@ filtre: texte
 	^ liste
 !
 
-importe: texte
-	| results fields rows imp |
-	imp := FdJImporteur new.
-	results := imp importe: texte.
-
-	fields := results meta fields.
-	rows := results data.
-"Differents fichiers 2014 
-	(fields includes: 'Taille')
-		ifTrue: [ self importeTShirts: rows ].
-	
-	(fields includes: 'asso')
-		ifTrue: [
-			imp importeAssociations: rows.
-			FdJStockage sauve: FdJAssociations instance ].
-
-	(fields includes: 'Vendredi midi')
-		ifTrue: [ self importeRepas: rows ].
-
-	(fields includes: 'Nom')
-		ifTrue: [
-			benevoles ajouteUnique: (imp importeBenevoles: rows) ].
-"
-"2016: importe la distribution de bracelet"
-	(fields includes: 'bracelet')
-		ifTrue: [
-			self importeBracelets: rows.
-			^ self ].
-
-"Fichiers unique 2015 donc mais en 2 passes"
-	(fields includes: 'asso')
-		ifTrue: [
-			imp importeAssociations: rows.
-			FdJStockage sauve: FdJAssociations instance ].
-
-	(fields includes: 'nom')
-		ifTrue: [
-			benevoles ajouteTous: (imp importeComplets: rows) ].
-
-	self sauve
-!
-
 initWidgets
-	| barre cache |
+	| barre cache annul |
 	'body' asJQuery children remove.
 
 	"Widgets"
@@ -153,12 +189,15 @@ initWidgets
 	"TODO importeur n'est pas utilisé ailleurs à priori !!"
 	importeur := FdJWidgetImporteur new.
 	barre ajoute: importeur.
-	
+
 	cache := FdJWidgetCache new.
 	barre ajoute: cache.
 	cache presentateur: benevoles.
 
 	barre ajoute: (FdJWidgetStatistique new).
+
+	annul := FdJWidgetAnnul new.
+	barre ajoute: annul.
 
 	barre appendToJQuery: 'body' asJQuery.
 
@@ -194,6 +233,7 @@ initialize
 !
 
 onBenevoleChangeEtat: benevole
+	dernier := benevole.
 	benevole estEncours
 		ifTrue: [
 			"un benevole vient de passer en cours, on a clique dessus dans la selection"
@@ -235,25 +275,6 @@ vide
 ! !
 
 !FdJApplication methodsFor: 'obsolete'!
-
-importeBracelets: rows
-	| bracelets key |
-Transcript show: 'Importe bracelets'; cr.
-
-	bracelets := FdJImporteur new importeBracelets: rows.
-	benevoles benevoles do: [ :b |
-		key := b identite asLowercase.
-		(bracelets includes: key) ifTrue: [
-				b bracelet: true.
-				 "on supprime de la liste les trouvés pour
-				 voir les non trouvés à la fin"
-				bracelets remove: key
-			]
-		].
-	bracelets ifNotEmpty: [ Transcript show: 'Bracelets non importés:'; cr ].
-	bracelets do: [ :b | Transcript show: ('- ', b);cr ].
-	self sauve
-!
 
 importeRepas: rows
 	| repas key |
@@ -505,7 +526,7 @@ estInscrit
 !
 
 estSpecial
-	^ (assoc nomSansAccent = 'auteur') | (assoc nomSansAccent = 'editeur')
+	^ (assoc nomSansAccent = 'auteur') | (assoc nomSansAccent = 'editeur') | (assoc nomSansAccent = 'illustrateur')
 !
 
 fromJSON: variables
@@ -678,12 +699,12 @@ ajouteUnique: desBenevoles
 	Transcript show: 'Benevoles déjà existants:'; cr.
 	liste addAll:
 		(desBenevoles
-				select: [ :b |
-					(self contient: b)
-						ifTrue: [ Transcript show: '- ', b nom, ' ', b prenom; cr. false ]
-						ifFalse: [ true ]
-					]
-				thenCollect: [ :b | b normalise ])
+			select: [ :b |
+				(self contient: b)
+					ifTrue: [ Transcript show: '- ', b nom, ' ', b prenom; cr. false ]
+					ifFalse: [ true ]
+				]
+			thenCollect: [ :b | b normalise ])
 !
 
 asJSON
@@ -914,6 +935,26 @@ importe: texte
 	^ tous
 !
 
+importeBracelets: rows
+	^ (rows collect: [ :row | self importeBracelet: row ]) asSet
+!
+
+importeComplets: rows
+	^ rows
+		select: [ :row | (row at: 'nom') isEmpty not ]
+		thenCollect: [ :row | self importeComplet: row ]
+! !
+
+!FdJImporteur methodsFor: 'helpers'!
+
+importeBooleen: value
+	value ifNil: [ ^ false].
+	value ifEmpty: [ ^ false].
+	^ (#( 'false' 'n' 'non') includes: value asLowercase) not
+! !
+
+!FdJImporteur methodsFor: 'importing'!
+
 importeAssociation: row
 	row at: 'asso' ifPresent: [ :assoc |
 		(FdJAssociations instance at: assoc) ifNil: [
@@ -927,11 +968,12 @@ importeAssociations: rows
 !
 
 importeBracelet: row
-	^ (((row at: 'nom'), ' ', (row at: 'prenom')) asLowercase) copyFrom: 2 to: 1000
+	^ ((row at: 'nom') trimBoth, ' ', (row at: 'prenom') trimBoth) asLowercase
 !
 
 importeComplet: row
-	| benevole participe |
+	| benevole participe bracelet |
+	"Creation du bénévole"
 	participe := self importeBooleen: (row at: 'participe').
 	benevole := FdJStockage charge: FdJBenevole depuis: #{
 		'nom' -> (row at: 'nom').
@@ -939,23 +981,23 @@ importeComplet: row
 		'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).
 		'inscrit' -> participe
 		}.
+	"Creation du repas associé" 
 	(row at: 'repas') ifNotEmpty: [
 		benevole repas: (self importeRepas: row) ].
+	"Creation du tshirt associé"
 	benevole tshirt: (self importeTShirt: row).
+	"Gestion du bracelet"
+	bracelet := self importeBooleen: (row at: 'bracelet').
+	benevole bracelet: bracelet.
+	"Ok"
 	^ benevole
-!
-
-importeComplets: rows
-	^ rows
-		select: [ :row | (row at: 'nom') isEmpty not ]
-		thenCollect: [ :row | self importeComplet: row ]
 !
 
 importeRepas: row
 	| repas |
 	repas := FdJRepas new.
 	"Les repas du vendredi midi et dimanche soir ne sont pas pris en compte d'ou le signe - devant le texte"
-	#('-Ven 8 Mai MIDI' 'Ven 8 Mai SOIR' 'Sam 9 Mai MIDI' 'Sam 9 Mai SOIR' 'Dim 10 Mai MIDI' '-Dim 10 Mai SOIR')
+	#('-Ven 29 Avril MIDI' 'Ven 29 Avril SOIR' 'Sam 30 Avril MIDI' 'Sam 30 Avril SOIR' 'Dim 1er Mai MIDI' '-Dim 1er Mai SOIR')
 		do: [ :jour |
 			repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].
 	repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).
@@ -969,14 +1011,6 @@ importeTShirt: row
 	ts := ts, '-', ((row at: 'taille') asLowercase).
 	(self importeBooleen: (row at: 'lsf')) ifTrue: [ ts := ts,'-lsf' ].
 	^ FdJTShirt at: ts
-! !
-
-!FdJImporteur methodsFor: 'helpers'!
-
-importeBooleen: value
-	value ifNil: [ ^ false].
-	value ifEmpty: [ ^ false].
-	^ (#( 'false' 'n' 'non') includes: value asLowercase) not
 ! !
 
 !FdJImporteur methodsFor: 'obsolete'!
@@ -997,10 +1031,6 @@ importeBenevoles: rows
 	^ rows
 		select: [ :row | (row at: 'Nom') isEmpty not ]
 		thenCollect: [ :row | self importeBenevole: row ]
-!
-
-importeBracelets: rows
-	^ (rows collect: [ :row | self importeBracelet: row ]) asSet
 !
 
 importeNomTShirt: row
@@ -1307,6 +1337,20 @@ vide
 	widgets := #()
 ! !
 
+FdJWidget subclass: #FdJWidgetAnnul
+	instanceVariableNames: ''
+	package: 'Benevoles'!
+
+!FdJWidgetAnnul methodsFor: 'as yet unclassified'!
+
+renderOn: html
+	"bouton dans la barre directement"
+	html button
+		class: 'special annuler';
+		with: 'Z';
+		onClick: [ presentateur annule ]
+! !
+
 FdJWidget subclass: #FdJWidgetBarre
 	instanceVariableNames: ''
 	package: 'Benevoles'!
@@ -1522,7 +1566,8 @@ renderDlgOn: html
 			input := html textarea.
 			html div class: 'actions';
 				 with: [ self renderActionsOn: html ]
-		]
+		].
+	dlg asJQuery hide
 !
 
 renderOn: html
@@ -1557,12 +1602,16 @@ renderBenevoleOn: html type: benevole
 				texte: (benevole at: #assoc)
 			].
 		((benevole at: #type) = 'auteur') ifFalse: [
+			self renderBraceletOn: html.
 			self renderTShirtOn: html.
-			html div class: 'repas';
-			      with: [ html div class: 'img'. 	
-				  		  html div class: 'texte'; with: 'repas' ]
-			]
+			self renderRepasOn: html ]
 		]
+!
+
+renderBraceletOn: html
+	html div class: 'bracelet';
+		with: [ html div class: 'img' ];
+		with: [ html div class: 'texte'; with: 'bracelet?' ]
 !
 
 renderContenuOn: html
@@ -1574,9 +1623,9 @@ renderContenuOn: html
 	self renderBenevoleOn: html type: #{
 		#type->'festival'. #assoc->'association' }.
 	self renderBenevoleOn: html type: #{
-		#type->'auteur'. #nom->'Auteur/Editeur'. #assoc->'special: pas de distri' }.
+		#type->'auteur'. #nom->'Auteur/Editeur/Illustrateur'. #assoc->'special: pas de distri' }.
 	self renderBenevoleOn: html type: #{
-			#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }
+		#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }
 !
 
 renderIdentiteOn: html
@@ -1604,13 +1653,19 @@ renderOn: html
 		]
 !
 
+renderRepasOn: html
+	html div class: 'repas';
+		 with: [ html div class: 'img'. 	
+		 		 html div class: 'texte'; with: 'repas' ]
+!
+
 renderTShirtOn: html
 	html div class: 'tshirt';
-		with: [
+		 with: [
 			html div with: 'H/F'.
 			html div with: 'taille'.
 			html div with: 'lsf?' ];
-		class: 'tshirt homme'
+		 class: 'tshirt homme'
 ! !
 
 FdJWidget subclass: #FdJWidgetSelectionneur
@@ -1697,7 +1752,8 @@ renderDlgOn: html
 		class: 'dialog';
 		with: [
 			html div with: 'Statistique'.
-			barres := html div class: 'barres' ]
+			barres := html div class: 'barres' ].
+	dlg asJQuery hide
 !
 
 renderOn: html

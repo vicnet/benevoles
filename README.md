@@ -44,3 +44,7 @@ In Workspace, do 'FdJApplication new vide'
 
 Reset state of benevoles.
 In Workspace, do 'FdJApplication new reinit'
+
+### Access application when running
+
+In Workspace, inspect  (CTRL-i) 'FdJApplication instance' 

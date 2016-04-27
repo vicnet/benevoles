@@ -176,7 +176,7 @@ filtre: texte
 !
 
 initWidgets
-	| barre cache annul |
+	| barre cache stat annul |
 	'body' asJQuery children remove.
 
 	"Widgets"
@@ -194,7 +194,9 @@ initWidgets
 	barre ajoute: cache.
 	cache presentateur: benevoles.
 
-	barre ajoute: (FdJWidgetStatistique new).
+	stat := FdJWidgetStatistique new.
+	barre ajoute: stat.
+	stat presentateur: benevoles.
 
 	annul := FdJWidgetAnnul new.
 	barre ajoute: annul.
@@ -828,6 +830,48 @@ selectionnes
 	^ liste select: [ :b | b estEncours ]
 !
 
+statTShirts
+	| bs result |
+	bs := liste select: [ :b | b tshirt notNil ].
+	result := Dictionary new.
+	bs do: [ :b | | id vals |
+		id := b tshirt id.
+		vals := result at: id ifAbsent: [ {0. 0. 0.} ].
+		vals at: 3 put: (vals at: 3)+1.
+		b estDistribue
+			ifTrue: [ vals at: 1 put: (vals at: 1)+1 ]
+			ifFalse: [ vals at: 2 put: (vals at: 2)+1 ].
+		result
+			at: id
+			put: vals
+		].
+	^ result
+!
+
+statistiques
+	| stats inscrits tshirts |
+	stats := Dictionary new.
+	inscrits := liste select: [ :b | b estSpecial not & b estInscrit ].
+	stats at: 'Nb bénévoles inscrits'
+		  put: (inscrits sizesOf: [ :b | b estDistribue ]).
+	stats at: 'Nb bénévoles non inscrits distribué'
+		  put: { ((liste select: [ :b | b estSpecial not & b estInscrit not & b estDistribue ]) size) }.
+	tshirts := self statTShirts.
+	stats at: 'TShirts Homme (distribué, à distribuer, total)' put: nil.
+	tshirts keysAndValuesDo: [ :k :v |
+		(k match: 'h-[^-]*$') ifTrue: [ stats at: ' - ',k put: v ] ].
+	stats at: 'TShirts Femme (distribué, à distribuer, total)' put: nil.
+	tshirts keysAndValuesDo: [ :k :v |
+		(k match: 'f-[^-]*$') ifTrue: [ stats at: ' - ',k put: v ] ].
+	stats at: 'TShirts Homme LSF (distribué, à distribuer, total)' put: nil.
+	tshirts keysAndValuesDo: [ :k :v |
+		(k match: 'h-[^-]*-lsf$') ifTrue: [ stats at: ' - ',k put: v ] ].
+	stats at: 'TShirts Femme LSF (distribué, à distribuer, total)' put: nil.
+	tshirts keysAndValuesDo: [ :k :v |
+		(k match: 'f-[^-]*-lsf$') ifTrue: [ stats at: ' - ',k put: v ] ].
+	^ stats
+!
+
 vide
 	liste := #().
 	self videCache
@@ -870,13 +914,16 @@ ajoute: texte
 !
 
 calculeStats
+	"Calcule le nombre d'evennements par jour.
+	 Le résultat est un dictionnaire avec le numéro de jour depuis une date"
 	| date result |
 	result := #().
 	date := (Date new: '08/05/2015').
 	liste do: [ :e | | delta |
 		delta := (Date new: (e at: 'date')) dayOfMonth - date dayOfMonth + 1.
-			result at: delta
-				put: ((result at: delta ifAbsent: [ 0 ])+1)
+		result
+			at: delta
+			put: ((result at: delta ifAbsent: [ 0 ])+1)
 		].
 	^ result
 !
@@ -1346,8 +1393,8 @@ FdJWidget subclass: #FdJWidgetAnnul
 renderOn: html
 	"bouton dans la barre directement"
 	html button
-		class: 'special annuler';
-		with: 'Z';
+		class: 'special';
+		with: [ html span class: 'annuler' ];
 		onClick: [ presentateur annule ]
 ! !
 
@@ -1726,25 +1773,45 @@ FdJWidget subclass: #FdJWidgetStatistique
 !FdJWidgetStatistique methodsFor: 'as yet unclassified'!
 
 ajoute: pourcentage
-	(pourcentage isKindOf: Array) ifTrue: [
-		^ self ajoute: (pourcentage at: 1) pour: (pourcentage at: 2) ].
-	(pourcentage isKindOf: Association) ifTrue: [
-		^ self ajoute: (pourcentage key) pour: (pourcentage value) ].
-	self ajoute: pourcentage pour: ''
+	| k v |
+	k := pourcentage key.
+	v := pourcentage value.
+	v ifNil: [ ^ self ajoute: nil pour: k ].
+	v withIndexDo: [ :s :i |
+		(i=1) ifTrue: [ k := k,' :  ' ] ifFalse: [ k := k,'  /  ' ].
+		k := k,s asString ].
+	(v size <= 1) ifTrue: [ ^ self ajoute: nil pour: k ].
+	self ajoute: (((v first) / (v last) * 100) rounded) pour: k
 !
 
 ajoute: pourcentage pour: texte
 	[ :html |
 	    html div  class: 'ligne'; with: [
-	    	html div  class: 'titre'; with: texte.
-	   		html div  class: 'image'; with: [
-				html div asJQuery width: pourcentage asString,'%' ]
+			pourcentage ifNotNil: [
+		   		html div  class: 'image'; with: [
+					html div asJQuery width: pourcentage asString,'%' ]
+				].
+	    	html div  class: 'titre'; with: texte
 		]
 	] appendToJQuery: barres asJQuery
 !
 
 ajouteTous: pourcentages
-	pourcentages do: [ :p | self ajoute: p ]
+	pourcentages associationsDo: [ :p | self ajoute: p ]
+!
+
+rafraichit
+	barres empty.
+	self ajouteTous: presentateur statistiques
+"
+	[ :html |
+		presentateur statistiques keysAndValuesDo: [ :k :v |
+		    html div class: 'ligne'; with: [
+			    html span class: 'texte'; with: k.
+			    html span class: 'valeur'; with: v
+			]
+		]
+	] appendToJQuery: barres asJQuery"
 !
 
 renderDlgOn: html
@@ -1764,7 +1831,23 @@ renderOn: html
 	html button
 		class: 'special';
 		with: 'S';
-		onClick: [ dlg asJQuery fadeToggle ]
+		onClick: [
+			dlg asJQuery fadeToggle.
+			self rafraichit ]
+! !
+
+!Collection methodsFor: '*Benevoles'!
+
+sizesOf: aBlock
+	| ntrue nfalse nb |
+	ntrue := nfalse := nb := 0.
+	self do: [ :e |
+		nb := nb+1.
+		(aBlock value: e)
+			ifTrue:  [ ntrue  := ntrue+1 ]
+			ifFalse: [ nfalse := nfalse+1 ]
+		].
+	^ {ntrue. nfalse. nb.}
 ! !
 
 !String methodsFor: '*Benevoles'!

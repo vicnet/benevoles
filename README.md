@@ -11,6 +11,17 @@ Application Amber Smalltalk pour gérer les bénévoles lors du festival du jeux
 
 ## Getting Started
 
+Install min sofware:
+- node.js 0.12
+- npm
+- git
+- with npm in node console:
+```sh
+npm install -g npm
+npm install -g bower grunt
+  (perhaps need also install in global amber-cli@<specific version> and dependencies...)
+```
+
 To bring project alive (for example after `git clone`):
 
 ```sh

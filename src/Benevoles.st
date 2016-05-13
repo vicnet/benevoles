@@ -196,7 +196,6 @@ initWidgets
 
 	stat := FdJWidgetStatistique new.
 	barre ajoute: stat.
-	stat presentateur: benevoles.
 
 	annul := FdJWidgetAnnul new.
 	barre ajoute: annul.
@@ -262,6 +261,13 @@ selectionne: benevole
 		^ benevole encours ].
 	benevole estEncours ifTrue: [
 		^ benevole distribue ]
+!
+
+statistiques
+	| stats |
+	stats := benevoles statistiques.
+	stats addAll: historique statistiques.
+	^ stats
 !
 
 termine
@@ -917,13 +923,32 @@ calculeStats
 	"Calcule le nombre d'evennements par jour.
 	 Le résultat est un dictionnaire avec le numéro de jour depuis une date"
 	| date result |
-	result := #().
-	date := (Date new: '08/05/2015').
-	liste do: [ :e | | delta |
-		delta := (Date new: (e at: 'date')) dayOfMonth - date dayOfMonth + 1.
-		result
-			at: delta
-			put: ((result at: delta ifAbsent: [ 0 ])+1)
+	result := Dictionary new.
+	liste do: [ :e |
+		((e at: 'evennement') includesSubString: 'Debut') ifTrue: [ | d |
+			d := Date new: (e at: 'date').
+			d := d dayOfMonth.
+			result
+				at: d
+				put: ((result at: d ifAbsent: [ 0 ])+1)
+			] 
+		].
+	^ result
+!
+
+calculeStats: type
+	"Calcule le nombre d'evennements par jour.
+	 Le résultat est un dictionnaire avec le numéro de jour depuis une date"
+	| date result |
+	result := Dictionary new.
+	liste do: [ :e |
+		((e at: 'evennement') includesSubString: type) ifTrue: [ | d |
+			d := Date new: (e at: 'date').
+			d := d dayOfMonth.
+			result
+				at: d
+				put: ((result at: d ifAbsent: [ 0 ])+1)
+			] 
 		].
 	^ result
 !
@@ -960,6 +985,25 @@ onBenevoleChangeEtat: benevole
 
 sauve
 	FdJStockage sauve: self
+!
+
+statistiques
+	| stats distri annul |
+	stats := Dictionary new.
+	stats at: 'Distribution par jour' put: nil.
+	distri := self calculeStats: 'Debut distri'.
+	annul := self calculeStats: 'Annulation'.
+	stats
+		at: ' - vendrredi'
+		put: { (distri at: 29)-(annul at: 29) }.
+	stats
+		at: ' - samedi'
+		put: { (distri at: 30)-(annul at: 29) }.
+"	stats
+		at: ' - dimanche'
+		put: { (distri at: 1)-(annul at:29) }.
+"
+	^ stats
 !
 
 vide

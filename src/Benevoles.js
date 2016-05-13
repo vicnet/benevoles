@@ -807,10 +807,6 @@ $recv(barre)._ajoute_(stat);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["ajoute:"]=4;
 //>>excludeEnd("ctx");
-$recv(stat)._presentateur_(self["@benevoles"]);
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["presentateur:"]=3;
-//>>excludeEnd("ctx");
 annul=$recv($FdJWidgetAnnul())._new();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["new"]=6;
@@ -849,7 +845,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "initWidgets\x0a\x09| barre cache stat annul |\x0a\x09'body' asJQuery children remove.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09\x22TODO importeur n'est pas utilisé ailleurs à priori !\x22\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09cache := FdJWidgetCache new.\x0a\x09barre ajoute: cache.\x0a\x09cache presentateur: benevoles.\x0a\x0a\x09stat := FdJWidgetStatistique new.\x0a\x09barre ajoute: stat.\x0a\x09stat presentateur: benevoles.\x0a\x0a\x09annul := FdJWidgetAnnul new.\x0a\x09barre ajoute: annul.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).",
+source: "initWidgets\x0a\x09| barre cache stat annul |\x0a\x09'body' asJQuery children remove.\x0a\x0a\x09\x22Widgets\x22\x0a\x09barre := FdJWidgetBarre new\x0a\x09\x09presentateur: self.\x0a\x0a\x09selectionneur := FdJWidgetSelectionneur\x09new.\x0a\x09barre ajoute: selectionneur.\x0a\x09\x0a\x09\x22TODO importeur n'est pas utilisé ailleurs à priori !\x22\x0a\x09importeur := FdJWidgetImporteur new.\x0a\x09barre ajoute: importeur.\x0a\x0a\x09cache := FdJWidgetCache new.\x0a\x09barre ajoute: cache.\x0a\x09cache presentateur: benevoles.\x0a\x0a\x09stat := FdJWidgetStatistique new.\x0a\x09barre ajoute: stat.\x0a\x0a\x09annul := FdJWidgetAnnul new.\x0a\x09barre ajoute: annul.\x0a\x0a\x09barre appendToJQuery: 'body' asJQuery.\x0a\x0a\x09distributeur := FdJWidgetBenevoles new\x0a\x09\x09presentateur: self;\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x09\x09\x0a\x09FdJWidgetLegende new\x0a\x09\x09appendToJQuery: 'body' asJQuery.\x0a\x0a\x09\x22init\x22\x0a\x09distributeur associe: (benevoles selectionnes).",
 referencedClasses: ["FdJWidgetBarre", "FdJWidgetSelectionneur", "FdJWidgetImporteur", "FdJWidgetCache", "FdJWidgetStatistique", "FdJWidgetAnnul", "FdJWidgetBenevoles", "FdJWidgetLegende"],
 //>>excludeEnd("ide");
 messageSends: ["remove", "children", "asJQuery", "presentateur:", "new", "ajoute:", "appendToJQuery:", "associe:", "selectionnes"]
@@ -1026,6 +1022,37 @@ source: "selectionne: benevole\x0a\x09benevole estDisponible ifTrue: [\x0a\x09\x
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["ifTrue:", "estDisponible", "encours", "estEncours", "distribue"]
+}),
+$globals.FdJApplication);
+
+$core.addMethod(
+$core.method({
+selector: "statistiques",
+protocol: 'initialization',
+fn: function (){
+var self=this;
+var stats;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+stats=$recv(self["@benevoles"])._statistiques();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["statistiques"]=1;
+//>>excludeEnd("ctx");
+$recv(stats)._addAll_($recv(self["@historique"])._statistiques());
+$1=stats;
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"statistiques",{stats:stats},$globals.FdJApplication)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "statistiques\x0a\x09| stats |\x0a\x09stats := benevoles statistiques.\x0a\x09stats addAll: historique statistiques.\x0a\x09^ stats",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["statistiques", "addAll:"]
 }),
 $globals.FdJApplication);
 
@@ -4010,37 +4037,35 @@ protocol: 'as yet unclassified',
 fn: function (){
 var self=this;
 var date,result;
+function $Dictionary(){return $globals.Dictionary||(typeof Dictionary=="undefined"?nil:Dictionary)}
 function $Date(){return $globals.Date||(typeof Date=="undefined"?nil:Date)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $2,$1,$3;
-result=[];
-date=$recv($Date())._new_("08/05/2015");
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["new:"]=1;
-//>>excludeEnd("ctx");
+result=$recv($Dictionary())._new();
 $recv(self["@liste"])._do_((function(e){
-var delta;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-$2=$recv($recv($Date())._new_($recv(e)._at_("date")))._dayOfMonth();
+$2=$recv(e)._at_("evennement");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["dayOfMonth"]=1;
+$ctx2.sendIdx["at:"]=1;
 //>>excludeEnd("ctx");
-$1=$recv($2).__minus($recv(date)._dayOfMonth());
-delta=$recv($1).__plus((1));
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx2.sendIdx["+"]=1;
-//>>excludeEnd("ctx");
-delta;
-return $recv(result)._at_put_(delta,$recv($recv(result)._at_ifAbsent_(delta,(function(){
+$1=$recv($2)._includesSubString_("Debut");
+if($core.assert($1)){
+var d;
+d=$recv($Date())._new_($recv(e)._at_("date"));
+d;
+d=$recv(d)._dayOfMonth();
+d;
+return $recv(result)._at_put_(d,$recv($recv(result)._at_ifAbsent_(d,(function(){
 return (0);
 
 }))).__plus((1)));
+};
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({e:e,delta:delta},$ctx1,1)});
+}, function($ctx2) {$ctx2.fillBlock({e:e},$ctx1,1)});
 //>>excludeEnd("ctx");
 }));
 $3=result;
@@ -4051,10 +4076,63 @@ return $3;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "calculeStats\x0a\x09\x22Calcule le nombre d'evennements par jour.\x0a\x09 Le résultat est un dictionnaire avec le numéro de jour depuis une date\x22\x0a\x09| date result |\x0a\x09result := #().\x0a\x09date := (Date new: '08/05/2015').\x0a\x09liste do: [ :e | | delta |\x0a\x09\x09delta := (Date new: (e at: 'date')) dayOfMonth - date dayOfMonth + 1.\x0a\x09\x09result\x0a\x09\x09\x09at: delta\x0a\x09\x09\x09put: ((result at: delta ifAbsent: [ 0 ])+1)\x0a\x09\x09].\x0a\x09^ result",
-referencedClasses: ["Date"],
+source: "calculeStats\x0a\x09\x22Calcule le nombre d'evennements par jour.\x0a\x09 Le résultat est un dictionnaire avec le numéro de jour depuis une date\x22\x0a\x09| date result |\x0a\x09result := Dictionary new.\x0a\x09liste do: [ :e |\x0a\x09\x09((e at: 'evennement') includesSubString: 'Debut') ifTrue: [ | d |\x0a\x09\x09\x09d := Date new: (e at: 'date').\x0a\x09\x09\x09d := d dayOfMonth.\x0a\x09\x09\x09result\x0a\x09\x09\x09\x09at: d\x0a\x09\x09\x09\x09put: ((result at: d ifAbsent: [ 0 ])+1)\x0a\x09\x09\x09] \x0a\x09\x09].\x0a\x09^ result",
+referencedClasses: ["Dictionary", "Date"],
 //>>excludeEnd("ide");
-messageSends: ["new:", "do:", "+", "-", "dayOfMonth", "at:", "at:put:", "at:ifAbsent:"]
+messageSends: ["new", "do:", "ifTrue:", "includesSubString:", "at:", "new:", "dayOfMonth", "at:put:", "+", "at:ifAbsent:"]
+}),
+$globals.FdJHistorique);
+
+$core.addMethod(
+$core.method({
+selector: "calculeStats:",
+protocol: 'as yet unclassified',
+fn: function (type){
+var self=this;
+var date,result;
+function $Dictionary(){return $globals.Dictionary||(typeof Dictionary=="undefined"?nil:Dictionary)}
+function $Date(){return $globals.Date||(typeof Date=="undefined"?nil:Date)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $2,$1,$3;
+result=$recv($Dictionary())._new();
+$recv(self["@liste"])._do_((function(e){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+$2=$recv(e)._at_("evennement");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["at:"]=1;
+//>>excludeEnd("ctx");
+$1=$recv($2)._includesSubString_(type);
+if($core.assert($1)){
+var d;
+d=$recv($Date())._new_($recv(e)._at_("date"));
+d;
+d=$recv(d)._dayOfMonth();
+d;
+return $recv(result)._at_put_(d,$recv($recv(result)._at_ifAbsent_(d,(function(){
+return (0);
+
+}))).__plus((1)));
+};
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({e:e},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+$3=result;
+return $3;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"calculeStats:",{type:type,date:date,result:result},$globals.FdJHistorique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["type"],
+source: "calculeStats: type\x0a\x09\x22Calcule le nombre d'evennements par jour.\x0a\x09 Le résultat est un dictionnaire avec le numéro de jour depuis une date\x22\x0a\x09| date result |\x0a\x09result := Dictionary new.\x0a\x09liste do: [ :e |\x0a\x09\x09((e at: 'evennement') includesSubString: type) ifTrue: [ | d |\x0a\x09\x09\x09d := Date new: (e at: 'date').\x0a\x09\x09\x09d := d dayOfMonth.\x0a\x09\x09\x09result\x0a\x09\x09\x09\x09at: d\x0a\x09\x09\x09\x09put: ((result at: d ifAbsent: [ 0 ])+1)\x0a\x09\x09\x09] \x0a\x09\x09].\x0a\x09^ result",
+referencedClasses: ["Dictionary", "Date"],
+//>>excludeEnd("ide");
+messageSends: ["new", "do:", "ifTrue:", "includesSubString:", "at:", "new:", "dayOfMonth", "at:put:", "+", "at:ifAbsent:"]
 }),
 $globals.FdJHistorique);
 
@@ -4242,6 +4320,69 @@ source: "sauve\x0a\x09FdJStockage sauve: self",
 referencedClasses: ["FdJStockage"],
 //>>excludeEnd("ide");
 messageSends: ["sauve:"]
+}),
+$globals.FdJHistorique);
+
+$core.addMethod(
+$core.method({
+selector: "statistiques",
+protocol: 'as yet unclassified',
+fn: function (){
+var self=this;
+var stats,distri,annul;
+function $Dictionary(){return $globals.Dictionary||(typeof Dictionary=="undefined"?nil:Dictionary)}
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$4,$5,$3,$2,$6,$9,$8,$7,$10;
+stats=$recv($Dictionary())._new();
+$recv(stats)._at_put_("Distribution par jour",nil);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:put:"]=1;
+//>>excludeEnd("ctx");
+distri=self._calculeStats_("Debut distri");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["calculeStats:"]=1;
+//>>excludeEnd("ctx");
+annul=self._calculeStats_("Annulation");
+$1=stats;
+$4=$recv(distri)._at_((29));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=1;
+//>>excludeEnd("ctx");
+$5=$recv(annul)._at_((29));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=2;
+//>>excludeEnd("ctx");
+$3=$recv($4).__minus($5);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["-"]=1;
+//>>excludeEnd("ctx");
+$2=[$3];
+$recv($1)._at_put_(" - vendrredi",$2);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:put:"]=2;
+//>>excludeEnd("ctx");
+$6=stats;
+$9=$recv(distri)._at_((30));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=3;
+//>>excludeEnd("ctx");
+$8=$recv($9).__minus($recv(annul)._at_((29)));
+$7=[$8];
+$recv($6)._at_put_(" - samedi",$7);
+$10=stats;
+return $10;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"statistiques",{stats:stats,distri:distri,annul:annul},$globals.FdJHistorique)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "statistiques\x0a\x09| stats distri annul |\x0a\x09stats := Dictionary new.\x0a\x09stats at: 'Distribution par jour' put: nil.\x0a\x09distri := self calculeStats: 'Debut distri'.\x0a\x09annul := self calculeStats: 'Annulation'.\x0a\x09stats\x0a\x09\x09at: ' - vendrredi'\x0a\x09\x09put: { (distri at: 29)-(annul at: 29) }.\x0a\x09stats\x0a\x09\x09at: ' - samedi'\x0a\x09\x09put: { (distri at: 30)-(annul at: 29) }.\x0a\x22\x09stats\x0a\x09\x09at: ' - dimanche'\x0a\x09\x09put: { (distri at: 1)-(annul at:29) }.\x0a\x22\x0a\x09^ stats",
+referencedClasses: ["Dictionary"],
+//>>excludeEnd("ide");
+messageSends: ["new", "at:put:", "calculeStats:", "-", "at:"]
 }),
 $globals.FdJHistorique);
 

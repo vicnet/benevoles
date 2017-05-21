@@ -446,7 +446,7 @@ instance
 ! !
 
 Object subclass: #FdJBenevole
-	instanceVariableNames: 'nom prenom assoc tshirt repas etat inscrit nomSansAccent prenomSansAccent bracelet'
+	instanceVariableNames: 'nom prenom assoc tshirt repas etat inscrit nomSansAccent prenomSansAccent bracelet noob'
 	package: 'Benevoles'!
 !FdJBenevole commentStamp!
 - tshirt: un TShirt
@@ -485,6 +485,8 @@ asJSON
 	variables at: 'assoc' put: assoc nom.
 	tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].
 	variables at: 'inscrit' put: inscrit.
+	variables at: 'noob' put: noob.
+	variables at: 'bracelet' put: bracelet.
 	repas ifNotNil: [ variables at: 'repas' put: repas asJSON ].
 	^ variables
 !
@@ -533,6 +535,10 @@ estInscrit
 	^ inscrit
 !
 
+estNoob
+	^ noob
+!
+
 estSpecial
 	^ (assoc nomSansAccent = 'auteur') | (assoc nomSansAccent = 'editeur') | (assoc nomSansAccent = 'illustrateur')
 !
@@ -551,6 +557,10 @@ fromJSON: variables
 		ifAbsent: [ nil ].
 	inscrit := variables at: 'inscrit'
 		ifAbsent: [ true ].
+	noob := variables at: 'noob'
+		ifAbsent: [ false ].
+	bracelet := variables at: 'bracelet'
+		ifAbsent: [ false ].
 	repas := variables at: 'repas'
 		ifPresent: [ :v | FdJRepas new fromJSON: v ]
 		ifAbsent: [ nil ].
@@ -608,6 +618,10 @@ nomSansAccent
 		nom ifNil: [ ^ '' ].
 		nomSansAccent := nom remplaceAvec: FdJApplication accents ].
 	^ nomSansAccent
+!
+
+noob: estNoob
+	noob := estNoob
 !
 
 normalise
@@ -1070,7 +1084,8 @@ importeComplet: row
 		'nom' -> (row at: 'nom').
 		'prenom' -> (row at: 'prenom').
 		'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).
-		'inscrit' -> participe
+		'inscrit' -> participe.
+		'noob' -> (self importeBooleen: (row at: 'noob'))
 		}.
 	"Creation du repas associé" 
 	(row at: 'repas') ifNotEmpty: [
@@ -1085,10 +1100,12 @@ importeComplet: row
 !
 
 importeRepas: row
+	"Convertit le champ repas en numéro de jour pour l'objet repas d'un bénévole
+	TODO remplacer la comparaison brute des jours en dur par quelque chose ne nécessitant pas de chg de code"
 	| repas |
 	repas := FdJRepas new.
-	"Les repas du vendredi midi et dimanche soir ne sont pas pris en compte d'ou le signe - devant le texte"
-	#('-Ven 29 Avril MIDI' 'Ven 29 Avril SOIR' 'Sam 30 Avril MIDI' 'Sam 30 Avril SOIR' 'Dim 1er Mai MIDI' '-Dim 1er Mai SOIR')
+	"Les repas du dimanche soir n'est pas pris en compte d'ou le signe - devant le texte"
+	#('Ven 26 Mai MIDI' 'Ven 26 Mai SOIR' 'Sam 27 Mai MIDI' 'Sam 27 Mai SOIR' 'Dim 28 Mai MIDI' '-Dim 28 Mai SOIR')
 		do: [ :jour |
 			repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].
 	repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).
@@ -1501,6 +1518,11 @@ renderIdentiteOn: html
 				html div class: 'prenom'; with: prenom ]
 !
 
+renderNoobOn: html
+	html div class: 'noob';
+	         with: [html div class: 'img']
+!
+
 renderOn: html
 	super renderOn: html.
 	div with: [
@@ -1510,7 +1532,8 @@ renderOn: html
 		self renderBraceletOn: html.
 		self renderTShirtOn: html.
 		self renderRepasOn: html.
-		self renderAnnulationOn: html ].
+		self renderAnnulationOn: html.
+		benevole estNoob ifTrue: [ self renderNoobOn: html ] ].
 	benevole estInscrit ifFalse: [			
 		self ajouteClasse: 'noninscrit' ].
 	div onClick: [ self selectionne ]
@@ -1689,6 +1712,8 @@ renderBenevoleOn: html type: benevole
 			benevole at: #nom
 				ifPresent: [ :t | self renderIdentiteOn: html texte: t ]
 				ifAbsent: [ self renderIdentiteOn: html ].
+			benevole at: #noob
+				ifPresent: [ self renderNoobOn: html ].
 			self renderAssociationOn: html
 				texte: (benevole at: #assoc)
 			].
@@ -1710,9 +1735,10 @@ renderContenuOn: html
 		html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.
 		html div with: '2) Cliquer dessus pour commencer la distribution'.
 		html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.
+		html div with: '4) Cliquer sur Annuler en cas d''erreur'.
 		html div with: 'Code des couleurs:' ].
 	self renderBenevoleOn: html type: #{
-		#type->'festival'. #assoc->'association' }.
+		#type->'festival'. #assoc->'association'. #noob->true }.
 	self renderBenevoleOn: html type: #{
 		#type->'auteur'. #nom->'Auteur/Editeur/Illustrateur'. #assoc->'special: pas de distri' }.
 	self renderBenevoleOn: html type: #{
@@ -1728,6 +1754,11 @@ renderIdentiteOn: html
 renderIdentiteOn: html texte: texte
 	html div class: 'identite';
 		with: [ html div class: 'nom'; with: texte ]
+!
+
+renderNoobOn: html
+	html div class: 'noob';
+	         with: [ html div class: 'img' ]
 !
 
 renderOn: html

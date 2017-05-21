@@ -1659,7 +1659,7 @@ messageSends: ["ifNil:", "new"]
 $globals.FdJAssociations.klass);
 
 
-$core.addClass('FdJBenevole', $globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'repas', 'etat', 'inscrit', 'nomSansAccent', 'prenomSansAccent', 'bracelet'], 'Benevoles');
+$core.addClass('FdJBenevole', $globals.Object, ['nom', 'prenom', 'assoc', 'tshirt', 'repas', 'etat', 'inscrit', 'nomSansAccent', 'prenomSansAccent', 'bracelet', 'noob'], 'Benevoles');
 //>>excludeStart("ide", pragmas.excludeIdeData);
 $globals.FdJBenevole.comment="- tshirt: un TShirt\x0a- etat: pas encore venu (nil), en cours de traitement (en cours), terminé (distribue)";
 //>>excludeEnd("ide");
@@ -1873,6 +1873,14 @@ $recv(variables)._at_put_("inscrit",self["@inscrit"]);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:put:"]=6;
 //>>excludeEnd("ctx");
+$recv(variables)._at_put_("noob",self["@noob"]);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:put:"]=7;
+//>>excludeEnd("ctx");
+$recv(variables)._at_put_("bracelet",self["@bracelet"]);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:put:"]=8;
+//>>excludeEnd("ctx");
 $3=self["@repas"];
 if(($receiver = $3) == null || $receiver.isNil){
 $3;
@@ -1887,7 +1895,7 @@ return $4;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "asJSON\x0a\x09| variables |\x0a\x09variables := HashedCollection new.\x0a\x09variables at: 'nom' put: nom.\x0a\x09variables at: 'prenom' put: prenom.\x0a\x09etat ifNotNil: [ variables at: 'etat' put: etat ].\x0a\x09variables at: 'assoc' put: assoc nom.\x0a\x09tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].\x0a\x09variables at: 'inscrit' put: inscrit.\x0a\x09repas ifNotNil: [ variables at: 'repas' put: repas asJSON ].\x0a\x09^ variables",
+source: "asJSON\x0a\x09| variables |\x0a\x09variables := HashedCollection new.\x0a\x09variables at: 'nom' put: nom.\x0a\x09variables at: 'prenom' put: prenom.\x0a\x09etat ifNotNil: [ variables at: 'etat' put: etat ].\x0a\x09variables at: 'assoc' put: assoc nom.\x0a\x09tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].\x0a\x09variables at: 'inscrit' put: inscrit.\x0a\x09variables at: 'noob' put: noob.\x0a\x09variables at: 'bracelet' put: bracelet.\x0a\x09repas ifNotNil: [ variables at: 'repas' put: repas asJSON ].\x0a\x09^ variables",
 referencedClasses: ["HashedCollection"],
 //>>excludeEnd("ide");
 messageSends: ["new", "at:put:", "ifNotNil:", "nom", "id", "asJSON"]
@@ -2124,6 +2132,26 @@ $globals.FdJBenevole);
 
 $core.addMethod(
 $core.method({
+selector: "estNoob",
+protocol: 'accessing',
+fn: function (){
+var self=this;
+var $1;
+$1=self["@noob"];
+return $1;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: [],
+source: "estNoob\x0a\x09^ noob",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
+}),
+$globals.FdJBenevole);
+
+$core.addMethod(
+$core.method({
 selector: "estSpecial",
 protocol: 'accessing',
 fn: function (){
@@ -2251,13 +2279,27 @@ self["@inscrit"]=$recv(variables)._at_ifAbsent_("inscrit",(function(){
 return true;
 
 }));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:ifAbsent:"]=1;
+//>>excludeEnd("ctx");
+self["@noob"]=$recv(variables)._at_ifAbsent_("noob",(function(){
+return false;
+
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:ifAbsent:"]=2;
+//>>excludeEnd("ctx");
+self["@bracelet"]=$recv(variables)._at_ifAbsent_("bracelet",(function(){
+return false;
+
+}));
 self["@repas"]=$recv(variables)._at_ifPresent_ifAbsent_("repas",(function(v){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 return $recv($recv($FdJRepas())._new())._fromJSON_(v);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,8)});
+}, function($ctx2) {$ctx2.fillBlock({v:v},$ctx1,10)});
 //>>excludeEnd("ctx");
 }),(function(){
 return nil;
@@ -2272,7 +2314,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["variables"],
-source: "fromJSON: variables\x0a\x09self nom: (variables at: 'nom').\x0a\x09self prenom: (variables at: 'prenom').\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ FdJAssociations instance festival ].\x0a\x09tshirt := variables at: 'tshirt'\x0a\x09\x09ifPresent: [ :v | FdJTShirt at: v ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09inscrit := variables at: 'inscrit'\x0a\x09\x09ifAbsent: [ true ].\x0a\x09repas := variables at: 'repas'\x0a\x09\x09ifPresent: [ :v | FdJRepas new fromJSON: v ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09\x22force le recalcule de nom sans accent\x22\x0a\x09self nomSansAccent.\x0a\x09self prenomSansAccent",
+source: "fromJSON: variables\x0a\x09self nom: (variables at: 'nom').\x0a\x09self prenom: (variables at: 'prenom').\x0a\x09etat := variables at: 'etat'\x0a\x09\x09ifPresent: [ :v | v asSymbol ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09assoc := variables at: 'assoc'\x0a\x09\x09ifPresent: [ :v | FdJAssociations instance at: v ]\x0a\x09\x09ifAbsent: [ FdJAssociations instance festival ].\x0a\x09tshirt := variables at: 'tshirt'\x0a\x09\x09ifPresent: [ :v | FdJTShirt at: v ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09inscrit := variables at: 'inscrit'\x0a\x09\x09ifAbsent: [ true ].\x0a\x09noob := variables at: 'noob'\x0a\x09\x09ifAbsent: [ false ].\x0a\x09bracelet := variables at: 'bracelet'\x0a\x09\x09ifAbsent: [ false ].\x0a\x09repas := variables at: 'repas'\x0a\x09\x09ifPresent: [ :v | FdJRepas new fromJSON: v ]\x0a\x09\x09ifAbsent: [ nil ].\x0a\x09\x22force le recalcule de nom sans accent\x22\x0a\x09self nomSansAccent.\x0a\x09self prenomSansAccent",
 referencedClasses: ["FdJAssociations", "FdJTShirt", "FdJRepas"],
 //>>excludeEnd("ide");
 messageSends: ["nom:", "at:", "prenom:", "at:ifPresent:ifAbsent:", "asSymbol", "instance", "festival", "at:ifAbsent:", "fromJSON:", "new", "nomSansAccent", "prenomSansAccent"]
@@ -2514,6 +2556,25 @@ source: "nomSansAccent\x0a\x09nomSansAccent ifNil: [\x0a\x09\x09nom ifNil: [ ^ '
 referencedClasses: ["FdJApplication"],
 //>>excludeEnd("ide");
 messageSends: ["ifNil:", "remplaceAvec:", "accents"]
+}),
+$globals.FdJBenevole);
+
+$core.addMethod(
+$core.method({
+selector: "noob:",
+protocol: 'accessing',
+fn: function (estNoob){
+var self=this;
+self["@noob"]=estNoob;
+return self;
+
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["estNoob"],
+source: "noob: estNoob\x0a\x09noob := estNoob",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: []
 }),
 $globals.FdJBenevole);
 
@@ -4725,7 +4786,7 @@ function $FdJBenevole(){return $globals.FdJBenevole||(typeof FdJBenevole=="undef
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$3,$4,$2,$5,$6;
+var $1,$3,$4,$5,$6,$8,$7,$2,$9,$10;
 $1=$recv(row)._at_("participe");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:"]=1;
@@ -4742,16 +4803,26 @@ $4=$recv(row)._at_("prenom");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:"]=3;
 //>>excludeEnd("ctx");
-$2=$globals.HashedCollection._newFromPairs_(["nom",$3,"prenom",$4,"assoc",$recv(row)._at_ifAbsent_("asso",(function(){
+$5=$recv(row)._at_ifAbsent_("asso",(function(){
 return "Festival";
 
-})),"inscrit",participe]);
-benevole=$recv($FdJStockage())._charge_depuis_($FdJBenevole(),$2);
-$5=$recv(row)._at_("repas");
+}));
+$6=participe;
+$8=$recv(row)._at_("noob");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:"]=4;
 //>>excludeEnd("ctx");
-$recv($5)._ifNotEmpty_((function(){
+$7=self._importeBooleen_($8);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["importeBooleen:"]=2;
+//>>excludeEnd("ctx");
+$2=$globals.HashedCollection._newFromPairs_(["nom",$3,"prenom",$4,"assoc",$5,"inscrit",$6,"noob",$7]);
+benevole=$recv($FdJStockage())._charge_depuis_($FdJBenevole(),$2);
+$9=$recv(row)._at_("repas");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:"]=5;
+//>>excludeEnd("ctx");
+$recv($9)._ifNotEmpty_((function(){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -4763,15 +4834,15 @@ return $recv(benevole)._repas_(self._importeRepas_(row));
 $recv(benevole)._tshirt_(self._importeTShirt_(row));
 bracelet=self._importeBooleen_($recv(row)._at_("bracelet"));
 $recv(benevole)._bracelet_(bracelet);
-$6=benevole;
-return $6;
+$10=benevole;
+return $10;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"importeComplet:",{row:row,benevole:benevole,participe:participe,bracelet:bracelet},$globals.FdJImporteur)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["row"],
-source: "importeComplet: row\x0a\x09| benevole participe bracelet |\x0a\x09\x22Creation du bénévole\x22\x0a\x09participe := self importeBooleen: (row at: 'participe').\x0a\x09benevole := FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (row at: 'nom').\x0a\x09\x09'prenom' -> (row at: 'prenom').\x0a\x09\x09'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).\x0a\x09\x09'inscrit' -> participe\x0a\x09\x09}.\x0a\x09\x22Creation du repas associé\x22 \x0a\x09(row at: 'repas') ifNotEmpty: [\x0a\x09\x09benevole repas: (self importeRepas: row) ].\x0a\x09\x22Creation du tshirt associé\x22\x0a\x09benevole tshirt: (self importeTShirt: row).\x0a\x09\x22Gestion du bracelet\x22\x0a\x09bracelet := self importeBooleen: (row at: 'bracelet').\x0a\x09benevole bracelet: bracelet.\x0a\x09\x22Ok\x22\x0a\x09^ benevole",
+source: "importeComplet: row\x0a\x09| benevole participe bracelet |\x0a\x09\x22Creation du bénévole\x22\x0a\x09participe := self importeBooleen: (row at: 'participe').\x0a\x09benevole := FdJStockage charge: FdJBenevole depuis: #{\x0a\x09\x09'nom' -> (row at: 'nom').\x0a\x09\x09'prenom' -> (row at: 'prenom').\x0a\x09\x09'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).\x0a\x09\x09'inscrit' -> participe.\x0a\x09\x09'noob' -> (self importeBooleen: (row at: 'noob'))\x0a\x09\x09}.\x0a\x09\x22Creation du repas associé\x22 \x0a\x09(row at: 'repas') ifNotEmpty: [\x0a\x09\x09benevole repas: (self importeRepas: row) ].\x0a\x09\x22Creation du tshirt associé\x22\x0a\x09benevole tshirt: (self importeTShirt: row).\x0a\x09\x22Gestion du bracelet\x22\x0a\x09bracelet := self importeBooleen: (row at: 'bracelet').\x0a\x09benevole bracelet: bracelet.\x0a\x09\x22Ok\x22\x0a\x09^ benevole",
 referencedClasses: ["FdJStockage", "FdJBenevole"],
 //>>excludeEnd("ide");
 messageSends: ["importeBooleen:", "at:", "charge:depuis:", "at:ifAbsent:", "ifNotEmpty:", "repas:", "importeRepas:", "tshirt:", "importeTShirt:", "bracelet:"]
@@ -4893,7 +4964,7 @@ return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
 var $1,$3,$2,$4;
 repas=$recv($FdJRepas())._new();
-["-Ven 29 Avril MIDI", "Ven 29 Avril SOIR", "Sam 30 Avril MIDI", "Sam 30 Avril SOIR", "Dim 1er Mai MIDI", "-Dim 1er Mai SOIR"]._do_((function(jour){
+["Ven 26 Mai MIDI", "Ven 26 Mai SOIR", "Sam 27 Mai MIDI", "Sam 27 Mai SOIR", "Dim 28 Mai MIDI", "-Dim 28 Mai SOIR"]._do_((function(jour){
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
@@ -4917,7 +4988,7 @@ return $4;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["row"],
-source: "importeRepas: row\x0a\x09| repas |\x0a\x09repas := FdJRepas new.\x0a\x09\x22Les repas du vendredi midi et dimanche soir ne sont pas pris en compte d'ou le signe - devant le texte\x22\x0a\x09#('-Ven 29 Avril MIDI' 'Ven 29 Avril SOIR' 'Sam 30 Avril MIDI' 'Sam 30 Avril SOIR' 'Dim 1er Mai MIDI' '-Dim 1er Mai SOIR')\x0a\x09\x09do: [ :jour |\x0a\x09\x09\x09repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].\x0a\x09repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).\x0a\x09^ repas",
+source: "importeRepas: row\x0a\x09\x22Convertit le champ repas en numéro de jour pour l'objet repas d'un bénévole\x0a\x09TODO remplacer la comparaison brute des jours en dur par quelque chose ne nécessitant pas de chg de code\x22\x0a\x09| repas |\x0a\x09repas := FdJRepas new.\x0a\x09\x22Les repas du dimanche soir n'est pas pris en compte d'ou le signe - devant le texte\x22\x0a\x09#('Ven 26 Mai MIDI' 'Ven 26 Mai SOIR' 'Sam 27 Mai MIDI' 'Sam 27 Mai SOIR' 'Dim 28 Mai MIDI' '-Dim 28 Mai SOIR')\x0a\x09\x09do: [ :jour |\x0a\x09\x09\x09repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].\x0a\x09repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).\x0a\x09^ repas",
 referencedClasses: ["FdJRepas"],
 //>>excludeEnd("ide");
 messageSends: ["new", "do:", "ajouteJour:", "includesSubString:", "at:", "vegetarien:", "importeBooleen:"]
@@ -6755,6 +6826,47 @@ $globals.FdJWidgetBenevole);
 
 $core.addMethod(
 $core.method({
+selector: "renderNoobOn:",
+protocol: 'rendering',
+fn: function (html){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2;
+$1=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["div"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._class_("noob");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["class:"]=1;
+//>>excludeEnd("ctx");
+$2=$recv($1)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($recv(html)._div())._class_("img");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderNoobOn:",{html:html},$globals.FdJWidgetBenevole)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderNoobOn: html\x0a\x09html div class: 'noob';\x0a\x09         with: [html div class: 'img']",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "div", "with:"]
+}),
+$globals.FdJWidgetBenevole);
+
+$core.addMethod(
+$core.method({
 selector: "renderOn:",
 protocol: 'rendering',
 fn: function (html){
@@ -6762,7 +6874,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$3;
+var $1,$2,$3,$4;
 (
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.supercall = true, 
@@ -6791,7 +6903,11 @@ $2;
 self._renderBraceletOn_(html);
 self._renderTShirtOn_(html);
 self._renderRepasOn_(html);
-return self._renderAnnulationOn_(html);
+self._renderAnnulationOn_(html);
+$3=$recv(self["@benevole"])._estNoob();
+if($core.assert($3)){
+return self._renderNoobOn_(html);
+};
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
 //>>excludeEnd("ctx");
@@ -6799,8 +6915,8 @@ return self._renderAnnulationOn_(html);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
-$3=$recv(self["@benevole"])._estInscrit();
-if(!$core.assert($3)){
+$4=$recv(self["@benevole"])._estInscrit();
+if(!$core.assert($4)){
 self._ajouteClasse_("noninscrit");
 };
 $recv(self["@div"])._onClick_((function(){
@@ -6809,7 +6925,7 @@ return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
 return self._selectionne();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,4)});
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,5)});
 //>>excludeEnd("ctx");
 }));
 return self;
@@ -6819,10 +6935,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderBraceletOn: html.\x0a\x09\x09self renderTShirtOn: html.\x0a\x09\x09self renderRepasOn: html.\x0a\x09\x09self renderAnnulationOn: html ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ self selectionne ]",
+source: "renderOn: html\x0a\x09super renderOn: html.\x0a\x09div with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09self renderIdentiteOn: html.\x0a\x09\x09\x09self renderAssociationOn: html ].\x0a\x09\x09self renderBraceletOn: html.\x0a\x09\x09self renderTShirtOn: html.\x0a\x09\x09self renderRepasOn: html.\x0a\x09\x09self renderAnnulationOn: html.\x0a\x09\x09benevole estNoob ifTrue: [ self renderNoobOn: html ] ].\x0a\x09benevole estInscrit ifFalse: [\x09\x09\x09\x0a\x09\x09self ajouteClasse: 'noninscrit' ].\x0a\x09div onClick: [ self selectionne ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderBraceletOn:", "renderTShirtOn:", "renderRepasOn:", "renderAnnulationOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne"]
+messageSends: ["renderOn:", "with:", "class:", "div", "renderIdentiteOn:", "renderAssociationOn:", "renderBraceletOn:", "renderTShirtOn:", "renderRepasOn:", "renderAnnulationOn:", "ifTrue:", "estNoob", "renderNoobOn:", "ifFalse:", "estInscrit", "ajouteClasse:", "onClick:", "selectionne"]
 }),
 $globals.FdJWidgetBenevole);
 
@@ -7701,6 +7817,15 @@ return self._renderIdentiteOn_(html);
 }, function($ctx4) {$ctx4.fillBlock({},$ctx3,4)});
 //>>excludeEnd("ctx");
 }));
+$recv(benevole)._at_ifPresent_("noob",(function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx4) {
+//>>excludeEnd("ctx");
+return self._renderNoobOn_(html);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx4) {$ctx4.fillBlock({},$ctx3,5)});
+//>>excludeEnd("ctx");
+}));
 $8=$recv(benevole)._at_("assoc");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx3.sendIdx["at:"]=2;
@@ -7731,10 +7856,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html", "benevole"],
-source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09((benevole at: #type) = 'auteur') ifFalse: [\x0a\x09\x09\x09self renderBraceletOn: html.\x0a\x09\x09\x09self renderTShirtOn: html.\x0a\x09\x09\x09self renderRepasOn: html ]\x0a\x09\x09]",
+source: "renderBenevoleOn: html type: benevole\x0a\x09html div class: 'benevole ',(benevole at: #type); with: [\x0a\x09\x09html div class: 'info'; with: [\x0a\x09\x09\x09benevole at: #nom\x0a\x09\x09\x09\x09ifPresent: [ :t | self renderIdentiteOn: html texte: t ]\x0a\x09\x09\x09\x09ifAbsent: [ self renderIdentiteOn: html ].\x0a\x09\x09\x09benevole at: #noob\x0a\x09\x09\x09\x09ifPresent: [ self renderNoobOn: html ].\x0a\x09\x09\x09self renderAssociationOn: html\x0a\x09\x09\x09\x09texte: (benevole at: #assoc)\x0a\x09\x09\x09].\x0a\x09\x09((benevole at: #type) = 'auteur') ifFalse: [\x0a\x09\x09\x09self renderBraceletOn: html.\x0a\x09\x09\x09self renderTShirtOn: html.\x0a\x09\x09\x09self renderRepasOn: html ]\x0a\x09\x09]",
 referencedClasses: [],
 //>>excludeEnd("ide");
-messageSends: ["class:", "div", ",", "at:", "with:", "at:ifPresent:ifAbsent:", "renderIdentiteOn:texte:", "renderIdentiteOn:", "renderAssociationOn:texte:", "ifFalse:", "=", "renderBraceletOn:", "renderTShirtOn:", "renderRepasOn:"]
+messageSends: ["class:", "div", ",", "at:", "with:", "at:ifPresent:ifAbsent:", "renderIdentiteOn:texte:", "renderIdentiteOn:", "at:ifPresent:", "renderNoobOn:", "renderAssociationOn:texte:", "ifFalse:", "=", "renderBraceletOn:", "renderTShirtOn:", "renderRepasOn:"]
 }),
 $globals.FdJWidgetLegende);
 
@@ -7813,7 +7938,7 @@ var self=this;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$3,$4,$5,$2;
+var $1,$3,$4,$5,$6,$2;
 $1=$recv(html)._div();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["div"]=1;
@@ -7847,6 +7972,14 @@ $recv($5)._with_("3) Cliquer sur l'étiquette pour terminer la distribution");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx2.sendIdx["with:"]=4;
 //>>excludeEnd("ctx");
+$6=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["div"]=5;
+//>>excludeEnd("ctx");
+$recv($6)._with_("4) Cliquer sur Annuler en cas d'erreur");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx2.sendIdx["with:"]=5;
+//>>excludeEnd("ctx");
 return $recv($recv(html)._div())._with_("Code des couleurs:");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
@@ -7855,7 +7988,7 @@ return $recv($recv(html)._div())._with_("Code des couleurs:");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["with:"]=1;
 //>>excludeEnd("ctx");
-self._renderBenevoleOn_type_(html,$globals.HashedCollection._newFromPairs_(["type","festival","assoc","association"]));
+self._renderBenevoleOn_type_(html,$globals.HashedCollection._newFromPairs_(["type","festival","assoc","association","noob",true]));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["renderBenevoleOn:type:"]=1;
 //>>excludeEnd("ctx");
@@ -7871,7 +8004,7 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html"],
-source: "renderContenuOn: html\x0a\x09html div class: 'texte'; with: [\x0a\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.\x0a\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'festival'. #assoc->'association' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'auteur'. #nom->'Auteur/Editeur/Illustrateur'. #assoc->'special: pas de distri' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }",
+source: "renderContenuOn: html\x0a\x09html div class: 'texte'; with: [\x0a\x09\x09html div with: '1) Sélectionner un bénévole avec une partie de son nom et/ou prénom en bas de l''écran'.\x0a\x09\x09html div with: '2) Cliquer dessus pour commencer la distribution'.\x0a\x09\x09html div with: '3) Cliquer sur l''étiquette pour terminer la distribution'.\x0a\x09\x09html div with: '4) Cliquer sur Annuler en cas d''erreur'.\x0a\x09\x09html div with: 'Code des couleurs:' ].\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'festival'. #assoc->'association'. #noob->true }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'auteur'. #nom->'Auteur/Editeur/Illustrateur'. #assoc->'special: pas de distri' }.\x0a\x09self renderBenevoleOn: html type: #{\x0a\x09\x09#type->'noninscrit'. #nom->'Non-inscrit'. #assoc->'vérif stock' }",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["class:", "div", "with:", "renderBenevoleOn:type:"]
@@ -7979,6 +8112,47 @@ return self;
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["html", "texte"],
 source: "renderIdentiteOn: html texte: texte\x0a\x09html div class: 'identite';\x0a\x09\x09with: [ html div class: 'nom'; with: texte ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["class:", "div", "with:"]
+}),
+$globals.FdJWidgetLegende);
+
+$core.addMethod(
+$core.method({
+selector: "renderNoobOn:",
+protocol: 'as yet unclassified',
+fn: function (html){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1,$2;
+$1=$recv(html)._div();
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["div"]=1;
+//>>excludeEnd("ctx");
+$recv($1)._class_("noob");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["class:"]=1;
+//>>excludeEnd("ctx");
+$2=$recv($1)._with_((function(){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv($recv(html)._div())._class_("img");
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)});
+//>>excludeEnd("ctx");
+}));
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"renderNoobOn:",{html:html},$globals.FdJWidgetLegende)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["html"],
+source: "renderNoobOn: html\x0a\x09html div class: 'noob';\x0a\x09         with: [ html div class: 'img' ]",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["class:", "div", "with:"]

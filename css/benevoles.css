@@ -358,6 +358,9 @@ div.tooltip span
 	border:0;
 	left:-12px;
 }
+.aucun.tooltip {
+	opacity: 1;
+}
 .annul {
     position: absolute;
     margin-top: -8px;
@@ -431,3 +434,28 @@ span.deleteicon input {
     height: 100%;
 }
 
+.noob {
+    position: relative;
+    float: left;
+}
+.noob .img {
+    background: url('../img/noob.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    opacity: 0.3;
+	top: 40px;
+    left: 480px;
+    width: 110px;
+    height: 80px;
+}
+.selectionneur .noob {
+    display:none;
+}
+.legende .noob .img {
+	top: -16px;
+    left: 78px;
+    width: 50px;
+    height: 40px;
+}

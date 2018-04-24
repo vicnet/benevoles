@@ -57,8 +57,16 @@ Object subclass: #FdJApplication
 !FdJApplication methodsFor: 'importing'!
 
 importe: texte
+	self importe: texte enVidant: false
+!
+
+importe: texte enVidant: vide
 	| results fields rows imp |
+
+	vide ifTrue: [self vide ].
+
 	imp := FdJImporteur new.
+	imp special: vide not.
 	results := imp importe: texte.
 
 	fields := results meta fields.
@@ -76,10 +84,10 @@ importe: texte
 			imp importeAssociations: rows.
 			FdJStockage sauve: FdJAssociations instance ].
 
-	(fields includes: 'nom')
-		ifTrue: [
-			benevoles ajouteTous: (imp importeComplets: rows) ]."
-			benevoles ajouteUnique: (imp importeComplets: rows) ]."
+	vide ifTrue: [
+			benevoles ajouteTous: (imp importeComplets: rows) ]
+		  ifFalse: [
+			benevoles ajouteUnique: (imp importeComplets: rows) ].
 
 	self sauve
 	
@@ -446,7 +454,7 @@ instance
 ! !
 
 Object subclass: #FdJBenevole
-	instanceVariableNames: 'nom prenom assoc tshirt repas etat inscrit nomSansAccent prenomSansAccent bracelet noob'
+	instanceVariableNames: 'nom prenom assoc tshirt repas etat inscrit nomSansAccent prenomSansAccent bracelet noob special'
 	package: 'Benevoles'!
 !FdJBenevole commentStamp!
 - tshirt: un TShirt
@@ -486,6 +494,7 @@ asJSON
 	tshirt ifNotNil: [ variables at: 'tshirt' put: tshirt id ].
 	variables at: 'inscrit' put: inscrit.
 	variables at: 'noob' put: noob.
+	variables at: 'special' put: special.
 	variables at: 'bracelet' put: bracelet.
 	repas ifNotNil: [ variables at: 'repas' put: repas asJSON ].
 	^ variables
@@ -540,7 +549,7 @@ estNoob
 !
 
 estSpecial
-	^ (assoc nomSansAccent = 'auteur') | (assoc nomSansAccent = 'editeur') | (assoc nomSansAccent = 'illustrateur')
+	^ special
 !
 
 fromJSON: variables
@@ -558,6 +567,8 @@ fromJSON: variables
 	inscrit := variables at: 'inscrit'
 		ifAbsent: [ true ].
 	noob := variables at: 'noob'
+		ifAbsent: [ false ].
+	special := variables at: 'special'
 		ifAbsent: [ false ].
 	bracelet := variables at: 'bracelet'
 		ifAbsent: [ false ].
@@ -662,6 +673,10 @@ repas
 
 repas: jours
 	repas := jours
+!
+
+special: estSpecial
+	special := estSpecial
 !
 
 tshirt
@@ -1026,7 +1041,7 @@ vide
 ! !
 
 Object subclass: #FdJImporteur
-	instanceVariableNames: ''
+	instanceVariableNames: 'special'
 	package: 'Benevoles'!
 
 !FdJImporteur methodsFor: 'as yet unclassified'!
@@ -1048,6 +1063,10 @@ importeComplets: rows
 	^ rows
 		select: [ :row | (row at: 'nom') isEmpty not ]
 		thenCollect: [ :row | self importeComplet: row ]
+!
+
+special: type
+	special := type
 ! !
 
 !FdJImporteur methodsFor: 'helpers'!
@@ -1085,7 +1104,8 @@ importeComplet: row
 		'prenom' -> (row at: 'prenom').
 		'assoc' -> (row at: 'asso' ifAbsent: [ 'Festival']).
 		'inscrit' -> participe.
-		'noob' -> (self importeBooleen: (row at: 'noob'))
+		'noob' -> ((self importeBooleen: (row at: 'noob'))
+				or: (self importeBooleen: (row at: 'nouveau')))
 		}.
 	"Creation du repas associé" 
 	(row at: 'repas') ifNotEmpty: [
@@ -1095,6 +1115,8 @@ importeComplet: row
 	"Gestion du bracelet"
 	bracelet := self importeBooleen: (row at: 'bracelet').
 	benevole bracelet: bracelet.
+	"Gestion des cas spéciaux"
+	benevole special: special.
 	"Ok"
 	^ benevole
 !
@@ -1104,8 +1126,8 @@ importeRepas: row
 	TODO remplacer la comparaison brute des jours en dur par quelque chose ne nécessitant pas de chg de code"
 	| repas |
 	repas := FdJRepas new.
-	"Les repas du dimanche soir n'est pas pris en compte d'ou le signe - devant le texte"
-	#('Ven 26 Mai MIDI' 'Ven 26 Mai SOIR' 'Sam 27 Mai MIDI' 'Sam 27 Mai SOIR' 'Dim 28 Mai MIDI' '-Dim 28 Mai SOIR')
+	"Certains repas ne sont pas pris en compte (restes ou sandwichs) d'ou le signe - devant le texte"
+	#('-Vendredi 09h' 'Vendredi 17h' 'Samedi 09h' '-Samedi 17h' 'Dimanche 09h' '-Dimanche 17h')
 		do: [ :jour |
 			repas ajouteJour: ((row at: 'repas') includesSubString: jour) ].
 	repas vegetarien: (self importeBooleen: (row at: 'repas_vegetarien')).
@@ -1533,7 +1555,8 @@ renderOn: html
 		self renderTShirtOn: html.
 		self renderRepasOn: html.
 		self renderAnnulationOn: html.
-		benevole estNoob ifTrue: [ self renderNoobOn: html ] ].
+		benevole estNoob ifTrue: [ self renderNoobOn: html ].
+		benevole estSpecial ifTrue: [ self renderSpecialOn: html ] ].
 	benevole estInscrit ifFalse: [			
 		self ajouteClasse: 'noninscrit' ].
 	div onClick: [ self selectionne ]
@@ -1560,6 +1583,11 @@ renderRepasOn: html
 					with: [html br]; with: (repas vegetarien ifTrue: [ 'Végétarien' ] ifFalse: [ '' ])
 			]
 		]
+!
+
+renderSpecialOn: html
+	html div class: 'special';
+	         with: [html div class: 'img']
 !
 
 renderTShirtOn: html
@@ -1665,10 +1693,8 @@ renderActionsOn: html
 	].
 	html button with: 'import';
 		onClick: [
-			vide element checked ifTrue: [
-					presentateur vide
-				].
-			presentateur importe: self input.
+			presentateur importe: (self input)
+						enVidant: vide element checked.
 			dlg asJQuery fadeOut
 		]
 !

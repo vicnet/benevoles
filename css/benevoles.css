@@ -459,3 +459,22 @@ span.deleteicon input {
     width: 50px;
     height: 40px;
 }
+.special {
+    position: relative;
+    float: left;
+}
+.special .img {
+    background: url('../img/special.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    opacity: 0.3;
+	top: 0px;
+    left: 380px;
+    width: 180px;
+    height: 120px;
+}
+.selectionneur .special {
+    display:none;
+}

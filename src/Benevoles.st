@@ -513,6 +513,13 @@ bracelet: aBracelet
 	bracelet := aBracelet
 !
 
+copie: benevole
+	"Copie un benevole"
+	"Attention copie brute, pas d'annonce !!"
+	benevole estDistribue ifTrue: [
+		etat := #distribue ]
+!
+
 correspond: unBenevole
 	"Retourne vrai si nom sans accent correspond"
 	^ (self indexDe: unBenevole identiteSansAccent) = 1
@@ -734,14 +741,14 @@ ajouteTous: desBenevoles
 
 ajouteUnique: desBenevoles
 	Transcript show: 'Benevoles déjà existants:'; cr.
-	liste addAll:
-		(desBenevoles
-			select: [ :b |
-				(self contient: b)
-					ifTrue: [ Transcript show: '- ', b nom, ' ', b prenom; cr. false ]
-					ifFalse: [ true ]
-				]
-			thenCollect: [ :b | b normalise ])
+	desBenevoles do: [ :b | | ref |
+		b normalise.
+		ref := self recherche: b.
+		ref ifNotNil: [
+				Transcript show: '- ', b nom, ' ', b prenom; cr.
+				b copie: ref.
+				liste remove: ref ].
+		liste add: b ]
 !
 
 asJSON
@@ -855,6 +862,11 @@ majCache
 
 majCacheAvec: c
 	^ cache at: c put: (self filtreCache: c )
+!
+
+recherche: unBenevole
+	^ liste detect: [ :b | b correspond: unBenevole ]
+			ifNone: [ nil ]
 !
 
 reinit
@@ -1022,16 +1034,22 @@ statistiques
 	stats at: 'Distribution par jour' put: nil.
 	distri := self calculeStats: 'Debut distri'.
 	annul := self calculeStats: 'Annulation'.
+	"TODO a revoir pour eviter les dates en dur !!"
 	stats
-		at: ' - vendrredi'
-		put: { (distri at: 29)-(annul at: 29) }.
+		at: ' - mercredi'
+		put: { (distri at: 26 ifAbsent: [0])-(annul at: 26 ifAbsent: [0]) }.
+	stats
+		at: ' - jeudi'
+		put: { (distri at: 26 ifAbsent: [0])-(annul at: 26 ifAbsent: [0]) }.
+	stats
+		at: ' - vendredi'
+		put: { (distri at: 27 ifAbsent: [0])-(annul at: 27 ifAbsent: [0]) }.
 	stats
 		at: ' - samedi'
-		put: { (distri at: 30)-(annul at: 29) }.
-"	stats
+		put: { (distri at: 28 ifAbsent: [0])-(annul at: 28 ifAbsent: [0]) }.
+	stats
 		at: ' - dimanche'
-		put: { (distri at: 1)-(annul at:29) }.
-"
+		put: { (distri at: 29 ifAbsent: [0])-(annul at: 29 ifAbsent: [0]) }.
 	^ stats
 !
 

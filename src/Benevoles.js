@@ -1997,6 +1997,35 @@ $globals.FdJBenevole);
 
 $core.addMethod(
 $core.method({
+selector: "copie:",
+protocol: 'accessing',
+fn: function(benevole){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv(benevole)._estDistribue();
+if($core.assert($1)){
+self["@etat"]="distribue";
+self["@etat"];
+};
+return self;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"copie:",{benevole:benevole},$globals.FdJBenevole)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["benevole"],
+source: "copie: benevole\x0a\x09\x22Copie un benevole\x22\x0a\x09\x22Attention copie brute, pas d'annonce !\x22\x0a\x09benevole estDistribue ifTrue: [\x0a\x09\x09etat := #distribue ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["ifTrue:", "estDistribue"]
+}),
+$globals.FdJBenevole);
+
+$core.addMethod(
+$core.method({
 selector: "correspond:",
 protocol: 'accessing',
 fn: function (unBenevole){
@@ -3032,13 +3061,13 @@ $core.addMethod(
 $core.method({
 selector: "ajouteUnique:",
 protocol: 'as yet unclassified',
-fn: function (desBenevoles){
+fn: function(desBenevoles){
 var self=this;
 function $Transcript(){return $globals.Transcript||(typeof Transcript=="undefined"?nil:Transcript)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$2,$4,$3,$5;
+var $1,$2,$4,$3,$5,$receiver;
 $recv($Transcript())._show_("Benevoles déjà existants:");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["show:"]=1;
@@ -3047,12 +3076,18 @@ $1=$recv($Transcript())._cr();
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["cr"]=1;
 //>>excludeEnd("ctx");
-$recv(self["@liste"])._addAll_($recv(desBenevoles)._select_thenCollect_((function(b){
+$recv(desBenevoles)._do_((function(b){
+var ref;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx2) {
 //>>excludeEnd("ctx");
-$2=self._contient_(b);
-if($core.assert($2)){
+$recv(b)._normalise();
+ref=self._recherche_(b);
+ref;
+$2=ref;
+if(($receiver = $2) == null || $receiver.isNil){
+$2;
+} else {
 $4=$recv("- ".__comma($recv(b)._nom())).__comma(" ");
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx2.sendIdx[","]=2;
@@ -3064,22 +3099,14 @@ $ctx2.sendIdx[","]=1;
 $recv($Transcript())._show_($3);
 $5=$recv($Transcript())._cr();
 $5;
-return false;
-} else {
-return true;
+$recv(b)._copie_(ref);
+$recv(self["@liste"])._remove_(ref);
 };
+return $recv(self["@liste"])._add_(b);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)});
+}, function($ctx2) {$ctx2.fillBlock({b:b,ref:ref},$ctx1,1)});
 //>>excludeEnd("ctx");
-}),(function(b){
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-return $core.withContext(function($ctx2) {
-//>>excludeEnd("ctx");
-return $recv(b)._normalise();
-//>>excludeStart("ctx", pragmas.excludeDebugContexts);
-}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,4)});
-//>>excludeEnd("ctx");
-})));
+}));
 return self;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"ajouteUnique:",{desBenevoles:desBenevoles},$globals.FdJBenevoles)});
@@ -3087,10 +3114,10 @@ return self;
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: ["desBenevoles"],
-source: "ajouteUnique: desBenevoles\x0a\x09Transcript show: 'Benevoles déjà existants:'; cr.\x0a\x09liste addAll:\x0a\x09\x09(desBenevoles\x0a\x09\x09\x09select: [ :b |\x0a\x09\x09\x09\x09(self contient: b)\x0a\x09\x09\x09\x09\x09ifTrue: [ Transcript show: '- ', b nom, ' ', b prenom; cr. false ]\x0a\x09\x09\x09\x09\x09ifFalse: [ true ]\x0a\x09\x09\x09\x09]\x0a\x09\x09\x09thenCollect: [ :b | b normalise ])",
+source: "ajouteUnique: desBenevoles\x0a\x09Transcript show: 'Benevoles déjà existants:'; cr.\x0a\x09desBenevoles do: [ :b | | ref |\x0a\x09\x09b normalise.\x0a\x09\x09ref := self recherche: b.\x0a\x09\x09ref ifNotNil: [\x0a\x09\x09\x09\x09Transcript show: '- ', b nom, ' ', b prenom; cr.\x0a\x09\x09\x09\x09b copie: ref.\x0a\x09\x09\x09\x09liste remove: ref ].\x0a\x09\x09liste add: b ]",
 referencedClasses: ["Transcript"],
 //>>excludeEnd("ide");
-messageSends: ["show:", "cr", "addAll:", "select:thenCollect:", "ifTrue:ifFalse:", "contient:", ",", "nom", "prenom", "normalise"]
+messageSends: ["show:", "cr", "do:", "normalise", "recherche:", "ifNotNil:", ",", "nom", "prenom", "copie:", "remove:", "add:"]
 }),
 $globals.FdJBenevoles);
 
@@ -3561,6 +3588,42 @@ source: "majCacheAvec: c\x0a\x09^ cache at: c put: (self filtreCache: c )",
 referencedClasses: [],
 //>>excludeEnd("ide");
 messageSends: ["at:put:", "filtreCache:"]
+}),
+$globals.FdJBenevoles);
+
+$core.addMethod(
+$core.method({
+selector: "recherche:",
+protocol: 'as yet unclassified',
+fn: function(unBenevole){
+var self=this;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx1) {
+//>>excludeEnd("ctx");
+var $1;
+$1=$recv(self["@liste"])._detect_ifNone_((function(b){
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+return $core.withContext(function($ctx2) {
+//>>excludeEnd("ctx");
+return $recv(b)._correspond_(unBenevole);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx2) {$ctx2.fillBlock({b:b},$ctx1,1)});
+//>>excludeEnd("ctx");
+}),(function(){
+return nil;
+
+}));
+return $1;
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+}, function($ctx1) {$ctx1.fill(self,"recherche:",{unBenevole:unBenevole},$globals.FdJBenevoles)});
+//>>excludeEnd("ctx");
+},
+//>>excludeStart("ide", pragmas.excludeIdeData);
+args: ["unBenevole"],
+source: "recherche: unBenevole\x0a\x09^ liste detect: [ :b | b correspond: unBenevole ]\x0a\x09\x09\x09ifNone: [ nil ]",
+referencedClasses: [],
+//>>excludeEnd("ide");
+messageSends: ["detect:ifNone:", "correspond:"]
 }),
 $globals.FdJBenevoles);
 
@@ -4424,14 +4487,14 @@ $core.addMethod(
 $core.method({
 selector: "statistiques",
 protocol: 'as yet unclassified',
-fn: function (){
+fn: function(){
 var self=this;
 var stats,distri,annul;
 function $Dictionary(){return $globals.Dictionary||(typeof Dictionary=="undefined"?nil:Dictionary)}
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 return $core.withContext(function($ctx1) {
 //>>excludeEnd("ctx");
-var $1,$4,$5,$3,$2,$6,$9,$8,$7,$10;
+var $1,$4,$5,$3,$2,$6,$9,$10,$8,$7,$11,$14,$15,$13,$12,$16,$19,$20,$18,$17,$21,$24,$23,$22,$25;
 stats=$recv($Dictionary())._new();
 $recv(stats)._at_put_("Distribution par jour",nil);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
@@ -4443,43 +4506,127 @@ $ctx1.sendIdx["calculeStats:"]=1;
 //>>excludeEnd("ctx");
 annul=self._calculeStats_("Annulation");
 $1=stats;
-$4=$recv(distri)._at_((29));
+$4=$recv(distri)._at_ifAbsent_((26),(function(){
+return (0);
+
+}));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["at:"]=1;
+$ctx1.sendIdx["at:ifAbsent:"]=1;
 //>>excludeEnd("ctx");
-$5=$recv(annul)._at_((29));
+$5=$recv(annul)._at_ifAbsent_((26),(function(){
+return (0);
+
+}));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["at:"]=2;
+$ctx1.sendIdx["at:ifAbsent:"]=2;
 //>>excludeEnd("ctx");
 $3=$recv($4).__minus($5);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["-"]=1;
 //>>excludeEnd("ctx");
 $2=[$3];
-$recv($1)._at_put_(" - vendrredi",$2);
+$recv($1)._at_put_(" - mercredi",$2);
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 $ctx1.sendIdx["at:put:"]=2;
 //>>excludeEnd("ctx");
 $6=stats;
-$9=$recv(distri)._at_((30));
+$9=$recv(distri)._at_ifAbsent_((26),(function(){
+return (0);
+
+}));
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
-$ctx1.sendIdx["at:"]=3;
+$ctx1.sendIdx["at:ifAbsent:"]=3;
 //>>excludeEnd("ctx");
-$8=$recv($9).__minus($recv(annul)._at_((29)));
+$10=$recv(annul)._at_ifAbsent_((26),(function(){
+return (0);
+
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:ifAbsent:"]=4;
+//>>excludeEnd("ctx");
+$8=$recv($9).__minus($10);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["-"]=2;
+//>>excludeEnd("ctx");
 $7=[$8];
-$recv($6)._at_put_(" - samedi",$7);
-$10=stats;
-return $10;
+$recv($6)._at_put_(" - jeudi",$7);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:put:"]=3;
+//>>excludeEnd("ctx");
+$11=stats;
+$14=$recv(distri)._at_ifAbsent_((27),(function(){
+return (0);
+
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:ifAbsent:"]=5;
+//>>excludeEnd("ctx");
+$15=$recv(annul)._at_ifAbsent_((27),(function(){
+return (0);
+
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:ifAbsent:"]=6;
+//>>excludeEnd("ctx");
+$13=$recv($14).__minus($15);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["-"]=3;
+//>>excludeEnd("ctx");
+$12=[$13];
+$recv($11)._at_put_(" - vendredi",$12);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:put:"]=4;
+//>>excludeEnd("ctx");
+$16=stats;
+$19=$recv(distri)._at_ifAbsent_((28),(function(){
+return (0);
+
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:ifAbsent:"]=7;
+//>>excludeEnd("ctx");
+$20=$recv(annul)._at_ifAbsent_((28),(function(){
+return (0);
+
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:ifAbsent:"]=8;
+//>>excludeEnd("ctx");
+$18=$recv($19).__minus($20);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["-"]=4;
+//>>excludeEnd("ctx");
+$17=[$18];
+$recv($16)._at_put_(" - samedi",$17);
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:put:"]=5;
+//>>excludeEnd("ctx");
+$21=stats;
+$24=$recv(distri)._at_ifAbsent_((29),(function(){
+return (0);
+
+}));
+//>>excludeStart("ctx", pragmas.excludeDebugContexts);
+$ctx1.sendIdx["at:ifAbsent:"]=9;
+//>>excludeEnd("ctx");
+$23=$recv($24).__minus($recv(annul)._at_ifAbsent_((29),(function(){
+return (0);
+
+})));
+$22=[$23];
+$recv($21)._at_put_(" - dimanche",$22);
+$25=stats;
+return $25;
 //>>excludeStart("ctx", pragmas.excludeDebugContexts);
 }, function($ctx1) {$ctx1.fill(self,"statistiques",{stats:stats,distri:distri,annul:annul},$globals.FdJHistorique)});
 //>>excludeEnd("ctx");
 },
 //>>excludeStart("ide", pragmas.excludeIdeData);
 args: [],
-source: "statistiques\x0a\x09| stats distri annul |\x0a\x09stats := Dictionary new.\x0a\x09stats at: 'Distribution par jour' put: nil.\x0a\x09distri := self calculeStats: 'Debut distri'.\x0a\x09annul := self calculeStats: 'Annulation'.\x0a\x09stats\x0a\x09\x09at: ' - vendrredi'\x0a\x09\x09put: { (distri at: 29)-(annul at: 29) }.\x0a\x09stats\x0a\x09\x09at: ' - samedi'\x0a\x09\x09put: { (distri at: 30)-(annul at: 29) }.\x0a\x22\x09stats\x0a\x09\x09at: ' - dimanche'\x0a\x09\x09put: { (distri at: 1)-(annul at:29) }.\x0a\x22\x0a\x09^ stats",
+source: "statistiques\x0a\x09| stats distri annul |\x0a\x09stats := Dictionary new.\x0a\x09stats at: 'Distribution par jour' put: nil.\x0a\x09distri := self calculeStats: 'Debut distri'.\x0a\x09annul := self calculeStats: 'Annulation'.\x0a\x09\x22TODO a revoir pour eviter les dates en dur !\x22\x0a\x09stats\x0a\x09\x09at: ' - mercredi'\x0a\x09\x09put: { (distri at: 26 ifAbsent: [0])-(annul at: 26 ifAbsent: [0]) }.\x0a\x09stats\x0a\x09\x09at: ' - jeudi'\x0a\x09\x09put: { (distri at: 26 ifAbsent: [0])-(annul at: 26 ifAbsent: [0]) }.\x0a\x09stats\x0a\x09\x09at: ' - vendredi'\x0a\x09\x09put: { (distri at: 27 ifAbsent: [0])-(annul at: 27 ifAbsent: [0]) }.\x0a\x09stats\x0a\x09\x09at: ' - samedi'\x0a\x09\x09put: { (distri at: 28 ifAbsent: [0])-(annul at: 28 ifAbsent: [0]) }.\x0a\x09stats\x0a\x09\x09at: ' - dimanche'\x0a\x09\x09put: { (distri at: 29 ifAbsent: [0])-(annul at: 29 ifAbsent: [0]) }.\x0a\x09^ stats",
 referencedClasses: ["Dictionary"],
 //>>excludeEnd("ide");
-messageSends: ["new", "at:put:", "calculeStats:", "-", "at:"]
+messageSends: ["new", "at:put:", "calculeStats:", "-", "at:ifAbsent:"]
 }),
 $globals.FdJHistorique);
 

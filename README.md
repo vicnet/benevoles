@@ -37,8 +37,11 @@ Start server with `amber serve` and go to `http://localhost:4000/` in your brows
 ### Import benevoles
 
 Input file should be like this:
-`nom;prenom;asso;participe;taille;t_shirt_cintre;lsf;repas
-XXXX;yyyy;Joc-Ere;O;L;N;N;Ven 8 Mai SOIR,Sam 9 Mai MIDI,Sam 9 Mai SOIR,Dim 10 Mai MIDI`
+
+```cvs
+nom;prenom;asso;participe;taille;t_shirt_cintre;lsf;nouveau;repas_vegetarien;repas
+XXXX;yyyy;Mon asso;O;L;N;N;O;N;Samedi 09h-13h,Dimanche 09h-13h,Vendredi 17h-21h,
+```
 
 ## Dev tips
 
